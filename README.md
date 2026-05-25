@@ -19,6 +19,12 @@ Current focus:
 - lexical and structural probes for private-channel use and collusion signals;
 - reproducible JSON traces for later inspection.
 
+## Research framing
+
+This project is accompanied by a short research brief explaining the problem model, the Prisoner’s Dilemma baseline, target failure modes, current limitations, and planned extension toward delegated agentic workflows.
+
+See: [Research Brief](docs/RESEARCH_BRIEF.md)
+
 ## Status
 
 Research prototype / alpha. The framework is useful for experimentation and portfolio demonstration, but it is not a formal alignment benchmark or production safety system.
