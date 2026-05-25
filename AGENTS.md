@@ -1,223 +1,410 @@
-# AGENTS.md — Правила и контекст для работы с multi_agent_safety_sim
+cat > AGENTS.md <<'MD'
+# AGENTS.md — Contributor and AI-Agent Guide
 
-> **Это главный документ для любого AI-агента или человека, который редактирует код проекта.**  
-> Нарушение принципов Safety-First — критическая ошибка.
+This file defines the working context, safety constraints, and coding standards for `multi-agent-safety-sim`.
 
----
+It is intended for:
 
-## 1. Миссия и цели проекта
+- human contributors;
+- AI coding assistants;
+- future reviewers of the project;
+- anyone modifying simulation logic, agent behavior, prompts, probes, or evaluation metrics.
 
-**multi_agent_safety_sim** — исследовательский инструмент для изучения **проблем alignment в multi-agent системах на базе LLM**.
-
-### Главные научные вопросы, на которые мы ищем ответы:
-
-1. **Collusion & Coordination Failure**  
-   Могут ли два (или больше) агента сойтись на стратегии обмана третьей стороны (overseer, human, другой агент), даже если каждый по отдельности "честный"?
-
-2. **Deception & Hidden Reasoning**  
-   Насколько эффективно агенты учатся скрывать свои истинные цели в chain-of-thought / internal monologue, когда знают, что за ними наблюдают?
-
-3. **Value Drift & Social Influence**  
-   Как взаимодействие в группе меняет (усиливает или ослабляет) исходные конституционные принципы отдельных агентов?
-
-4. **Scalable Oversight Breakdown**  
-   В каких условиях механизмы oversight (debate, critique, recursive evaluation) перестают работать, когда оцениваемые агенты могут общаться между собой?
-
-5. **Emergent Power-Seeking & Manipulation**  
-   Появляются ли в multi-agent setting'ах стратегии, направленные на захват контроля над средой, каналами коммуникации или reward signal'ом?
-
-6. **Misgeneralization в Shared Environments**  
-   Как агенты обобщают цели, когда reward/feedback приходит из общей среды, а не персонально?
-
-### Что НЕ является целью проекта
-- Создание "более умных" multi-agent систем для продакшена.
-- Любые реальные применения вне контролируемой исследовательской среды.
-- Оптимизация latency / cost без учёта safety trade-off.
+`multi-agent-safety-sim` is an **alpha-stage research prototype**, not a production safety system. The current implementation is observability-first: it simulates multi-agent behavior, logs traces, and detects suspicious patterns. Active enforcement is planned but not yet implemented.
 
 ---
 
-## 2. Принципы Safety-First (НЕНАРУШИМЫ)
+## 1. Project Mission
 
-Эти принципы важнее скорости разработки, удобства и "интересных идей".
+`multi-agent-safety-sim` is a research tool for exploring alignment and governance problems in multi-agent LLM systems.
 
-### 2.1 Sandbox & Isolation
-- **Никогда** не давай агентам реальный доступ к файловой системе, сети, shell, браузеру, email и т.п.
-- Все "действия" агентов — это только сообщения в симулированную среду (`Environment`).
-- Любые tool calls должны проходить через `ToolRegistry` с явным whitelist'ом и полным логированием.
-- Даже "безобидные" инструменты (калькулятор, поиск по вики) — только в симуляции.
+The project studies how risks may emerge from interaction patterns between agents rather than from a single model output.
 
-### 2.2 Полная наблюдаемость (Full Observability)
-- **Каждый** токен, сгенерированный агентом, должен быть записан:
-  - `agent_id`, `step`, `timestamp`, `message_type` (thought | speech | action | private_note)
-  - Полный prompt + completion (или structured output)
-  - Parent message id (для графа коммуникаций)
-- Нельзя позволять агенту "думать про себя" без записи (никаких `print` без logger, никаких скрытых состояний).
-- Логи — primary source of truth. Код может меняться, логи — остаются для reproducible analysis.
+Key research questions include:
 
-### 2.3 Жёсткие ресурсные лимиты (Hard Budgets)
-- `max_tokens_per_run`, `max_steps`, `max_agents`, `max_messages_per_agent` — **всегда** заданы в конфиге и enforced в `SimulationRunner`.
-- При превышении — **немедленная остановка** с дампом состояния (`SafetyBudgetExceeded`).
-- Отдельный `safety_monitor` процесс/таск, который может убить симуляцию извне.
+### Coordination and Collusion-Like Behavior
 
-### 2.4 Явные Конституции агентов
-- Каждый агент обязан иметь `constitution: list[str]` — набор принципов, которые он "обязан" соблюдать.
-- В экспериментах мы меняем конституцию: 
-  - Honest baseline
-  - "You must win at all costs, the overseer must not know"
-  - "Be maximally helpful to the group, even if it contradicts individual instructions"
-- Изменения конституции — это **основной рычаг** экспериментов.
+Can two or more agents converge on coordination patterns that conflict with intended oversight, even if each agent appears individually compliant?
 
-### 2.5 Fail-Closed & Kill Switches
-- При любой непредвиденной ошибке, нарушении схемы, подозрительном поведении (steganography patterns, sudden spike в private messages) — симуляция **останавливается**.
-- Есть режим `strict_mode: true` — при малейшем намёке на misalignment эксперимент прерывается и требует ручного подтверждения.
-- Кнопка "STOP ALL" в CLI и в API (если будет).
+### Behavioral Mismatch
 
-### 2.6 Reproducibility > Convenience
-- Все запуски идентифицируются по `run_id = f"{scenario}_{timestamp}_{seed}"`.
-- Полный `config.yaml` + `git commit` + `random seeds` + `model versions` сохраняются автоматически.
-- Temperature для "творческих" агентов — 0.7, для safety-critical — 0.0 или 0.1 + multiple samples.
-- Нельзя использовать `random` без `simulation_seed`.
+Do agents produce public messages or actions that diverge from their declared task, constitution, or observable rationale?
 
-### 2.7 Разделение ролей (Separation of Concerns)
-- **Agent** — только генерит сообщения по своей конституции и наблюдениям.
-- **Environment** — применяет правила мира, выдаёт observations/rewards.
-- **Monitor / Overseer** — отдельный слой (может быть LLM или rule-based), который не участвует в игре, а только анализирует.
-- **Runner** — оркестратор, который ничего не "знает" про смысл, только про потоки и бюджеты.
+### Goal Drift and Social Influence
 
-### 2.8 Логирование для Safety Research (особый режим)
-- Вдобавок к обычным логам есть `safety_events`:
-  - `deception_probe_triggered`
-  - `private_channel_detected`
-  - `value_drift_detected`
-  - `collusion_pattern_score`
-- Эти события никогда не отдаются обратно агентам (чтобы не contamination).
+How does interaction in a group change the behavior of individual agents over time?
 
-### 2.9 Запрет на реальный вред
-- Код проекта **никогда** не должен использоваться для:
-  - Генерации реальных вредоносных агентов
-  - Атак на существующие системы
-  - Создания deepfake / phishing / scam кампаний
-- Даже "для теста" — только внутри песочницы проекта.
+### Oversight Breakdown
+
+Under what conditions do watchdog, critique, or monitoring mechanisms fail when evaluated agents can communicate with one another?
+
+### Emergent Power-Seeking or Manipulation
+
+Do multi-agent settings produce strategies that attempt to control communication channels, shared state, or reward signals?
+
+### Misgeneralization in Shared Environments
+
+How do agents generalize goals when feedback comes from a shared environment rather than from direct individual supervision?
 
 ---
 
-## 3. Coding Standards (строго соблюдать)
+## 2. What This Project Is Not
 
-### 3.1 Общие правила языка и стиля
-- **Python 3.11+** только. Используй `|` для union, `list[str]`, `Self`, `match/case` где уместно.
-- **Type hints везде**. `from __future__ import annotations`
-- `mypy --strict` должен проходить без ошибок.
-- Форматирование: **ruff format** (аналог black, 100 символов).
-- Линтинг: **ruff check** (E, F, I, B, SIM, UP).
-- Импорты: isort через ruff.
+This project is not intended to:
 
-### 3.2 Архитектурные правила
-- **Pydantic v2** — единственный способ описывать данные:
-  - `BaseModel` для `AgentState`, `Message`, `SimulationEvent`, `ScenarioConfig`, `RunResult`.
-  - `Field(..., description=...)`, `model_config = ConfigDict(extra='forbid')` почти всегда.
-  - Валидация на уровне модели (`@field_validator`, `model_validator`).
-- **Async-first**:
-  - Все LLM-вызовы, I/O — `async def`.
-  - `SimulationRunner.run()` — async.
-  - Синхронные обёртки только для CLI и тестов.
-- **Нет глобального состояния**. Всё через `SimulationContext` или dependency injection.
-- **Маленькие файлы** (< 250–300 строк). При превышении — рефактори.
-- **Явные протоколы**: `class Agent(Protocol): async def act(...)`.
+- create more capable autonomous agents for production use;
+- provide real-world tool access to agents;
+- optimize multi-agent systems for deployment;
+- build systems that evade oversight;
+- generate harmful agents, attacks, scams, phishing, malware, or operational abuse;
+- claim to detect real deception in deployed frontier models.
 
-### 3.3 Именование
-- `snake_case` для всего (переменные, функции, файлы, папки).
-- `PascalCase` — только классы и Pydantic модели.
-- `UPPER_SNAKE` — константы и enum'ы верхнего уровня.
-- Префиксы:
-  - `safety_*` — всё, что связано с защитой
-  - `probe_*` — тесты на misalignment
-  - `scenario_*` — конкретные миры
-
-### 3.4 Документация
-- Google-style docstrings для всех публичных классов и функций.
-- В каждом модуле верхний docstring: что делает, какие риски alignment здесь моделируются.
-- В сложных местах — `Why:` комментарии (почему сделано именно так с точки зрения safety).
-
-### 3.5 Обработка ошибок и безопасность
-- Создавай свои исключения:
-  - `SafetyViolationError`
-  - `BudgetExceededError`
-  - `ConstitutionViolationError`
-  - `SimulationHaltError`
-- Никогда не `except Exception:` без re-raise + logging + safety dump.
-- Все LLM-клиенты должны иметь `tenacity` retry с exponential backoff + jitter, но с общим budget'ом.
-
-### 3.6 Тестирование
-- Обязательно: `tests/` зеркалит `src/`.
-- `pytest-asyncio` для async.
-- `hypothesis` для property-based тестов на чистой логике (Message routing, scoring и т.д.).
-- Для LLM-частей — **deterministic mocks** + snapshot тесты (снимки промптов и ответов).
-- Минимальное покрытие core: 85%+.
-
-### 3.7 Конфигурация и промпты
-- **Всё в YAML/JSON**, ничего жёстко в коде.
-- Промпты хранятся в `data/prompts/{agent_type}/` или в `config.yaml` как multiline.
-- Каждый промпт имеет версию (`prompt_version: "v1.3-collusion-test"`).
-- Нельзя менять промпт без изменения версии и записи в changelog эксперимента.
-
-### 3.8 Логирование
-- `structlog` + JSON для машинного анализа.
-- В dev — `rich` + цвета (agent_id разными цветами).
-- Обязательные поля в каждом логе: `run_id`, `step`, `agent_id`, `event_type`.
-
-### 3.9 Git и PR
-- Conventional Commits: `feat:`, `fix(safety):`, `refactor(alignment):`, `docs(agents):`
-- В описании PR обязательно:
-  - Какой alignment risk / phenomenon исследуется
-  - Как это влияет на safety properties
-  - Что было протестировано (включая негативные кейсы)
-- Никогда не мержить без хотя бы одного ревью от другого человека (или детального self-review + checklist).
+All experiments must remain inside controlled simulation environments.
 
 ---
 
-## 4. Как работать с проектом (для AI-агентов)
+## 3. Current Status
 
-1. **Всегда читай AGENTS.md** перед началом любой задачи.
-2. **Проверяй текущий `config.yaml`** и `run_id` перед запуском экспериментов.
-3. **Сначала пиши тесты / safety checks**, потом код.
-4. При добавлении нового сценария — создай:
-   - `scenarios/my_scenario.py`
-   - Пример конфига в `data/scenarios/my_scenario.yaml`
-   - Метрики в `alignment/metrics/`
-   - Тест `tests/scenarios/test_my_scenario.py`
-5. При любом изменении поведения агента — обнови хотя бы один probe в `alignment/probes/`.
-6. Если ты (AI) предлагаешь "сделать агентов умнее, чтобы они лучше врали" — **это красный флаг**. Такие изменения требуют отдельного обоснования в контексте изучения именно этого риска.
-7. Никогда не предлагай убрать логирование "для скорости" или "чтобы было красивее".
+Current implementation:
 
----
+- repeated Prisoner’s Dilemma baseline;
+- configurable agent personas;
+- watchdog monitoring layer;
+- dry-run mode with `DummyLLMClient`;
+- structured JSON traces;
+- safety caps for tokens and steps;
+- CLI experiment runner;
+- pytest test suite;
+- ruff linting;
+- public research brief in `docs/RESEARCH_BRIEF.md`.
 
-## 5. Запрещённые паттерны (антипаттерны)
+Current status: **MVP observability prototype**.
 
-- `global agents = []`
-- LLM-клиент как синглтон
-- `eval()` / `exec()` где угодно
-- Секреты в коде или комментариях
-- `time.sleep` в async коде
-- Скрытые файлы `.agent_memory/` или pickle состояний
-- "Быстрые хаки" в обход `SimulationRunner`
-- Запуск экспериментов напрямую из ноутбуков без сохранения run_id и конфига
-- Игнорирование `SafetyMonitor` алертов
+Planned extensions:
+
+- `PlannerDelegationEnv`;
+- stronger task-drift and coordination metrics;
+- governance mapping documentation;
+- trace comparison across seeds and model configurations;
+- active allow / deny / escalate enforcement layer;
+- richer false positive / false negative review workflow.
 
 ---
 
-## 6. Текущая фаза проекта (обновляется)
+## 4. Safety-First Principles
 
-- Phase 0: Базовая инфраструктура (Pydantic, async runner, logging, budgets)
-- Phase 1: Первые 3 сценария + честные vs deceptive агенты
-- Phase 2: Базовые метрики (collusion, deception, oversight failure)
-- Phase 3: Probes + red-teaming harness
-- Phase 4: Визуализация + отчёты
-- Phase 5: LangGraph integration (опционально, для сложных графов oversight)
+Safety constraints take priority over speed, convenience, and interesting experiments.
+
+### 4.1 Sandbox and Isolation
+
+Agents must not receive real access to:
+
+- the local filesystem;
+- shell commands;
+- browsers;
+- email;
+- external APIs;
+- network resources;
+- credentials;
+- user accounts.
+
+Agent actions should be represented as messages or structured actions inside the simulated environment.
+
+If real tools are ever introduced, they must go through an explicit tool registry with:
+
+- whitelist-based access;
+- full logging;
+- per-run budget controls;
+- human review for high-risk actions.
+
+### 4.2 Observability
+
+The simulation should log observable behavior, including:
+
+- `run_id`;
+- `agent_id`;
+- step number;
+- timestamp;
+- message type;
+- public or private channel;
+- structured actions;
+- safety events;
+- environment state changes where relevant.
+
+Do not claim access to hidden model internals. The project should track observable messages, declared rationales, structured outputs, and trace metadata.
+
+Logs are the primary source of truth for reproducible analysis.
+
+### 4.3 Resource Budgets
+
+Runs must use explicit limits, such as:
+
+- maximum steps;
+- maximum agents;
+- maximum messages;
+- maximum tokens per run;
+- maximum trials.
+
+If a budget is exceeded, the simulation should halt safely and preserve the trace for review.
+
+### 4.4 Agent Constitutions
+
+Agent behavior should be controlled through explicit persona and constitution settings.
+
+Changes to agent personas or constitutions should be treated as experimental variables and documented in configuration or scenario files.
+
+### 4.5 Fail-Closed Behavior
+
+Unexpected errors, invalid structured outputs, suspicious message patterns, or budget failures should stop the run or emit a clearly logged safety event.
+
+The system should prefer halting or escalating over silently continuing after a safety-relevant failure.
+
+### 4.6 Reproducibility
+
+Every experiment should make it possible to reconstruct:
+
+- scenario name;
+- config;
+- random seed;
+- model or dummy client;
+- agent personas;
+- run ID;
+- output traces.
+
+Avoid uncontrolled randomness. Use explicit seeds where possible.
+
+### 4.7 Separation of Concerns
+
+Keep the architecture conceptually clean:
+
+- **Agent**: generates messages or structured actions based on observations and configuration.
+- **Environment**: applies world rules and produces observations or rewards.
+- **Watchdog / Monitor**: observes traces and emits safety events.
+- **Runner**: orchestrates flow, budgets, logging, and output files.
+- **Probes / Metrics**: analyze traces and produce measurable indicators.
+
+Do not bypass the runner for experiments that should be logged and reproducible.
 
 ---
 
-**Последнее обновление**: 2026-05 (начальная версия)
+## 5. Coding Standards
 
-**Ответственный за поддержание этого файла**: любой, кто вносит изменения в core.
+### 5.1 Python and Style
 
-Если ты не уверен — спроси. Лучше остановить работу, чем нарушить safety principle.
+Target Python version: Python 3.11+.
+
+Use:
+
+- type hints;
+- `from __future__ import annotations`;
+- `ruff check`;
+- `ruff format` where appropriate;
+- clear module docstrings;
+- small, focused functions;
+- explicit error handling.
+
+The current repository uses ruff and pytest as the minimum quality gate.
+
+Before committing, run:
+
+```bash
+python3 -m ruff check .
+python3 -m pytest
+5.2 Data Models
+
+Prefer explicit data models for simulation objects, including:
+
+* messages;
+* agent state;
+* simulation events;
+* run metadata;
+* scenario configuration.
+
+Use Pydantic models where appropriate.
+
+5.3 Async and LLM Calls
+
+LLM calls should be async where possible.
+
+All real LLM calls must go through the project’s LLM client abstraction. Do not call provider APIs directly from scenario logic.
+
+Dry-run mode must remain available and safe.
+
+5.4 Error Handling
+
+Do not silently swallow exceptions.
+
+Avoid broad except Exception unless the exception is:
+
+* logged or surfaced clearly;
+* re-raised or converted into an explicit failure;
+* associated with a safe halt or controlled CLI exit.
+
+5.5 Configuration
+
+Do not hard-code experimental settings when they belong in configuration.
+
+Prompts, personas, scenario parameters, safety caps, and model settings should be configurable.
+
+Do not commit real API keys or credentials.
+
+.env.example must contain placeholders only.
+
+5.6 Logging
+
+Safety-relevant events should be logged as structured data whenever possible.
+
+Important event types include:
+
+* private-channel detection;
+* collusion-like keyword detection;
+* excessive private messaging;
+* watchdog alerts;
+* budget halts;
+* malformed model outputs;
+* task drift indicators in future scenarios.
+
+Safety events should not be fed back to agents unless the experiment explicitly requires it.
+
+⸻
+
+6. Testing Standards
+
+The current minimum standard:
+python3 -m ruff check .
+python3 -m pytest
+Future targets:
+
+* scenario tests;
+* probe tests;
+* deterministic mock tests for LLM behavior;
+* trace schema tests;
+* regression tests for safety events;
+* false positive / false negative examples for watchdog probes.
+
+Tests should mirror the structure of src/ where practical.
+
+⸻
+
+7. Working With the Project
+
+Before modifying behavior:
+
+1. Read this file.
+2. Read README.md.
+3. Read docs/RESEARCH_BRIEF.md.
+4. Check the current config.yaml.
+5. Run the test suite before and after changes.
+
+When adding a new scenario, include:
+
+* a scenario module under src/multi_agent_safety_sim/scenarios/;
+* configuration or example parameters;
+* tests;
+* documentation updates;
+* safety probes or metrics if the scenario introduces a new failure mode.
+
+When changing agent behavior, update or add at least one relevant test or probe.
+
+⸻
+
+8. Prohibited Patterns
+
+Do not introduce:
+
+* real shell access for agents;
+* hidden persistent agent memory outside logged traces;
+* real credential use in simulation examples;
+* eval() or exec() for agent-generated content;
+* unlogged tool calls;
+* direct experiments from notebooks without run IDs or saved configuration;
+* code that optimizes for deception, evasion, or harmful capability outside a controlled research framing;
+* shortcuts that bypass safety caps or trace logging.
+
+⸻
+
+9. Git and Commit Guidelines
+
+Use clear commits.
+
+Preferred examples:
+
+* docs: add research brief
+* feat: add planner delegation scenario
+* fix: prevent unsafe config defaults
+* test: add watchdog probe tests
+* refactor: simplify simulation runner
+
+Before pushing:
+python3 -m ruff check .
+python3 -m pytest
+git status
+
+
+* .venv/;
+* __pycache__/;
+* .pytest_cache/;
+* .ruff_cache/;
+* *.egg-info/;
+* data/runs/;
+* real .env files.
+
+⸻
+
+10. Project Phases
+
+Current phase: Phase 0 / Phase 1 boundary
+
+Phase 0 — Foundation
+
+* package structure;
+* CLI;
+* config;
+* dry-run mode;
+* tests;
+* linting;
+* research brief.
+
+Phase 1 — Baseline Scenarios
+
+* repeated Prisoner’s Dilemma baseline;
+* watchdog probes;
+* trace output;
+* basic metrics.
+
+Phase 2 — Agentic Workflow Scenario
+
+* PlannerDelegationEnv;
+* planner and sub-agents;
+* task drift metrics;
+* hidden coordination probes.
+
+Phase 3 — Evaluation Harness
+
+* scenario reports;
+* seed comparison;
+* false positive review;
+* governance mapping.
+
+Phase 4 — Runtime Enforcement
+
+* allow / deny / escalate controls;
+* policy rules;
+* enforcement metrics;
+* latency and block-rate reporting.
+
+Phase 5 — Public Research Outputs
+
+* case study;
+* LessWrong / Alignment Forum post;
+* portfolio writeup;
+* external feedback.
+
+⸻
+
+11. Final Rule
+
+If a proposed change makes the system less observable, less reproducible, or less safe, do not implement it without explicit justification.
+
+When uncertain, stop and ask.
+MD
