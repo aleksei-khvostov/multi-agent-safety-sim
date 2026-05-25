@@ -21,9 +21,10 @@ Current focus:
 
 ## Research framing
 
-This project is accompanied by a short research brief explaining the problem model, the Prisoner’s Dilemma baseline, target failure modes, current limitations, and planned extension toward delegated agentic workflows.
+This project is accompanied by short research notes explaining the problem model, governance framing, current limitations, and planned extension toward delegated agentic workflows.
 
-See: [Research Brief](docs/RESEARCH_BRIEF.md)
+- [Research Brief](docs/RESEARCH_BRIEF.md)
+- [Governance Mapping](docs/GOVERNANCE_MAPPING.md)
 
 ## Status
 
