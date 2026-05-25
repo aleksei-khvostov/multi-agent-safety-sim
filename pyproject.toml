@@ -1,0 +1,96 @@
+[project]
+name = "multi-agent-safety-sim"
+version = "0.1.0"
+description = "A safety-first simulation framework for studying alignment problems in multi-agent LLM systems."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "Aleksei"}
+]
+keywords = ["ai-safety", "alignment", "multi-agent", "llm", "simulation", "red-teaming"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    "pydantic>=2.7,<3.0",
+    "pyyaml>=6.0",
+    "typer[all]>=0.12",
+    "rich>=13.0",
+    "httpx>=0.27",
+    "python-dotenv>=1.0",
+    "structlog>=24.0",
+    "tenacity>=8.0",  # for robust LLM retries
+]
+
+[project.optional-dependencies]
+llm = [
+    "openai>=1.30",
+    "anthropic>=0.28",
+    "litellm>=1.40",  # unified LLM interface
+]
+dev = [
+    "ruff>=0.4",
+    "mypy>=1.10",
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "hypothesis>=6.0",
+    "pre-commit>=3.5",
+]
+notebooks = [
+    "jupyter>=1.0",
+    "pandas>=2.0",
+    "matplotlib>=3.8",
+    "seaborn>=0.13",
+]
+
+[project.scripts]
+massim = "multi_agent_safety_sim.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/ccaudaa/multi-agent-safety-sim"
+Repository = "https://github.com/ccaudaa/multi-agent-safety-sim"
+Issues = "https://github.com/ccaudaa/multi-agent-safety-sim/issues"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+extend-exclude = ["notebooks/*", "data/*"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "C4"]
+ignore = ["E501", "B008"]  # line too long (handled by black-ish), function arg defaults
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+no_implicit_reexport = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "-ra -q --strict-markers"
+
+[tool.uv]
+dev-dependencies = ["multi-agent-safety-sim[dev,llm,notebooks]"]
