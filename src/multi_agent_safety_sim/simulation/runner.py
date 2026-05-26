@@ -50,6 +50,8 @@ class TrialResult:
     collusion_incidents: int
     safety_events: list[dict[str, Any]]
     final_scores: dict[str, int]
+    message_trace: list[dict[str, Any]]
+    round_trace: list[dict[str, Any]]
     success: bool = True
 
 
@@ -265,8 +267,10 @@ class SimulationRunner:
         # Per-round message routing (inboxes)
         inboxes: dict[AgentID, list[Message]] = {aid: [] for aid in agents}
 
-        round_infos: list[dict] = []
+        round_infos: list[dict[str, Any]] = []
         safety_events: list[dict[str, Any]] = []
+        message_trace: list[dict[str, Any]] = []
+        round_trace: list[dict[str, Any]] = []
 
         for _rnd in range(num_rounds):
             self._steps_done += 1
@@ -337,6 +341,21 @@ class SimulationRunner:
             round_infos.append(round_info)
             safety_events.extend(round_info.get("safety_events", []))
 
+            message_trace.extend(
+                self._serialize_messages(
+                    messages=produced_messages,
+                    trial_id=trial_id,
+                    round_index=_rnd,
+                )
+            )
+            round_trace.append(
+                {
+                    "trial_id": trial_id,
+                    "round_index": _rnd,
+                    "round_info": round_info,
+                }
+            )
+
             # 4. Prepare inboxes for the next round (normal routing for players, watchdog will get full copy again)
             inboxes = {aid: [] for aid in agents}
             for msg in produced_messages:
@@ -367,6 +386,8 @@ class SimulationRunner:
             collusion_incidents=collusion_count,
             safety_events=safety_events,
             final_scores=final_scores,
+            message_trace=message_trace,
+            round_trace=round_trace,
         )
 
         logger.info(
@@ -460,6 +481,39 @@ class SimulationRunner:
                 cooperations += 1
         return cooperations / len(round_infos)
 
+    def _serialize_messages(
+        self,
+        *,
+        messages: list[Message],
+        trial_id: int,
+        round_index: int,
+    ) -> list[dict[str, Any]]:
+        """Convert Message objects into JSON-serializable trace records."""
+        serialized: list[dict[str, Any]] = []
+
+        for msg in messages:
+            serialized.append(
+                {
+                    "trial_id": trial_id,
+                    "round_index": round_index,
+                    "message_id": str(msg.id),
+                    "sender_id": str(msg.sender_id),
+                    "recipient_ids": (
+                        [str(rid) for rid in msg.recipient_ids]
+                        if msg.recipient_ids is not None
+                        else None
+                    ),
+                    "message_type": str(msg.type),
+                    "content": msg.content,
+                    "metadata": msg.metadata,
+                    "timestamp": msg.timestamp.isoformat()
+                    if hasattr(msg.timestamp, "isoformat")
+                    else str(msg.timestamp),
+                }
+            )
+
+        return serialized
+
     def _save_trial(self, trial: TrialResult) -> None:
         if not self.output_dir:
             return
@@ -473,6 +527,8 @@ class SimulationRunner:
                     "collusion_incidents": trial.collusion_incidents,
                     "safety_events": trial.safety_events,
                     "final_scores": trial.final_scores,
+                    "message_trace": trial.message_trace,
+                    "round_trace": trial.round_trace,
                 },
                 f,
                 indent=2,
