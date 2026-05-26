@@ -27,6 +27,7 @@ This project is accompanied by short research notes explaining the problem model
 - [Governance Mapping](docs/GOVERNANCE_MAPPING.md)
 - [Planner Delegation Scenario Spec](docs/PLANNER_DELEGATION_SPEC.md)
 - [Agentic Governance Rubric](docs/AGENTIC_GOVERNANCE_RUBRIC.md)
+- [Pilot Run Report](docs/PILOT_RUN_REPORT.md)
 
 ## Status
 
