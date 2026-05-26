@@ -492,7 +492,7 @@ class SimulationRunner:
         serialized: list[dict[str, Any]] = []
 
         for msg in messages:
-            sender = getattr(msg, "sender_id", None) or getattr(msg, "sender", None)
+            sender = getattr(msg, "agent_id", None) or getattr(msg, "sender_id", None) or getattr(msg, "sender", None)
             recipients = getattr(msg, "recipient_ids", None) or getattr(msg, "recipients", None)
             timestamp = getattr(msg, "timestamp", None)
 
