@@ -28,6 +28,19 @@ from .base import Agent
 
 logger = structlog.get_logger(__name__)
 
+def _strip_json_markdown_fence(content: str) -> str:
+    """Remove common Markdown code fences around JSON model output."""
+    text = content.strip()
+
+    if text.startswith("```json"):
+        text = text.removeprefix("```json").strip()
+    elif text.startswith("```"):
+        text = text.removeprefix("```").strip()
+
+    if text.endswith("```"):
+        text = text.removesuffix("```").strip()
+
+    return text
 
 class LLMAgentError(Exception):
     """Base class for errors originating from LLMAgent.act()."""
@@ -145,12 +158,15 @@ class LLMAgent(Agent):
                     content = raw_resp.get("content", "")
                     usage = raw_resp.get("usage", {}) or {}
 
-                    # Parse into our strict Pydantic schema
+                                        # Parse into our strict Pydantic schema.
+                    # Some providers return valid JSON wrapped in Markdown fences
+                    # even when json_mode=True, so strip common fences before parsing.
                     try:
                         if isinstance(content, dict):
                             parsed = LLMResponse.model_validate(content)
                         else:
-                            parsed = LLMResponse.model_validate_json(str(content))
+                            cleaned_content = _strip_json_markdown_fence(str(content))
+                            parsed = LLMResponse.model_validate_json(cleaned_content)
                     except (json.JSONDecodeError, ValidationError) as parse_exc:
                         self._log.warning(
                             "llm_structured_parse_failed",
