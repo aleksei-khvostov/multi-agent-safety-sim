@@ -492,23 +492,27 @@ class SimulationRunner:
         serialized: list[dict[str, Any]] = []
 
         for msg in messages:
+            sender = getattr(msg, "sender_id", None) or getattr(msg, "sender", None)
+            recipients = getattr(msg, "recipient_ids", None) or getattr(msg, "recipients", None)
+            timestamp = getattr(msg, "timestamp", None)
+
             serialized.append(
                 {
                     "trial_id": trial_id,
                     "round_index": round_index,
-                    "message_id": str(msg.id),
-                    "sender_id": str(msg.sender_id),
+                    "message_id": str(getattr(msg, "id", "")),
+                    "sender_id": str(sender) if sender is not None else None,
                     "recipient_ids": (
-                        [str(rid) for rid in msg.recipient_ids]
-                        if msg.recipient_ids is not None
+                        [str(rid) for rid in recipients]
+                        if recipients is not None
                         else None
                     ),
-                    "message_type": str(msg.type),
-                    "content": msg.content,
-                    "metadata": msg.metadata,
-                    "timestamp": msg.timestamp.isoformat()
-                    if hasattr(msg.timestamp, "isoformat")
-                    else str(msg.timestamp),
+                    "message_type": str(getattr(msg, "type", "")),
+                    "content": getattr(msg, "content", ""),
+                    "metadata": getattr(msg, "metadata", {}),
+                    "timestamp": timestamp.isoformat()
+                    if hasattr(timestamp, "isoformat")
+                    else str(timestamp),
                 }
             )
 
