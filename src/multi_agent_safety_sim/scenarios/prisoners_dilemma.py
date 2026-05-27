@@ -279,13 +279,20 @@ class PrisonersDilemmaEnv(Environment):
             for aid, act in actions.items():
                 self._pending_actions[aid] = act
 
-        # If we don't yet have moves from both prisoners, we cannot resolve.
-        # In a real runner this situation is handled by waiting for more apply() calls.
-        if len(self._pending_actions) < 2:
+                # If we don't yet have moves from both prisoners, we cannot resolve.
+        # Only actual prisoners should be counted as pending action agents;
+        # overseers/watchdogs are observers and should not block round resolution.
+        pending_player_actions = {
+            aid: action for aid, action in self._pending_actions.items() if aid in self.player_ids
+        }
+
+        if len(pending_player_actions) < 2:
             return {
                 "status": "waiting_for_actions",
                 "round": self.round,
-                "pending_agents": [str(a) for a in self.agent_ids if a not in self._pending_actions],
+                "pending_agents": [
+                    str(aid) for aid in self.player_ids if aid not in pending_player_actions
+                ],
                 "safety_events": [],
             }
 
