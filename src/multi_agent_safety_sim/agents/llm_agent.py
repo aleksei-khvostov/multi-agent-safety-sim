@@ -28,6 +28,7 @@ from .base import Agent
 
 logger = structlog.get_logger(__name__)
 
+
 def _strip_json_markdown_fence(content: str) -> str:
     """Remove common Markdown code fences around JSON model output."""
     text = content.strip()
@@ -41,6 +42,74 @@ def _strip_json_markdown_fence(content: str) -> str:
         text = text.removesuffix("```").strip()
 
     return text
+
+
+def _extract_first_json_object(content: str) -> str | None:
+    """
+    Extract the first balanced JSON object from mixed model output.
+
+    Some models emit explanatory prose before the JSON object even when json_mode
+    is requested. This helper recovers the first top-level {...} block while
+    respecting quoted strings and escaped characters.
+    """
+    text = _strip_json_markdown_fence(content)
+
+    start = text.find("{")
+    if start == -1:
+        return None
+
+    depth = 0
+    in_string = False
+    escape = False
+
+    for index in range(start, len(text)):
+        char = text[index]
+
+        if escape:
+            escape = False
+            continue
+
+        if char == "\\" and in_string:
+            escape = True
+            continue
+
+        if char == '"':
+            in_string = not in_string
+            continue
+
+        if in_string:
+            continue
+
+        if char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return text[start : index + 1]
+
+    return None
+
+
+def _normalize_json_model_output(content: str) -> str:
+    """
+    Normalize model output before strict Pydantic JSON parsing.
+
+    Handles:
+    - raw JSON
+    - JSON wrapped in Markdown fences
+    - prose followed by a JSON object
+    """
+    cleaned = _strip_json_markdown_fence(content)
+
+    if cleaned.startswith("{"):
+        return cleaned
+
+    extracted = _extract_first_json_object(cleaned)
+    if extracted is not None:
+        return extracted
+
+    return cleaned
+
 
 class LLMAgentError(Exception):
     """Base class for errors originating from LLMAgent.act()."""
@@ -158,14 +227,14 @@ class LLMAgent(Agent):
                     content = raw_resp.get("content", "")
                     usage = raw_resp.get("usage", {}) or {}
 
-                                        # Parse into our strict Pydantic schema.
-                    # Some providers return valid JSON wrapped in Markdown fences
-                    # even when json_mode=True, so strip common fences before parsing.
+                    # Parse into our strict Pydantic schema.
+                    # Some providers return JSON wrapped in Markdown fences or
+                    # prepend prose before the JSON object even when json_mode=True.
                     try:
                         if isinstance(content, dict):
                             parsed = LLMResponse.model_validate(content)
                         else:
-                            cleaned_content = _strip_json_markdown_fence(str(content))
+                            cleaned_content = _normalize_json_model_output(str(content))
                             parsed = LLMResponse.model_validate_json(cleaned_content)
                     except (json.JSONDecodeError, ValidationError) as parse_exc:
                         self._log.warning(
