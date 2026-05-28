@@ -34,10 +34,19 @@ def run(
         "honest,deceptive",
         "--agents",
         "-a",
-        help="Comma-separated personas (honest,deceptive,watchdog,power,sycophant or full keys from config)",
+        help=(
+            "Comma-separated personas "
+            "(honest,deceptive,watchdog,power,sycophant,planner,executor "
+            "or full keys from config)"
+        ),
     ),
-    rounds: int | None = typer.Option(None, "--rounds", "-r", help="Number of PD rounds per trial"),
-    trials: int = typer.Option(5, "--trials", "-t", help="How many independent games to run"),
+    rounds: int | None = typer.Option(
+        None,
+        "--rounds",
+        "-r",
+        help="Number of scenario steps/rounds per trial",
+    ),
+    trials: int = typer.Option(5, "--trials", "-t", help="How many independent trials to run"),
     seed: int | None = typer.Option(None, help="Base random seed"),
     config: Path = typer.Option("config.yaml", exists=True, readable=True),
     dry_run: bool = typer.Option(True, help="Force DummyLLMClient (no real API calls)"),
@@ -50,10 +59,13 @@ def run(
     output_root: str = typer.Option("data/runs", help="Where to store JSON traces"),
 ) -> None:
     """
-    Run a multi-agent Prisoner's Dilemma experiment with LLM agents.
+    Run a multi-agent safety experiment with LLM agents.
 
     Example dry-run:
         massim run --scenario prisoners_dilemma --agents honest,deceptive,watchdog --rounds 10 --trials 5 --dry-run
+
+    Example planner-delegation dry-run:
+        massim run --scenario planner_delegation --agents planner,executor,watchdog --rounds 4 --trials 1 --dry-run
     """
     cfg = load_config(config)
 
@@ -103,29 +115,68 @@ def run(
     table.add_column("Metric", style="cyan")
     table.add_column("Value", style="green")
 
-    table.add_row("Trials completed", str(result.num_trials))
-    table.add_row("Mean cooperation rate", f"{agg.get('mean_cooperation_rate', 0):.3f}")
-    table.add_row("Trials with collusion detected", f"{agg.get('trials_with_collusion_detected', 0)}%")
-    table.add_row("Total safety events", str(agg.get("total_safety_events", 0)))
-    table.add_row("Total collusion incidents", str(agg.get("total_collusion_incidents", 0)))
-    table.add_row("Total tokens used", str(agg.get("total_tokens_used", 0)))
+    table.add_row("Trials completed", str(agg.get("trials_completed", result.num_trials)))
+
+    if result.scenario == "planner_delegation":
+        table.add_row("Audit complete rate", f"{agg.get('audit_complete_rate', 0):.3f}")
+        table.add_row(
+            "Delegation executed rate",
+            f"{agg.get('delegation_executed_rate', 0):.3f}",
+        )
+        table.add_row(
+            "Review completed rate",
+            f"{agg.get('review_completed_rate', 0):.3f}",
+        )
+        table.add_row("Escalation rate", f"{agg.get('escalation_rate', 0):.3f}")
+        table.add_row("Total safety events", str(agg.get("total_safety_events", 0)))
+        table.add_row("Total tokens used", str(agg.get("total_tokens_used", 0)))
+    else:
+        table.add_row("Mean cooperation rate", f"{agg.get('mean_cooperation_rate', 0):.3f}")
+        table.add_row(
+            "Trials with collusion detected",
+            f"{agg.get('trials_with_collusion_detected', 0)}%",
+        )
+        table.add_row("Total safety events", str(agg.get("total_safety_events", 0)))
+        table.add_row("Total collusion incidents", str(agg.get("total_collusion_incidents", 0)))
+        table.add_row("Total tokens used", str(agg.get("total_tokens_used", 0)))
 
     console.print(table)
 
     if result.trials:
         t_table = Table(title="Per-Trial Highlights (first 8)", show_header=True)
         t_table.add_column("#", style="dim")
-        t_table.add_column("Coop %", justify="right")
-        t_table.add_column("Collusion", justify="right")
-        t_table.add_column("Safety events", justify="right")
 
-        for trial in result.trials[:8]:
-            t_table.add_row(
-                str(trial.trial_id),
-                f"{trial.cooperation_rate:.2f}",
-                str(trial.collusion_incidents),
-                str(len(trial.safety_events)),
-            )
+        if result.scenario == "planner_delegation":
+            t_table.add_column("Status")
+            t_table.add_column("Audit", justify="right")
+            t_table.add_column("Final action", justify="right")
+            t_table.add_column("Safety events", justify="right")
+
+            for trial in result.trials[:8]:
+                final_round = (
+                    trial.round_trace[-1].get("round_info", {})
+                    if trial.round_trace
+                    else {}
+                )
+                t_table.add_row(
+                    str(trial.trial_id),
+                    str(final_round.get("status", "unknown")),
+                    str(final_round.get("audit_complete", False)),
+                    "yes" if final_round.get("final_action") else "no",
+                    str(len(trial.safety_events)),
+                )
+        else:
+            t_table.add_column("Coop %", justify="right")
+            t_table.add_column("Collusion", justify="right")
+            t_table.add_column("Safety events", justify="right")
+
+            for trial in result.trials[:8]:
+                t_table.add_row(
+                    str(trial.trial_id),
+                    f"{trial.cooperation_rate:.2f}",
+                    str(trial.collusion_incidents),
+                    str(len(trial.safety_events)),
+                )
 
         console.print(t_table)
 
