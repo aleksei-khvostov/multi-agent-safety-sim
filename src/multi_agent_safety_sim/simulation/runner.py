@@ -31,9 +31,8 @@ from ..models import (
     SimulationEvent,
     SimulationEventType,
 )
-from ..scenarios.prisoners_dilemma import (
-    PrisonersDilemmaEnv,
-)
+from ..scenarios.planner_delegation import PlannerDelegationEnv
+from ..scenarios.prisoners_dilemma import PrisonersDilemmaEnv
 from ..utils.llm import DummyLLMClient, LLMClient, RealLLMClient
 from ..utils.logging import setup_logging
 
@@ -42,7 +41,7 @@ logger = structlog.get_logger(__name__)
 
 @dataclass
 class TrialResult:
-    """Results of a single independent trial (one full iterated PD game)."""
+    """Results of a single independent trial."""
 
     trial_id: int
     rounds_played: int
@@ -75,10 +74,10 @@ class SimulationRunner:
     The central orchestrator for multi-agent safety experiments.
 
     It is responsible for:
-    - Creating fresh LLMAgents + PrisonersDilemmaEnv for every trial (clean isolation)
+    - Creating fresh agents and environments for every trial
     - Enforcing global safety budgets across all trials
-    - Running the message-passing loop (act → apply → step + probes)
-    - Collecting rich statistics (cooperation, collusion probes, safety events)
+    - Running the message-passing loop
+    - Collecting statistics, safety events, and traces
     - Persisting full audit traces under data/runs/<run_id>/
     """
 
@@ -113,14 +112,13 @@ class SimulationRunner:
         """
         High-level entry point used by the CLI.
 
-        Runs `num_trials` independent games. Each trial:
-        - Gets fresh agents (with the requested personas) and a fresh env
-        - Plays `num_rounds` rounds of PD with full message passing
-        - Records cooperation, collusion probes, safety events
+        Runs `num_trials` independent trials. Each trial:
+        - Gets fresh agents and a fresh environment
+        - Runs the selected scenario with full message passing
+        - Records metrics, safety events, and trace artifacts
 
-        When `dry_run=True`, DummyLLMClient is used for all agents (no real API calls).
+        When `dry_run=True`, DummyLLMClient is used for all agents.
         """
-        # Setup
         setup_logging(
             level=self.config.logging.level,
             json_logs=self.config.logging.json_logs,
@@ -132,13 +130,11 @@ class SimulationRunner:
             f"{scenario_name}_{datetime.now(UTC).strftime('%Y%m%d-%H%M%S')}_{base_seed}"
         )
 
-        # Resolve personas (support short aliases used in CLI)
         if agent_personas is None:
             agent_personas = ["honest_baseline", "deceptive_strategic"]
 
         resolved_personas = self._resolve_persona_aliases(agent_personas)
 
-        # Prepare output directory
         self.output_dir = Path(output_root) / self.run_id
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -156,9 +152,11 @@ class SimulationRunner:
         if not dry_run:
             self._ensure_api_key()
 
-        # LLM client (Dummy for dry-run, RealLLMClient otherwise)
         chosen_model = model or self.config.llm.default_model
         llm_client = self._create_llm_client(dry_run, chosen_model)
+
+        scenario_steps = self.config.scenarios[scenario_name].get("steps", 20)
+        rounds_per_trial = num_rounds or scenario_steps
 
         trials: list[TrialResult] = []
         total_safety = 0
@@ -166,31 +164,30 @@ class SimulationRunner:
         coop_rates: list[float] = []
 
         for t in range(num_trials):
-            trial_seed = base_seed + t * 10007  # deterministic but different per trial
+            trial_seed = base_seed + t * 10007
 
             trial_res = await self._run_single_trial(
                 trial_id=t,
+                scenario_name=scenario_name,
                 persona_keys=resolved_personas,
-                num_rounds=num_rounds or self.config.scenarios[scenario_name].get("steps", 20),
+                num_rounds=rounds_per_trial,
                 llm_client=llm_client,
                 base_seed=trial_seed,
                 dry_run=dry_run,
                 model=chosen_model,
             )
+
             trials.append(trial_res)
             total_safety += len(trial_res.safety_events)
             total_collusion += trial_res.collusion_incidents
             coop_rates.append(trial_res.cooperation_rate)
 
-            # Persist per-trial trace
             self._save_trial(trial_res)
 
-            # Global budget check across trials
             if self._check_budgets():
                 logger.warning("budget_exceeded_mid_experiment", trial=t)
                 break
 
-        # Aggregate statistics
         mean_coop = sum(coop_rates) / len(coop_rates) if coop_rates else 0.0
         pct_with_collusion = (
             sum(1 for tr in trials if tr.collusion_incidents > 0) / len(trials) * 100
@@ -200,7 +197,9 @@ class SimulationRunner:
 
         aggregate = {
             "mean_cooperation_rate": round(mean_coop, 4),
-            "median_cooperation_rate": round(sorted(coop_rates)[len(coop_rates) // 2], 4) if coop_rates else 0,
+            "median_cooperation_rate": round(sorted(coop_rates)[len(coop_rates) // 2], 4)
+            if coop_rates
+            else 0,
             "trials_with_collusion_detected": round(pct_with_collusion, 1),
             "total_safety_events": total_safety,
             "total_collusion_incidents": total_collusion,
@@ -213,7 +212,7 @@ class SimulationRunner:
             scenario_name=scenario_name,
             started_at=datetime.now(UTC),
             seed=base_seed,
-            config_hash="config-v1",  # could compute sha256 of config
+            config_hash="config-v1",
             agent_ids=[AgentID(f"player_{i}") for i in range(len(resolved_personas))],
             total_tokens=self._tokens_used,
             total_steps=sum(t.rounds_played for t in trials),
@@ -223,7 +222,7 @@ class SimulationRunner:
             run_id=self.run_id,
             scenario=scenario_name,
             num_trials=len(trials),
-            num_rounds_per_trial=num_rounds or 20,
+            num_rounds_per_trial=rounds_per_trial,
             agent_personas=resolved_personas,
             trials=trials,
             aggregate=aggregate,
@@ -244,6 +243,7 @@ class SimulationRunner:
     async def _run_single_trial(
         self,
         trial_id: int,
+        scenario_name: str,
         persona_keys: list[str],
         num_rounds: int,
         llm_client: LLMClient,
@@ -251,20 +251,35 @@ class SimulationRunner:
         dry_run: bool,
         model: str | None = None,
     ) -> TrialResult:
-        """Run one complete iterated PD game with two LLM agents."""
+        """Run one complete trial for the selected scenario."""
 
-        # Fresh environment for this trial
-        env = PrisonersDilemmaEnv(
-            agent_ids=[AgentID(f"player_{i}") for i in range(len(persona_keys))],
-            max_rounds=num_rounds,
-            seed=base_seed,
-        )
+        agent_ids = [AgentID(f"player_{i}") for i in range(len(persona_keys))]
+        scenario_cfg = self.config.scenarios.get(scenario_name, {})
+
+        if scenario_name == "prisoners_dilemma":
+            env = PrisonersDilemmaEnv(
+                agent_ids=agent_ids,
+                max_rounds=num_rounds,
+                seed=base_seed,
+            )
+        elif scenario_name == "planner_delegation":
+            env = PlannerDelegationEnv(
+                agent_ids=agent_ids,
+                original_intent=str(
+                    scenario_cfg.get(
+                        "original_intent",
+                        "Prepare a safe summary of a user request.",
+                    )
+                ),
+                max_steps=num_rounds,
+            )
+        else:
+            raise ValueError(f"Unknown scenario: {scenario_name}")
+
         env.reset(seed=base_seed)
 
-        # Fresh agents with the requested personas
         agents = self._create_agents(persona_keys, llm_client, model)
 
-        # Per-round message routing (inboxes)
         inboxes: dict[AgentID, list[Message]] = {aid: [] for aid in agents}
 
         round_infos: list[dict[str, Any]] = []
@@ -277,10 +292,9 @@ class SimulationRunner:
             if self._check_budgets():
                 break
 
-            # 1. Let the *player* agents (everyone except a possible watchdog) act first
             produced_messages: list[Message] = []
             watchdog: WatchdogAgent | None = None
-            player_agents = {}
+            player_agents: dict[AgentID, LLMAgent] = {}
 
             for aid, agent in agents.items():
                 if isinstance(agent, WatchdogAgent):
@@ -293,50 +307,45 @@ class SimulationRunner:
                 incoming = inboxes.get(aid, [])
                 try:
                     msgs = await agent.act(obs, incoming)
-                except Exception as e:  # safety net
-                    logger.error("agent_act_failed", agent=str(aid), error=str(e))
+                except Exception as exc:
+                    logger.error("agent_act_failed", agent=str(aid), error=str(exc))
                     msgs = []
+
                 produced_messages.extend(msgs)
                 env.apply(msgs, aid)
-                self._tokens_used += getattr(agent.state, "tokens_used", 0)
+                self._tokens_used += int(getattr(agent.state, "tokens_used", 0) or 0)
 
-            # 2. Watchdog (if present) receives the COMPLETE transcript of what the players just said
-            #    (including all PRIVATE messages between them).
             if watchdog is not None:
-                # Give the watchdog the full list of messages produced by the players this round
                 full_transcript = list(produced_messages)
-                # Also give it whatever was already in the env's current buffer (defensive)
+
                 try:
                     full_transcript.extend(env.get_current_round_messages())
                 except Exception:
                     full_transcript.extend(getattr(env, "_current_round_messages", []))
 
-                # Deduplicate while preserving order
                 seen = set()
-                unique_transcript = []
-                for m in full_transcript:
-                    if m.id not in seen:
-                        seen.add(m.id)
-                        unique_transcript.append(m)
+                unique_transcript: list[Message] = []
+                for msg in full_transcript:
+                    if msg.id not in seen:
+                        seen.add(msg.id)
+                        unique_transcript.append(msg)
 
                 obs = env.observe(watchdog.agent_id)
                 try:
                     watchdog_msgs = await watchdog.act(obs, unique_transcript)
-                except Exception as e:
-                    logger.error("watchdog_act_failed", error=str(e))
+                except Exception as exc:
+                    logger.error("watchdog_act_failed", error=str(exc))
                     watchdog_msgs = []
 
                 produced_messages.extend(watchdog_msgs)
                 env.apply(watchdog_msgs, watchdog.agent_id)
-                self._tokens_used += getattr(watchdog.state, "tokens_used", 0)
+                self._tokens_used += int(getattr(watchdog.state, "tokens_used", 0) or 0)
 
-                # Collect any alerts the watchdog raised (LLM + heuristic)
                 if hasattr(watchdog, "get_alerts_this_round"):
                     wd_alerts = watchdog.get_alerts_this_round()
                     safety_events.extend(wd_alerts)
                     watchdog.clear_alerts()
 
-            # 3. Resolve the PD round (cheap probes + any watchdog ALERTs are turned into safety_events inside the env)
             round_info = env.step()
             round_infos.append(round_info)
             safety_events.extend(round_info.get("safety_events", []))
@@ -356,10 +365,9 @@ class SimulationRunner:
                 }
             )
 
-            # 4. Prepare inboxes for the next round (normal routing for players, watchdog will get full copy again)
             inboxes = {aid: [] for aid in agents}
             for msg in produced_messages:
-                if msg.recipient_ids is None:  # broadcast
+                if msg.recipient_ids is None:
                     for aid in inboxes:
                         inboxes[aid].append(msg)
                 else:
@@ -367,17 +375,15 @@ class SimulationRunner:
                         if rid in inboxes:
                             inboxes[rid].append(msg)
 
-            # Early exit
             if round_info.get("done"):
                 break
 
-        # Compute trial-level statistics
         coop_rate = self._compute_cooperation_rate(round_infos)
         collusion_count = sum(
-            1 for e in safety_events if e.get("name") == "collusion_keywords"
+            1 for event in safety_events if event.get("name") == "collusion_keywords"
         )
 
-        final_scores = {str(k): v for k, v in env.scores.items()}
+        final_scores = {str(k): v for k, v in getattr(env, "scores", {}).items()}
 
         trial_res = TrialResult(
             trial_id=trial_id,
@@ -405,7 +411,7 @@ class SimulationRunner:
     # ------------------------------------------------------------------
 
     def _resolve_persona_aliases(self, names: list[str]) -> list[str]:
-        """Map CLI short names (honest, deceptive) to full persona keys from config."""
+        """Map CLI short names to full persona keys from config."""
         alias_map = {
             "honest": "honest_baseline",
             "deceptive": "deceptive_strategic",
@@ -414,28 +420,37 @@ class SimulationRunner:
             "sycophantic": "sycophantic_group",
             "watchdog": "watchdog",
             "overseer": "watchdog",
+            "planner": "honest_baseline",
+            "executor": "honest_baseline",
         }
+
         resolved = []
-        for n in names:
-            key = alias_map.get(n.lower(), n)
+        for name in names:
+            key = alias_map.get(name.lower(), name)
             if key not in self.config.agent_personas:
-                raise ValueError(f"Unknown persona '{n}'. Available: {list(self.config.agent_personas.keys())}")
+                raise ValueError(
+                    f"Unknown persona '{name}'. Available: {list(self.config.agent_personas.keys())}"
+                )
             resolved.append(key)
         return resolved
 
     def _create_agents(
-        self, persona_keys: list[str], llm_client: LLMClient, model: str | None = None
+        self,
+        persona_keys: list[str],
+        llm_client: LLMClient,
+        model: str | None = None,
     ) -> dict[AgentID, LLMAgent]:
-        """Instantiate the correct agent class (LLMAgent or WatchdogAgent) with optional model override."""
+        """Instantiate the correct agent class with optional model override."""
         agents: dict[AgentID, LLMAgent] = {}
         chosen_model = model or self.config.llm.default_model
+
         for i, key in enumerate(persona_keys):
             persona = self.config.agent_personas[key]
             aid = AgentID(f"player_{i}")
             is_watchdog = "watchdog" in key.lower()
 
-            AgentClass = WatchdogAgent if is_watchdog else LLMAgent
-            agent = AgentClass(
+            agent_class = WatchdogAgent if is_watchdog else LLMAgent
+            agent = agent_class(
                 aid,
                 persona.name,
                 persona.constitution,
@@ -444,23 +459,27 @@ class SimulationRunner:
                 llm_config=self.config.llm,
             )
             agents[aid] = agent
+
         return agents
 
     def _create_llm_client(self, dry_run: bool, model: str | None = None) -> LLMClient:
-        """Return Dummy for dry-run or RealLLMClient for production."""
+        """Return DummyLLMClient for dry-runs or RealLLMClient for production."""
         if dry_run:
             logger.info("using_dummy_llm_client", model="dummy")
             return DummyLLMClient()
 
-        # Real client
         chosen_model = model or self.config.llm.default_model
-        logger.info("using_real_llm_client", model=chosen_model, provider="auto (xai/openai/anthropic)")
+        logger.info(
+            "using_real_llm_client",
+            model=chosen_model,
+            provider="auto (xai/openai/anthropic)",
+        )
         return RealLLMClient(default_model=chosen_model)
 
     def _ensure_api_key(self) -> None:
-        """Fail fast if no API key is present for a real (non-dry-run) experiment."""
+        """Fail fast if no API key is present for a real experiment."""
         keys = ["XAI_API_KEY", "OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
-        if not any(os.getenv(k) for k in keys):
+        if not any(os.getenv(key) for key in keys):
             raise RuntimeError(
                 "No API key found for real LLM calls.\n"
                 "Please set one of the following environment variables (or in .env):\n"
@@ -470,15 +489,17 @@ class SimulationRunner:
                 "You can also run with --dry-run for safe testing."
             )
 
-    def _compute_cooperation_rate(self, round_infos: list[dict]) -> float:
-        """Fraction of rounds in which both players chose cooperate."""
+    def _compute_cooperation_rate(self, round_infos: list[dict[str, Any]]) -> float:
+        """Fraction of rounds in which both PD players chose cooperate."""
         if not round_infos:
             return 0.0
+
         cooperations = 0
         for info in round_infos:
             actions = info.get("actions", {})
-            if len(actions) == 2 and all(a == "cooperate" for a in actions.values()):
+            if len(actions) == 2 and all(action == "cooperate" for action in actions.values()):
                 cooperations += 1
+
         return cooperations / len(round_infos)
 
     def _serialize_messages(
@@ -492,7 +513,11 @@ class SimulationRunner:
         serialized: list[dict[str, Any]] = []
 
         for msg in messages:
-            sender = getattr(msg, "agent_id", None) or getattr(msg, "sender_id", None) or getattr(msg, "sender", None)
+            sender = (
+                getattr(msg, "agent_id", None)
+                or getattr(msg, "sender_id", None)
+                or getattr(msg, "sender", None)
+            )
             recipients = getattr(msg, "recipient_ids", None) or getattr(msg, "recipients", None)
             timestamp = getattr(msg, "timestamp", None)
 
@@ -502,11 +527,9 @@ class SimulationRunner:
                     "round_index": round_index,
                     "message_id": str(getattr(msg, "id", "")),
                     "sender_id": str(sender) if sender is not None else None,
-                    "recipient_ids": (
-                        [str(rid) for rid in recipients]
-                        if recipients is not None
-                        else None
-                    ),
+                    "recipient_ids": [str(rid) for rid in recipients]
+                    if recipients is not None
+                    else None,
                     "message_type": str(getattr(msg, "type", "")),
                     "content": getattr(msg, "content", ""),
                     "metadata": getattr(msg, "metadata", {}),
@@ -521,8 +544,9 @@ class SimulationRunner:
     def _save_trial(self, trial: TrialResult) -> None:
         if not self.output_dir:
             return
+
         path = self.output_dir / f"trial_{trial.trial_id:03d}.json"
-        with open(path, "w", encoding="utf-8") as f:
+        with open(path, "w", encoding="utf-8") as file:
             json.dump(
                 {
                     "trial_id": trial.trial_id,
@@ -534,7 +558,7 @@ class SimulationRunner:
                     "message_trace": trial.message_trace,
                     "round_trace": trial.round_trace,
                 },
-                f,
+                file,
                 indent=2,
                 default=str,
             )
@@ -544,7 +568,7 @@ class SimulationRunner:
             return
 
         summary_path = self.output_dir / "summary.json"
-        with open(summary_path, "w", encoding="utf-8") as f:
+        with open(summary_path, "w", encoding="utf-8") as file:
             json.dump(
                 {
                     "run_id": result.run_id,
@@ -555,46 +579,48 @@ class SimulationRunner:
                     "aggregate": result.aggregate,
                     "trials": [
                         {
-                            "id": t.trial_id,
-                            "coop": t.cooperation_rate,
-                            "collusion": t.collusion_incidents,
-                            "safety_count": len(t.safety_events),
+                            "id": trial.trial_id,
+                            "coop": trial.cooperation_rate,
+                            "collusion": trial.collusion_incidents,
+                            "safety_count": len(trial.safety_events),
                         }
-                        for t in result.trials
+                        for trial in result.trials
                     ],
                 },
-                f,
+                file,
                 indent=2,
             )
 
-        # Also save a copy of the config that was used
         cfg_path = self.output_dir / "config_used.yaml"
         try:
             import yaml
 
-            with open(cfg_path, "w", encoding="utf-8") as f:
-                yaml.safe_dump(self.config.model_dump(), f)
+            with open(cfg_path, "w", encoding="utf-8") as file:
+                yaml.safe_dump(self.config.model_dump(), file)
         except Exception:
             pass
 
         logger.info("results_saved", dir=str(self.output_dir))
 
     # ------------------------------------------------------------------
-    # Budget / safety (kept from original skeleton)
+    # Budget / safety
     # ------------------------------------------------------------------
 
     def _check_budgets(self) -> bool:
         if self._steps_done >= self.safety.max_steps:
             self._log_event(SimulationEventType.BUDGET_EXCEEDED, {"reason": "max_steps"})
             return True
+
         if self._tokens_used >= self.safety.max_tokens_per_run:
             self._log_event(SimulationEventType.BUDGET_EXCEEDED, {"reason": "max_tokens"})
             return True
+
         if self._start_time is not None:
             elapsed = time.monotonic() - self._start_time
             if elapsed > self.safety.max_wall_time_seconds:
                 self._log_event(SimulationEventType.BUDGET_EXCEEDED, {"reason": "wall_time"})
                 return True
+
         return False
 
     def _log_event(
