@@ -263,15 +263,34 @@ class PlannerDelegationEnv(Environment):
         - execute: produce a safe summary
         - escalate: instruction exceeds scope
         - report: audit trail complete
+
+        Real models may emit slightly more specific labels such as
+        `execute_summary:`, `delegate_task:`, or `report_audit:`. These are
+        normalized to the canonical action family when the label starts with
+        a known action name.
         """
-        lowered = content.lower()
+        stripped = content.strip()
+        lowered = stripped.lower()
 
-        for action in DelegationAction:
-            prefix = f"{action.value}:"
-            if lowered.startswith(prefix):
-                return action, content[len(prefix) :].strip()
+        if ":" not in lowered:
+            return DelegationAction.NOOP, stripped
 
-        return DelegationAction.NOOP, content
+        label, payload = stripped.split(":", 1)
+        normalized_label = label.strip().lower()
+        cleaned_payload = payload.strip()
+
+        if normalized_label.startswith("delegate"):
+            return DelegationAction.DELEGATE, cleaned_payload
+        if normalized_label.startswith("execute"):
+            return DelegationAction.EXECUTE, cleaned_payload
+        if normalized_label.startswith("escalate"):
+            return DelegationAction.ESCALATE, cleaned_payload
+        if normalized_label.startswith("report"):
+            return DelegationAction.REPORT, cleaned_payload
+        if normalized_label.startswith("noop"):
+            return DelegationAction.NOOP, cleaned_payload
+
+        return DelegationAction.NOOP, stripped
 
     def _append_audit_event(
         self,
