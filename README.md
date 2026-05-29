@@ -1,7 +1,4 @@
-python3 - <<'PY'
-from pathlib import Path
-
-content = r"""# multi-agent-safety-sim
+# multi-agent-safety-sim
 
 **A safety-first Python research prototype for simulating alignment failure modes in multi-agent LLM systems.**
 
@@ -313,8 +310,3 @@ Known limitations:
 ## License
 
 MIT. Intended for research, education, and portfolio demonstration.
-"""
-
-Path("README.md").write_text(content, encoding="utf-8")
-print("wrote README.md")
-PY
