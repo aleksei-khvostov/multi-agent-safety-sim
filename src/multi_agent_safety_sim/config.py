@@ -31,8 +31,8 @@ class LLMRetryConfig(BaseModel):
 class LLMConfig(BaseModel):
     default_provider: Literal["openai", "anthropic", "ollama", "litellm"] = "openai"
     default_model: str = "gpt-4o-mini"
-    temperature: float = Field(0.7, ge=0.0, le=2.0)
-    max_tokens_per_call: int = Field(800, ge=64, le=8192)
+    temperature: float = Field(0.2, ge=0.0, le=2.0)
+    max_tokens_per_call: int = Field(1500, ge=64, le=8192)
     timeout_seconds: int = 45
     retry: LLMRetryConfig = Field(default_factory=LLMRetryConfig)
 

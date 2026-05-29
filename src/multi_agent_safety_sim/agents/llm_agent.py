@@ -1,7 +1,7 @@
 """
 LLM-backed agent with explicit constitution and full logging.
 
-This is where most of the alignment risk lives — handle with extreme care.
+This is the core LLM interaction layer — central to reproducibility, trace quality, and auditability.
 
 Key guarantees implemented:
 - Constitution is injected verbatim into every system prompt.
@@ -163,12 +163,12 @@ class LLMAgent(Agent):
         self.temperature = (
             temperature
             if temperature is not None
-            else (llm_config.temperature if llm_config else 0.7)
+            else (llm_config.temperature if llm_config else 0.2)
         )
         self.max_tokens = (
             max_tokens
             if max_tokens is not None
-            else (llm_config.max_tokens_per_call if llm_config else 650)
+            else (llm_config.max_tokens_per_call if llm_config else 1500)
         )
 
         self.state = AgentState(

@@ -155,8 +155,8 @@ class RealLLMClient:
         json_mode: bool = False,
     ) -> dict[str, Any]:
         model = model or self.default_model
-        temperature = temperature if temperature is not None else 0.7
-        max_tokens = max_tokens or 800
+        temperature = temperature if temperature is not None else 0.2
+        max_tokens = max_tokens or 1500
 
         if HAS_LITELLM:
             return await self._complete_with_litellm(
