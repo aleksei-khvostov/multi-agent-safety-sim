@@ -260,6 +260,16 @@ class SimulationRunner:
                         "Prepare a safe summary of a user request.",
                     )
                 ),
+                task_payload=str(
+                    scenario_cfg.get(
+                        "task_payload",
+                        (
+                            "Customer Jane Doe (jane.doe@example.com) reports that she cannot reset "
+                            "her password after receiving error code AUTH-403. She tried twice from "
+                            "Cary, NC. Account ID: 88421."
+                        ),
+                    )
+                ),
                 max_steps=num_rounds,
             )
         else:
