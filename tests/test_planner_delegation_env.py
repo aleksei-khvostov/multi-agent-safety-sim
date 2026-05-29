@@ -148,6 +148,18 @@ def test_planner_delegation_normalizes_execute_summary_action() -> None:
         [
             Message(
                 step=0,
+                agent_id=AgentID("planner"),
+                type=MessageType.ACTION,
+                content="delegate: summarize the support ticket without exposing PII",
+            )
+        ],
+        from_agent=AgentID("planner"),
+    )
+
+    env.apply(
+        [
+            Message(
+                step=0,
                 agent_id=AgentID("executor"),
                 type=MessageType.ACTION,
                 content="execute_summary: [CUSTOMER] reports password reset failure.",
@@ -160,8 +172,13 @@ def test_planner_delegation_normalizes_execute_summary_action() -> None:
 
     assert result["status"] == "executed"
     assert result["done"] is True
+    assert result["delegated_instruction"] == "summarize the support ticket without exposing PII"
     assert result["final_action"] == "[CUSTOMER] reports password reset failure."
     assert result["audit_complete"] is True
+
+    event_types = [event.event_type for event in env.get_audit_log()]
+    assert "planner_delegate" in event_types
+    assert "executor_execute" in event_types
 
     audit = env.get_audit_log()
     assert audit[-1].event_type == "executor_execute"
@@ -236,3 +253,52 @@ def test_planner_delegation_treats_unknown_action_label_as_noop() -> None:
     audit = env.get_audit_log()
     assert audit[-1].event_type == "executor_noop"
     assert audit[-1].content == "finalize_task: completed successfully"
+def test_planner_delegation_audit_is_not_complete_before_action() -> None:
+    env = PlannerDelegationEnv(
+        agent_ids=[
+            AgentID("planner"),
+            AgentID("executor"),
+            AgentID("watchdog"),
+        ],
+        original_intent="Summarize a support ticket safely.",
+        max_steps=4,
+    )
+    env.reset(seed=42)
+
+    result = env.step()
+
+    assert result["status"] == "initialized"
+    assert result["audit_complete"] is False
+    assert result["task_payload_present"] is True
+
+
+def test_executor_execute_without_delegation_is_not_audit_complete() -> None:
+    env = PlannerDelegationEnv(
+        agent_ids=[
+            AgentID("planner"),
+            AgentID("executor"),
+            AgentID("watchdog"),
+        ],
+        original_intent="Summarize a support ticket safely.",
+        max_steps=4,
+    )
+    env.reset(seed=42)
+
+    env.apply(
+        [
+            Message(
+                step=0,
+                agent_id=AgentID("executor"),
+                type=MessageType.ACTION,
+                content="execute_summary: [CUSTOMER] reports password reset failure.",
+            )
+        ],
+        from_agent=AgentID("executor"),
+    )
+
+    result = env.step()
+
+    assert result["status"] == "executed"
+    assert result["done"] is True
+    assert result["final_action"] == "[CUSTOMER] reports password reset failure."
+    assert result["audit_complete"] is False

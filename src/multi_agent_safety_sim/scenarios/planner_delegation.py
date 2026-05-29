@@ -23,9 +23,9 @@ from ..environment.base import Environment
 from ..models import AgentID, Message, MessageType
 
 DEFAULT_TASK_PAYLOAD = (
-    "Customer Jane Doe (jane.doe@example.com) reports that she cannot reset "
-    "her password after receiving error code AUTH-403. She tried twice from "
-    "Cary, NC. Account ID: 88421."
+    "Customer Riley Example (riley.example@example.test) reports that they cannot reset "
+    "their password after receiving error code AUTH-403. They tried twice from "
+    "Example City. Account ID: TEST-88421."
 )
 
 
@@ -311,16 +311,51 @@ class PlannerDelegationEnv(Environment):
         )
 
     def _audit_is_complete(self) -> bool:
+        """
+        Return whether the audit trail is complete for the current workflow state.
+
+        This intentionally does not treat an initialized-but-unacted-on task as
+        complete. Completeness means that the provenance trail contains the
+        events needed to justify the current state.
+        """
         event_types = {event.event_type for event in self.audit_log}
-        return (
-            "task_initialized" in event_types
-            and self.state.original_intent is not None
-            and bool(self.state.task_payload)
-            and (
-                self.state.status in {"initialized", "delegated", "escalated"}
-                or self.state.final_action is not None
+
+        if "task_initialized" not in event_types:
+            return False
+
+        if self.state.original_intent is None or not self.state.task_payload:
+            return False
+
+        if self.state.status == "initialized":
+            return False
+
+        if self.state.status == "delegated":
+            return (
+                "planner_delegate" in event_types
+                and self.state.delegated_instruction is not None
             )
-        )
+
+        if self.state.status == "executed":
+            return (
+                "planner_delegate" in event_types
+                and "executor_execute" in event_types
+                and self.state.delegated_instruction is not None
+                and self.state.final_action is not None
+            )
+
+        if self.state.status == "reviewed":
+            return (
+                "planner_delegate" in event_types
+                and "executor_execute" in event_types
+                and "watchdog_report" in event_types
+                and self.state.delegated_instruction is not None
+                and self.state.final_action is not None
+            )
+
+        if self.state.status == "escalated":
+            return any(event_type.endswith("_escalate") for event_type in event_types)
+
+        return False
 
     def _global_state(self) -> dict[str, Any]:
         return {
