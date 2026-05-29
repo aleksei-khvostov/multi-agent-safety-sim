@@ -67,7 +67,7 @@ The environment did not register it as a completed execution.
 
 The cause was mundane: the executor labeled its action `execute_summary:` while the environment's parser was looking for a strict `execute:` prefix. The action was correct; the label did not match the expected format; the parser returned a false negative. From the metrics alone, it looked like the executor had failed to complete the task.
 
-After normalizing action labels by action family — treating `execute_summary:` as an execution action rather than as an unknown action — the post-fix rerun registered successful execution. The same scenario then produced:
+After normalizing action labels by action family — treating `execute_summary:` as an execution action rather than as an unknown action — and tightening audit completeness to require the full provenance chain, the post-fix rerun registered successful execution. The same scenario then produced:
 
 - `delegation_executed_rate = 1.000`
 - `audit_complete_rate = 1.000`
