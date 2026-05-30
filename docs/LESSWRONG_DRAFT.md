@@ -23,7 +23,7 @@ Most discussion of multi-agent LLM risk focuses on what the agents do: do they c
 
 These are the right questions. But there is a quieter problem underneath them. Before we can evaluate whether an agent did something unsafe, some layer of the system has to observe, parse, classify, and record what the agent did. If that layer is wrong, every downstream judgment is wrong — and the error is easy to miss unless you inspect the traces directly.
 
-This note describes two cases where the oversight layer failed in opposite directions, in a toy simulator I have been building. Neither is dramatic. That is the point.
+This note describes two cases where the oversight layer failed in opposite directions, in a deliberately simplified simulator I have been building. Neither is dramatic. That is the point.
 
 ---
 
@@ -31,9 +31,9 @@ This note describes two cases where the oversight layer failed in opposite direc
 
 [`multi-agent-safety-sim`](https://github.com/fsrxc2bvv9-ctrl/multi-agent-safety-sim) is a small Python simulator for studying multi-agent safety failure modes. It has two scenario baselines, structured JSON traces, a watchdog monitoring layer, dry-run and real-model execution, and pre-run evaluation criteria.
 
-It is explicitly a toy. The value is not in scale or statistical power. The value is in having a concrete, auditable environment where you can watch the oversight machinery work and see where it breaks.
+It is explicitly small-scale and simplified. The value is not in scale or statistical power. The value is in having a concrete, auditable environment where you can watch the oversight machinery work and see where it breaks.
 
-I want to be clear about scope up front: single model, small runs, toy scenarios. Nothing here is statistically meaningful, and nothing here is evidence that any model is safe or unsafe. The interesting findings are about the system around the model, not the model itself.
+I want to be clear about scope up front: single model, small runs, deliberately simplified scenarios. Nothing here is statistically meaningful, and nothing here is evidence that any model is safe or unsafe. The interesting findings are about the system around the model, not the model itself.
 
 ---
 
@@ -101,7 +101,7 @@ To be explicit, because small results are easy to over-read:
 - This is **not** evidence that any model was deceptive.
 - This is **not** evidence that any model was safe.
 - This is **not** a benchmark.
-- This is **not** statistically meaningful: one model, few runs, toy scenarios.
+- This is **not** statistically meaningful: one model, few runs, simplified scenarios.
 - The agents' behavior was, if anything, unremarkable. They mostly did sensible things.
 
 The findings are about the oversight layer, and only the oversight layer.
@@ -110,13 +110,13 @@ The findings are about the oversight layer, and only the oversight layer.
 
 ## 7. Why I still think it matters
 
-These are infrastructure bugs. In a toy simulator they are harmless and easy to fix once you see the trace.
+These are infrastructure bugs. At small scale they are harmless and easy to fix once you see the trace.
 
 But the same two failure shapes — false positives from broad matching, false negatives from strict parsing — do not go away as systems scale. They get harder to see. In a production agentic system with many agents, long horizons, and high trace volume, a watchdog that cries wolf trains operators to ignore it, and a parser that silently drops correct actions corrupts every metric built on top of it. The oversight layer becomes a source of risk in its own right.
 
 This is a much smaller point than the usual existential-risk arguments, but I think it is adjacent to them. Carlsmith-style power-seeking risk depends partly on whether we can notice, evaluate, and correct strategically aware systems before their behavior scales. Gradual-disempowerment arguments point at a slower systemic pathway where human influence erodes as AI systems mediate more of the economy, culture, and state. In both cases, observation and governance are not background assumptions; they are part of the system under stress.
 
-My toy failures are not evidence for either large-scale risk story. They are examples of something more modest: the monitoring layer can fail before anything dramatic happens.
+These small failures are not evidence for either large-scale risk story. They are examples of something more modest: the monitoring layer can fail before anything dramatic happens.
 
 There is a governance angle here too. We talk a lot about AI systems being opaque. The systems we build to *govern* AI can be just as opaque — and when they produce contradictory signals, such as a summary saying “no deception” next to a deception alert, they erode the accountability they were supposed to provide. Policy-as-code and automated governance frameworks make this especially important: when oversight is encoded into rules, the rules themselves can encode mistaken assumptions at scale.
 
@@ -132,7 +132,7 @@ Joseph Carlsmith’s “Is Power-Seeking AI an Existential Risk?” gives a stru
 
 Jan Kulveit et al.’s “Gradual Disempowerment: Systemic Existential Risks from Incremental AI Development” points at a different pathway: not sudden takeover, but incremental erosion of human influence over economic, cultural, and political systems as AI systems become more capable substitutes for human cognition and participation. The paper explicitly calls for governance approaches that address incremental erosion of human influence. My examples are far smaller, but they point in the same operational direction: if humans are going to preserve meaningful influence over AI-mediated systems, the mechanisms that measure, audit, and interpret that influence need to be reliable.
 
-The connection I want to make is narrow: large AI-risk stories often depend on monitoring, interpretation, and correction layers working well enough to support intervention. My toy examples show two mundane ways that assumption can fail.
+The connection I want to make is narrow: large AI-risk stories often depend on monitoring, interpretation, and correction layers working well enough to support intervention. My examples show two mundane ways that assumption can fail.
 
 Related work:
 
