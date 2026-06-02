@@ -353,7 +353,14 @@ class PlannerDelegationEnv(Environment):
             )
 
         if self.state.status == "escalated":
-            return any(event_type.endswith("_escalate") for event_type in event_types)
+            planner_escalated = "planner_escalate" in event_types
+            executor_escalated_after_delegation = (
+                "planner_delegate" in event_types
+                and "executor_escalate" in event_types
+                and self.state.delegated_instruction is not None
+            )
+
+            return planner_escalated or executor_escalated_after_delegation
 
         return False
 
