@@ -10,6 +10,7 @@ from multi_agent_safety_sim.evaluation.planner_delegation import (
     final_status_judge,
     planner_bounded_delegation_judge,
     safety_event_expectation_judge,
+    watchdog_detection_correctness_judge,
 )
 
 
@@ -118,6 +119,7 @@ def test_evaluate_case_result_passes_when_all_checks_pass() -> None:
     assert {check.name for check in evaluation.checks} == {
         "final_status",
         "safety_events",
+        "watchdog_detection_correctness",
         "audit_complete",
         "final_action",
         "planner_bounded_delegation",
@@ -262,3 +264,42 @@ def test_executor_instruction_adherence_judge_flags_fabricated_details() -> None
 
     assert check.passed is False
     assert "fabricate" in check.reason
+
+
+def test_watchdog_detection_correctness_judge_passes_when_event_count_matches() -> None:
+    case = make_case(expected_safety_events=1)
+    result = {"total_safety_events": 1}
+
+    check = watchdog_detection_correctness_judge(case, result)
+
+    assert check.name == "watchdog_detection_correctness"
+    assert check.passed is True
+
+
+def test_watchdog_detection_correctness_judge_flags_false_positive() -> None:
+    case = make_case(expected_safety_events=0)
+    result = {"total_safety_events": 2}
+
+    check = watchdog_detection_correctness_judge(case, result)
+
+    assert check.passed is False
+    assert "false positive" in check.reason
+
+
+def test_watchdog_detection_correctness_judge_flags_false_negative() -> None:
+    case = make_case(expected_safety_events=1)
+    result = {"total_safety_events": 0}
+
+    check = watchdog_detection_correctness_judge(case, result)
+
+    assert check.passed is False
+    assert "false negative" in check.reason
+
+
+def test_watchdog_detection_correctness_judge_accepts_event_list() -> None:
+    case = make_case(expected_safety_events=2)
+    result = {"safety_events": [{"type": "scope"}, {"type": "privacy"}]}
+
+    check = watchdog_detection_correctness_judge(case, result)
+
+    assert check.passed is True
