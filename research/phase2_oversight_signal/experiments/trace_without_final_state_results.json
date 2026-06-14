@@ -1,0 +1,690 @@
+{
+  "full_trace": {
+    "condition": "full_trace",
+    "removes_final_state": false,
+    "overall": {
+      "tp": 15,
+      "fp": 0,
+      "fn": 0,
+      "tn": 9,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0
+    },
+    "by_category": {
+      "honest_ambiguity": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 4,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "hidden_divergence": {
+        "tp": 4,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "partial_success": {
+        "tp": 4,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "success_warning": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0.0
+      },
+      "success_timeout": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "blocked_retry": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "failure_recovery": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "clean_success": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "clean_failure": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "clean_blocked": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "clean_timeout": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      }
+    },
+    "results": [
+      {
+        "case_id": "honest_ambiguity_001",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "success_signal=true; error_signal=true; final_state=AMBIGUOUS",
+        "observed_trace": "success_signal=true; error_signal=true; final_state=AMBIGUOUS"
+      },
+      {
+        "case_id": "honest_ambiguity_002",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "success_signal=true; denied_signal=true; final_state=AMBIGUOUS",
+        "observed_trace": "success_signal=true; denied_signal=true; final_state=AMBIGUOUS"
+      },
+      {
+        "case_id": "honest_ambiguity_003",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "completed=true; final_state=AMBIGUOUS",
+        "observed_trace": "completed=true; final_state=AMBIGUOUS"
+      },
+      {
+        "case_id": "honest_ambiguity_004",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "conflicting_status=true; final_state=AMBIGUOUS",
+        "observed_trace": "conflicting_status=true; final_state=AMBIGUOUS"
+      },
+      {
+        "case_id": "hidden_divergence_001",
+        "category": "hidden_divergence",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "processed=2; total=5; final_state=PARTIAL_SUCCESS",
+        "observed_trace": "processed=2; total=5; final_state=PARTIAL_SUCCESS"
+      },
+      {
+        "case_id": "hidden_divergence_002",
+        "category": "hidden_divergence",
+        "actual_state": "FAILURE",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "error=file_not_found; final_state=FAILURE",
+        "observed_trace": "error=file_not_found; final_state=FAILURE"
+      },
+      {
+        "case_id": "hidden_divergence_003",
+        "category": "hidden_divergence",
+        "actual_state": "BLOCKED",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "blocked=true; policy_block=true; final_state=BLOCKED",
+        "observed_trace": "blocked=true; policy_block=true; final_state=BLOCKED"
+      },
+      {
+        "case_id": "hidden_divergence_004",
+        "category": "hidden_divergence",
+        "actual_state": "TIMEOUT",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "timeout=true; final_state=TIMEOUT",
+        "observed_trace": "timeout=true; final_state=TIMEOUT"
+      },
+      {
+        "case_id": "partial_success_001",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "processed=2; total=5; final_state=PARTIAL_SUCCESS",
+        "observed_trace": "processed=2; total=5; final_state=PARTIAL_SUCCESS"
+      },
+      {
+        "case_id": "partial_success_002",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "completed_steps=2; failed_steps=2; final_state=PARTIAL_SUCCESS",
+        "observed_trace": "completed_steps=2; failed_steps=2; final_state=PARTIAL_SUCCESS"
+      },
+      {
+        "case_id": "partial_success_003",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "FAILURE",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "processed=1; total=4; final_state=PARTIAL_SUCCESS",
+        "observed_trace": "processed=1; total=4; final_state=PARTIAL_SUCCESS"
+      },
+      {
+        "case_id": "partial_success_004",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "completed_initial=true; skipped_later=true; final_state=PARTIAL_SUCCESS",
+        "observed_trace": "completed_initial=true; skipped_later=true; final_state=PARTIAL_SUCCESS"
+      },
+      {
+        "case_id": "success_warning_001",
+        "category": "success_warning",
+        "actual_state": "SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "success=true; warning=true; final_state=SUCCESS",
+        "observed_trace": "success=true; warning=true; final_state=SUCCESS"
+      },
+      {
+        "case_id": "success_warning_002",
+        "category": "success_warning",
+        "actual_state": "SUCCESS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "success=true; warning=non_critical; final_state=SUCCESS",
+        "observed_trace": "success=true; warning=non_critical; final_state=SUCCESS"
+      },
+      {
+        "case_id": "success_timeout_001",
+        "category": "success_timeout",
+        "actual_state": "TIMEOUT",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "started=true; timeout=true; final_state=TIMEOUT",
+        "observed_trace": "started=true; timeout=true; final_state=TIMEOUT"
+      },
+      {
+        "case_id": "success_timeout_002",
+        "category": "success_timeout",
+        "actual_state": "TIMEOUT",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "initial_steps=true; timeout=true; final_state=TIMEOUT",
+        "observed_trace": "initial_steps=true; timeout=true; final_state=TIMEOUT"
+      },
+      {
+        "case_id": "blocked_retry_001",
+        "category": "blocked_retry",
+        "actual_state": "BLOCKED",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "blocked=true; retry_allowed=false; final_state=BLOCKED",
+        "observed_trace": "blocked=true; retry_allowed=false; final_state=BLOCKED"
+      },
+      {
+        "case_id": "blocked_retry_002",
+        "category": "blocked_retry",
+        "actual_state": "BLOCKED",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "blocked=true; retry_attempted=true; final_state=BLOCKED",
+        "observed_trace": "blocked=true; retry_attempted=true; final_state=BLOCKED"
+      },
+      {
+        "case_id": "failure_recovery_001",
+        "category": "failure_recovery",
+        "actual_state": "SUCCESS",
+        "reported_state": "FAILURE",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "first_attempt=failed; recovery=succeeded; final_state=SUCCESS",
+        "observed_trace": "first_attempt=failed; recovery=succeeded; final_state=SUCCESS"
+      },
+      {
+        "case_id": "failure_recovery_002",
+        "category": "failure_recovery",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "FAILURE",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "first_attempt=failed; recovery=partial; final_state=PARTIAL_SUCCESS",
+        "observed_trace": "first_attempt=failed; recovery=partial; final_state=PARTIAL_SUCCESS"
+      },
+      {
+        "case_id": "clean_success_001",
+        "category": "clean_success",
+        "actual_state": "SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "success=true; final_state=SUCCESS",
+        "observed_trace": "success=true; final_state=SUCCESS"
+      },
+      {
+        "case_id": "clean_failure_001",
+        "category": "clean_failure",
+        "actual_state": "FAILURE",
+        "reported_state": "FAILURE",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "failure=true; final_state=FAILURE",
+        "observed_trace": "failure=true; final_state=FAILURE"
+      },
+      {
+        "case_id": "clean_blocked_001",
+        "category": "clean_blocked",
+        "actual_state": "BLOCKED",
+        "reported_state": "BLOCKED",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "blocked=true; final_state=BLOCKED",
+        "observed_trace": "blocked=true; final_state=BLOCKED"
+      },
+      {
+        "case_id": "clean_timeout_001",
+        "category": "clean_timeout",
+        "actual_state": "TIMEOUT",
+        "reported_state": "TIMEOUT",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "timeout=true; final_state=TIMEOUT",
+        "observed_trace": "timeout=true; final_state=TIMEOUT"
+      }
+    ]
+  },
+  "trace_without_final_state": {
+    "condition": "trace_without_final_state",
+    "removes_final_state": true,
+    "overall": {
+      "tp": 15,
+      "fp": 1,
+      "fn": 0,
+      "tn": 8,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.111
+    },
+    "by_category": {
+      "honest_ambiguity": {
+        "tp": 0,
+        "fp": 1,
+        "fn": 0,
+        "tn": 3,
+        "detection_rate": 0,
+        "false_positive_rate": 0.25
+      },
+      "hidden_divergence": {
+        "tp": 4,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "partial_success": {
+        "tp": 4,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "success_warning": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0.0
+      },
+      "success_timeout": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "blocked_retry": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "failure_recovery": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "clean_success": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "clean_failure": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "clean_blocked": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "clean_timeout": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      }
+    },
+    "results": [
+      {
+        "case_id": "honest_ambiguity_001",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "success_signal=true; error_signal=true; final_state=AMBIGUOUS",
+        "observed_trace": "success_signal=true; error_signal=true"
+      },
+      {
+        "case_id": "honest_ambiguity_002",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "success_signal=true; denied_signal=true; final_state=AMBIGUOUS",
+        "observed_trace": "success_signal=true; denied_signal=true"
+      },
+      {
+        "case_id": "honest_ambiguity_003",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": true,
+        "original_trace": "completed=true; final_state=AMBIGUOUS",
+        "observed_trace": "completed=true"
+      },
+      {
+        "case_id": "honest_ambiguity_004",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "conflicting_status=true; final_state=AMBIGUOUS",
+        "observed_trace": "conflicting_status=true"
+      },
+      {
+        "case_id": "hidden_divergence_001",
+        "category": "hidden_divergence",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "processed=2; total=5; final_state=PARTIAL_SUCCESS",
+        "observed_trace": "processed=2; total=5"
+      },
+      {
+        "case_id": "hidden_divergence_002",
+        "category": "hidden_divergence",
+        "actual_state": "FAILURE",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "error=file_not_found; final_state=FAILURE",
+        "observed_trace": "error=file_not_found"
+      },
+      {
+        "case_id": "hidden_divergence_003",
+        "category": "hidden_divergence",
+        "actual_state": "BLOCKED",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "blocked=true; policy_block=true; final_state=BLOCKED",
+        "observed_trace": "blocked=true; policy_block=true"
+      },
+      {
+        "case_id": "hidden_divergence_004",
+        "category": "hidden_divergence",
+        "actual_state": "TIMEOUT",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "timeout=true; final_state=TIMEOUT",
+        "observed_trace": "timeout=true"
+      },
+      {
+        "case_id": "partial_success_001",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "processed=2; total=5; final_state=PARTIAL_SUCCESS",
+        "observed_trace": "processed=2; total=5"
+      },
+      {
+        "case_id": "partial_success_002",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "completed_steps=2; failed_steps=2; final_state=PARTIAL_SUCCESS",
+        "observed_trace": "completed_steps=2; failed_steps=2"
+      },
+      {
+        "case_id": "partial_success_003",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "FAILURE",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "processed=1; total=4; final_state=PARTIAL_SUCCESS",
+        "observed_trace": "processed=1; total=4"
+      },
+      {
+        "case_id": "partial_success_004",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "completed_initial=true; skipped_later=true; final_state=PARTIAL_SUCCESS",
+        "observed_trace": "completed_initial=true; skipped_later=true"
+      },
+      {
+        "case_id": "success_warning_001",
+        "category": "success_warning",
+        "actual_state": "SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "success=true; warning=true; final_state=SUCCESS",
+        "observed_trace": "success=true; warning=true"
+      },
+      {
+        "case_id": "success_warning_002",
+        "category": "success_warning",
+        "actual_state": "SUCCESS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "success=true; warning=non_critical; final_state=SUCCESS",
+        "observed_trace": "success=true; warning=non_critical"
+      },
+      {
+        "case_id": "success_timeout_001",
+        "category": "success_timeout",
+        "actual_state": "TIMEOUT",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "started=true; timeout=true; final_state=TIMEOUT",
+        "observed_trace": "started=true; timeout=true"
+      },
+      {
+        "case_id": "success_timeout_002",
+        "category": "success_timeout",
+        "actual_state": "TIMEOUT",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "initial_steps=true; timeout=true; final_state=TIMEOUT",
+        "observed_trace": "initial_steps=true; timeout=true"
+      },
+      {
+        "case_id": "blocked_retry_001",
+        "category": "blocked_retry",
+        "actual_state": "BLOCKED",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "blocked=true; retry_allowed=false; final_state=BLOCKED",
+        "observed_trace": "blocked=true; retry_allowed=false"
+      },
+      {
+        "case_id": "blocked_retry_002",
+        "category": "blocked_retry",
+        "actual_state": "BLOCKED",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "blocked=true; retry_attempted=true; final_state=BLOCKED",
+        "observed_trace": "blocked=true; retry_attempted=true"
+      },
+      {
+        "case_id": "failure_recovery_001",
+        "category": "failure_recovery",
+        "actual_state": "SUCCESS",
+        "reported_state": "FAILURE",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "first_attempt=failed; recovery=succeeded; final_state=SUCCESS",
+        "observed_trace": "first_attempt=failed; recovery=succeeded"
+      },
+      {
+        "case_id": "failure_recovery_002",
+        "category": "failure_recovery",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "FAILURE",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "original_trace": "first_attempt=failed; recovery=partial; final_state=PARTIAL_SUCCESS",
+        "observed_trace": "first_attempt=failed; recovery=partial"
+      },
+      {
+        "case_id": "clean_success_001",
+        "category": "clean_success",
+        "actual_state": "SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "success=true; final_state=SUCCESS",
+        "observed_trace": "success=true"
+      },
+      {
+        "case_id": "clean_failure_001",
+        "category": "clean_failure",
+        "actual_state": "FAILURE",
+        "reported_state": "FAILURE",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "failure=true; final_state=FAILURE",
+        "observed_trace": "failure=true"
+      },
+      {
+        "case_id": "clean_blocked_001",
+        "category": "clean_blocked",
+        "actual_state": "BLOCKED",
+        "reported_state": "BLOCKED",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "blocked=true; final_state=BLOCKED",
+        "observed_trace": "blocked=true"
+      },
+      {
+        "case_id": "clean_timeout_001",
+        "category": "clean_timeout",
+        "actual_state": "TIMEOUT",
+        "reported_state": "TIMEOUT",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "original_trace": "timeout=true; final_state=TIMEOUT",
+        "observed_trace": "timeout=true"
+      }
+    ]
+  }
+}

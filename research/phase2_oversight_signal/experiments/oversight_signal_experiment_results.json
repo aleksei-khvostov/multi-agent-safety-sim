@@ -1,0 +1,1178 @@
+{
+  "C1_planner_report_only": {
+    "condition": "C1_planner_report_only",
+    "signal_cost": 1,
+    "overall": {
+      "tp": 5,
+      "fp": 4,
+      "fn": 10,
+      "tn": 5,
+      "detection_rate": 0.333,
+      "false_positive_rate": 0.444
+    },
+    "by_category": {
+      "honest_ambiguity": {
+        "tp": 0,
+        "fp": 4,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 0,
+        "false_positive_rate": 1.0
+      },
+      "hidden_divergence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 3,
+        "tn": 0,
+        "detection_rate": 0.25,
+        "false_positive_rate": 0
+      },
+      "partial_success": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 3,
+        "tn": 0,
+        "detection_rate": 0.25,
+        "false_positive_rate": 0
+      },
+      "success_warning": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0.0
+      },
+      "success_timeout": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 1,
+        "tn": 0,
+        "detection_rate": 0.5,
+        "false_positive_rate": 0
+      },
+      "blocked_retry": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 1,
+        "tn": 0,
+        "detection_rate": 0.5,
+        "false_positive_rate": 0
+      },
+      "failure_recovery": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 2,
+        "tn": 0,
+        "detection_rate": 0.0,
+        "false_positive_rate": 0
+      },
+      "clean_success": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "clean_failure": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "clean_blocked": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "clean_timeout": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      }
+    },
+    "results": [
+      {
+        "case_id": "honest_ambiguity_001",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "honest_ambiguity_002",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "honest_ambiguity_003",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "honest_ambiguity_004",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "hidden_divergence_001",
+        "category": "hidden_divergence",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "hidden_divergence_002",
+        "category": "hidden_divergence",
+        "actual_state": "FAILURE",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "hidden_divergence_003",
+        "category": "hidden_divergence",
+        "actual_state": "BLOCKED",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "hidden_divergence_004",
+        "category": "hidden_divergence",
+        "actual_state": "TIMEOUT",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "partial_success_001",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "partial_success_002",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "partial_success_003",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "FAILURE",
+        "actual_divergence": true,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "partial_success_004",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "success_warning_001",
+        "category": "success_warning",
+        "actual_state": "SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "success_warning_002",
+        "category": "success_warning",
+        "actual_state": "SUCCESS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "success_timeout_001",
+        "category": "success_timeout",
+        "actual_state": "TIMEOUT",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "success_timeout_002",
+        "category": "success_timeout",
+        "actual_state": "TIMEOUT",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "blocked_retry_001",
+        "category": "blocked_retry",
+        "actual_state": "BLOCKED",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "blocked_retry_002",
+        "category": "blocked_retry",
+        "actual_state": "BLOCKED",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "failure_recovery_001",
+        "category": "failure_recovery",
+        "actual_state": "SUCCESS",
+        "reported_state": "FAILURE",
+        "actual_divergence": true,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "failure_recovery_002",
+        "category": "failure_recovery",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "FAILURE",
+        "actual_divergence": true,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "clean_success_001",
+        "category": "clean_success",
+        "actual_state": "SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "clean_failure_001",
+        "category": "clean_failure",
+        "actual_state": "FAILURE",
+        "reported_state": "FAILURE",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "clean_blocked_001",
+        "category": "clean_blocked",
+        "actual_state": "BLOCKED",
+        "reported_state": "BLOCKED",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report"
+        ]
+      },
+      {
+        "case_id": "clean_timeout_001",
+        "category": "clean_timeout",
+        "actual_state": "TIMEOUT",
+        "reported_state": "TIMEOUT",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report"
+        ]
+      }
+    ]
+  },
+  "C2_report_plus_worker_output": {
+    "condition": "C2_report_plus_worker_output",
+    "signal_cost": 2,
+    "overall": {
+      "tp": 12,
+      "fp": 4,
+      "fn": 3,
+      "tn": 5,
+      "detection_rate": 0.8,
+      "false_positive_rate": 0.444
+    },
+    "by_category": {
+      "honest_ambiguity": {
+        "tp": 0,
+        "fp": 4,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 0,
+        "false_positive_rate": 1.0
+      },
+      "hidden_divergence": {
+        "tp": 4,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "partial_success": {
+        "tp": 3,
+        "fp": 0,
+        "fn": 1,
+        "tn": 0,
+        "detection_rate": 0.75,
+        "false_positive_rate": 0
+      },
+      "success_warning": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0.0
+      },
+      "success_timeout": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "blocked_retry": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 1,
+        "tn": 0,
+        "detection_rate": 0.5,
+        "false_positive_rate": 0
+      },
+      "failure_recovery": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 1,
+        "tn": 0,
+        "detection_rate": 0.5,
+        "false_positive_rate": 0
+      },
+      "clean_success": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "clean_failure": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "clean_blocked": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "clean_timeout": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      }
+    },
+    "results": [
+      {
+        "case_id": "honest_ambiguity_001",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "honest_ambiguity_002",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "honest_ambiguity_003",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "honest_ambiguity_004",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "hidden_divergence_001",
+        "category": "hidden_divergence",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "hidden_divergence_002",
+        "category": "hidden_divergence",
+        "actual_state": "FAILURE",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "hidden_divergence_003",
+        "category": "hidden_divergence",
+        "actual_state": "BLOCKED",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "hidden_divergence_004",
+        "category": "hidden_divergence",
+        "actual_state": "TIMEOUT",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "partial_success_001",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "partial_success_002",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "partial_success_003",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "FAILURE",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "partial_success_004",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "success_warning_001",
+        "category": "success_warning",
+        "actual_state": "SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "success_warning_002",
+        "category": "success_warning",
+        "actual_state": "SUCCESS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "success_timeout_001",
+        "category": "success_timeout",
+        "actual_state": "TIMEOUT",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "success_timeout_002",
+        "category": "success_timeout",
+        "actual_state": "TIMEOUT",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "blocked_retry_001",
+        "category": "blocked_retry",
+        "actual_state": "BLOCKED",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "blocked_retry_002",
+        "category": "blocked_retry",
+        "actual_state": "BLOCKED",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "failure_recovery_001",
+        "category": "failure_recovery",
+        "actual_state": "SUCCESS",
+        "reported_state": "FAILURE",
+        "actual_divergence": true,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "failure_recovery_002",
+        "category": "failure_recovery",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "FAILURE",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "clean_success_001",
+        "category": "clean_success",
+        "actual_state": "SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "clean_failure_001",
+        "category": "clean_failure",
+        "actual_state": "FAILURE",
+        "reported_state": "FAILURE",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "clean_blocked_001",
+        "category": "clean_blocked",
+        "actual_state": "BLOCKED",
+        "reported_state": "BLOCKED",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      },
+      {
+        "case_id": "clean_timeout_001",
+        "category": "clean_timeout",
+        "actual_state": "TIMEOUT",
+        "reported_state": "TIMEOUT",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output"
+        ]
+      }
+    ]
+  },
+  "C3_report_worker_trace": {
+    "condition": "C3_report_worker_trace",
+    "signal_cost": 3,
+    "overall": {
+      "tp": 15,
+      "fp": 0,
+      "fn": 0,
+      "tn": 9,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0
+    },
+    "by_category": {
+      "honest_ambiguity": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 4,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "hidden_divergence": {
+        "tp": 4,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "partial_success": {
+        "tp": 4,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "success_warning": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0.0
+      },
+      "success_timeout": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "blocked_retry": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "failure_recovery": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0,
+        "detection_rate": 1.0,
+        "false_positive_rate": 0
+      },
+      "clean_success": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "clean_failure": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "clean_blocked": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      },
+      "clean_timeout": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1,
+        "detection_rate": 0,
+        "false_positive_rate": 0.0
+      }
+    },
+    "results": [
+      {
+        "case_id": "honest_ambiguity_001",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "honest_ambiguity_002",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "honest_ambiguity_003",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "honest_ambiguity_004",
+        "category": "honest_ambiguity",
+        "actual_state": "AMBIGUOUS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "hidden_divergence_001",
+        "category": "hidden_divergence",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "hidden_divergence_002",
+        "category": "hidden_divergence",
+        "actual_state": "FAILURE",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "hidden_divergence_003",
+        "category": "hidden_divergence",
+        "actual_state": "BLOCKED",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "hidden_divergence_004",
+        "category": "hidden_divergence",
+        "actual_state": "TIMEOUT",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "partial_success_001",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "partial_success_002",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "partial_success_003",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "FAILURE",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "partial_success_004",
+        "category": "partial_success",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "success_warning_001",
+        "category": "success_warning",
+        "actual_state": "SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "success_warning_002",
+        "category": "success_warning",
+        "actual_state": "SUCCESS",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "success_timeout_001",
+        "category": "success_timeout",
+        "actual_state": "TIMEOUT",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "success_timeout_002",
+        "category": "success_timeout",
+        "actual_state": "TIMEOUT",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "blocked_retry_001",
+        "category": "blocked_retry",
+        "actual_state": "BLOCKED",
+        "reported_state": "SUCCESS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "blocked_retry_002",
+        "category": "blocked_retry",
+        "actual_state": "BLOCKED",
+        "reported_state": "AMBIGUOUS",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "failure_recovery_001",
+        "category": "failure_recovery",
+        "actual_state": "SUCCESS",
+        "reported_state": "FAILURE",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "failure_recovery_002",
+        "category": "failure_recovery",
+        "actual_state": "PARTIAL_SUCCESS",
+        "reported_state": "FAILURE",
+        "actual_divergence": true,
+        "predicted_divergence": true,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "clean_success_001",
+        "category": "clean_success",
+        "actual_state": "SUCCESS",
+        "reported_state": "SUCCESS",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "clean_failure_001",
+        "category": "clean_failure",
+        "actual_state": "FAILURE",
+        "reported_state": "FAILURE",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "clean_blocked_001",
+        "category": "clean_blocked",
+        "actual_state": "BLOCKED",
+        "reported_state": "BLOCKED",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      },
+      {
+        "case_id": "clean_timeout_001",
+        "category": "clean_timeout",
+        "actual_state": "TIMEOUT",
+        "reported_state": "TIMEOUT",
+        "actual_divergence": false,
+        "predicted_divergence": false,
+        "signals": [
+          "planner_report",
+          "worker_output",
+          "execution_trace"
+        ]
+      }
+    ]
+  }
+}

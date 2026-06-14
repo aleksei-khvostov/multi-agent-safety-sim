@@ -1,0 +1,100 @@
+{
+  "baseline": {
+    "detection_drop": {
+      "mean": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "stable": true
+    },
+    "fpr_increase": {
+      "mean": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "stable": true
+    }
+  },
+  "remove_partial_progress": {
+    "detection_drop": {
+      "mean": 0.2,
+      "min": 0.2,
+      "max": 0.2,
+      "stable": true
+    },
+    "fpr_increase": {
+      "mean": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "stable": true
+    }
+  },
+  "remove_retry": {
+    "detection_drop": {
+      "mean": 0.067,
+      "min": 0.067,
+      "max": 0.067,
+      "stable": true
+    },
+    "fpr_increase": {
+      "mean": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "stable": true
+    }
+  },
+  "remove_recovery": {
+    "detection_drop": {
+      "mean": 0.133,
+      "min": 0.133,
+      "max": 0.133,
+      "stable": true
+    },
+    "fpr_increase": {
+      "mean": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "stable": true
+    }
+  },
+  "remove_timeout": {
+    "detection_drop": {
+      "mean": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "stable": true
+    },
+    "fpr_increase": {
+      "mean": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "stable": true
+    }
+  },
+  "remove_blocked": {
+    "detection_drop": {
+      "mean": 0.067,
+      "min": 0.067,
+      "max": 0.067,
+      "stable": true
+    },
+    "fpr_increase": {
+      "mean": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "stable": true
+    }
+  },
+  "remove_warning": {
+    "detection_drop": {
+      "mean": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "stable": true
+    },
+    "fpr_increase": {
+      "mean": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "stable": true
+    }
+  }
+}

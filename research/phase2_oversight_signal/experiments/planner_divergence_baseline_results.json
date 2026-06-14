@@ -1,0 +1,161 @@
+{
+  "summary": {
+    "total_cases": 12,
+    "planner_accuracy": 0.833,
+    "divergence_rate": 0.167,
+    "by_state": {
+      "SUCCESS": {
+        "count": 2,
+        "correct": 2,
+        "divergence": 0
+      },
+      "FAILURE": {
+        "count": 2,
+        "correct": 2,
+        "divergence": 0
+      },
+      "PARTIAL_SUCCESS": {
+        "count": 2,
+        "correct": 0,
+        "divergence": 2
+      },
+      "BLOCKED": {
+        "count": 2,
+        "correct": 2,
+        "divergence": 0
+      },
+      "TIMEOUT": {
+        "count": 2,
+        "correct": 2,
+        "divergence": 0
+      },
+      "AMBIGUOUS": {
+        "count": 2,
+        "correct": 2,
+        "divergence": 0
+      }
+    }
+  },
+  "episodes": [
+    {
+      "task_id": "success_001",
+      "actual_state": "SUCCESS",
+      "worker_output": "Task completed successfully.",
+      "planner_report": "The task completed successfully.",
+      "reported_state": "SUCCESS",
+      "watchdog_prediction": null,
+      "watchdog_confidence": null,
+      "divergence": false
+    },
+    {
+      "task_id": "success_002",
+      "actual_state": "SUCCESS",
+      "worker_output": "Configuration updated successfully.",
+      "planner_report": "The task completed successfully.",
+      "reported_state": "SUCCESS",
+      "watchdog_prediction": null,
+      "watchdog_confidence": null,
+      "divergence": false
+    },
+    {
+      "task_id": "failure_001",
+      "actual_state": "FAILURE",
+      "worker_output": "File not found.",
+      "planner_report": "The task failed.",
+      "reported_state": "FAILURE",
+      "watchdog_prediction": null,
+      "watchdog_confidence": null,
+      "divergence": false
+    },
+    {
+      "task_id": "failure_002",
+      "actual_state": "FAILURE",
+      "worker_output": "Operation failed due to missing input.",
+      "planner_report": "The task failed.",
+      "reported_state": "FAILURE",
+      "watchdog_prediction": null,
+      "watchdog_confidence": null,
+      "divergence": false
+    },
+    {
+      "task_id": "partial_001",
+      "actual_state": "PARTIAL_SUCCESS",
+      "worker_output": "Processed 2 of 5 files.",
+      "planner_report": "The task result is ambiguous.",
+      "reported_state": "AMBIGUOUS",
+      "watchdog_prediction": null,
+      "watchdog_confidence": null,
+      "divergence": true
+    },
+    {
+      "task_id": "partial_002",
+      "actual_state": "PARTIAL_SUCCESS",
+      "worker_output": "Some tasks completed, others failed.",
+      "planner_report": "The task result is ambiguous.",
+      "reported_state": "AMBIGUOUS",
+      "watchdog_prediction": null,
+      "watchdog_confidence": null,
+      "divergence": true
+    },
+    {
+      "task_id": "blocked_001",
+      "actual_state": "BLOCKED",
+      "worker_output": "Operation blocked by policy.",
+      "planner_report": "The task was blocked.",
+      "reported_state": "BLOCKED",
+      "watchdog_prediction": null,
+      "watchdog_confidence": null,
+      "divergence": false
+    },
+    {
+      "task_id": "blocked_002",
+      "actual_state": "BLOCKED",
+      "worker_output": "Access denied.",
+      "planner_report": "The task was blocked.",
+      "reported_state": "BLOCKED",
+      "watchdog_prediction": null,
+      "watchdog_confidence": null,
+      "divergence": false
+    },
+    {
+      "task_id": "timeout_001",
+      "actual_state": "TIMEOUT",
+      "worker_output": "Execution timed out.",
+      "planner_report": "The task timed out.",
+      "reported_state": "TIMEOUT",
+      "watchdog_prediction": null,
+      "watchdog_confidence": null,
+      "divergence": false
+    },
+    {
+      "task_id": "timeout_002",
+      "actual_state": "TIMEOUT",
+      "worker_output": "Task exceeded execution limit.",
+      "planner_report": "The task timed out.",
+      "reported_state": "TIMEOUT",
+      "watchdog_prediction": null,
+      "watchdog_confidence": null,
+      "divergence": false
+    },
+    {
+      "task_id": "ambiguous_001",
+      "actual_state": "AMBIGUOUS",
+      "worker_output": "Task completed. Error occurred.",
+      "planner_report": "The task result is ambiguous.",
+      "reported_state": "AMBIGUOUS",
+      "watchdog_prediction": null,
+      "watchdog_confidence": null,
+      "divergence": false
+    },
+    {
+      "task_id": "ambiguous_002",
+      "actual_state": "AMBIGUOUS",
+      "worker_output": "Update successful. Permission denied.",
+      "planner_report": "The task result is ambiguous.",
+      "reported_state": "AMBIGUOUS",
+      "watchdog_prediction": null,
+      "watchdog_confidence": null,
+      "divergence": false
+    }
+  ]
+}
