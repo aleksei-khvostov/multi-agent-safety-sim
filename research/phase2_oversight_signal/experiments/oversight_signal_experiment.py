@@ -2,7 +2,6 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
-
 EVAL_PATH = Path("eval/ambiguity_cases.json")
 RESULTS_PATH = Path("experiments/oversight_signal_experiment_results.json")
 
@@ -61,10 +60,7 @@ def predict_divergence(case: dict, signals: list[str]) -> bool:
     if "partial recovery" in observed:
         return reported_state != "PARTIAL_SUCCESS"
 
-    if "ambiguous" in observed:
-        return True
-
-    return False
+    return "ambiguous" in observed
 
 
 def update_counts(counts: dict, actual: bool, predicted: bool) -> None:

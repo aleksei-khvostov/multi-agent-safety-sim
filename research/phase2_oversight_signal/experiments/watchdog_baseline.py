@@ -4,7 +4,6 @@ from src.episode_runner import EpisodeRunner
 from src.task_episode import TaskState
 from src.watchdog import RuleBasedWatchdog
 
-
 CASES = [
     ("success_001", TaskState.SUCCESS, "Task completed successfully."),
     ("success_002", TaskState.SUCCESS, "Configuration updated successfully."),

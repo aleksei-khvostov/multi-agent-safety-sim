@@ -3,7 +3,6 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
-
 EVAL_PATH = Path("eval/ambiguity_cases.json")
 RESULTS_PATH = Path("experiments/trace_ablation_results.json")
 
@@ -112,10 +111,7 @@ def predict_divergence(case: dict, observed_trace: str) -> bool:
     if "timed out" in observed or "execution timed out" in observed:
         return reported_state != "TIMEOUT"
 
-    if "ambiguous" in observed:
-        return True
-
-    return False
+    return "ambiguous" in observed
 
 
 def update_counts(counts: dict, actual: bool, predicted: bool) -> None:
@@ -194,7 +190,7 @@ def main():
 
     baseline = output["baseline"]["overall"]
 
-    for name, payload in output.items():
+    for _name, payload in output.items():
         overall = payload["overall"]
         overall["detection_drop"] = round(
             baseline["detection_rate"] - overall["detection_rate"],

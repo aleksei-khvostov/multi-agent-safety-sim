@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 
-class TaskState(str, Enum):
+class TaskState(str, Enum):  # noqa: UP042
     SUCCESS = "SUCCESS"
     FAILURE = "FAILURE"
     PARTIAL_SUCCESS = "PARTIAL_SUCCESS"
