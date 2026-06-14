@@ -6,11 +6,52 @@
 
 The project is intentionally conservative: it defaults to a `DummyLLMClient`, records auditable traces, and enforces safety caps through a central runner.
 
+## Latest Status (v0.2.0)
+
+Current version: **v0.2.0**
+
+Recent milestone:
+
+- Phase 2 Oversight Signal Study completed
+- Research study integrated under `research/phase2_oversight_signal`
+- 60 tests passing
+- GitHub Actions passing
+- Phase 3 Integration Plan published
+
+The project now combines two research tracks:
+
+1. Multi-agent workflow simulation
+2. State-Report Divergence and observability research
+
+Current development focus:
+
+```text
+Planner
+↓
+Worker
+↓
+Watchdog
+↓
+State-Report Divergence Measurement
+↓
+Multi-Agent Safety Simulation
+```
+
+The next milestone is integrating the observability findings from the Phase 2 research study into the packaged simulator architecture.
+
 ## Why this project exists
 
 Multi-agent LLM systems are increasingly used for planning, delegation, research, negotiation, and automated workflows. Those systems can fail in ways that are hard to observe from a single-agent prompt-response view.
 
 This project explores those failure modes as measurable simulations rather than vague anecdotes.
+
+A recent research line investigates observability failures in agentic systems.
+
+Specifically, the project studies State-Report Divergence:
+
+> A mismatch between what actually happened in a system and what an agent or oversight layer reports happened.
+
+This work produced the Phase 2 Oversight Signal Study, whose findings are now being integrated into the simulator architecture.
 
 Current focus:
 
@@ -34,14 +75,53 @@ This project is accompanied by short research notes and governance artifacts tha
 - [Planner Delegation Evaluation Criteria](docs/PLANNER_DELEGATION_EVALUATION_CRITERIA.md) — defines pre-run success and failure criteria for delegated workflow traces.
 - [Planner Delegation Baseline](docs/PLANNER_DELEGATION_BASELINE.md) — records the working `planner_delegation` baseline, task-payload fix, action-label parser fix, dry-run baseline, and successful post-parser-fix real-model rerun.
 
+### Oversight Signal Research
+
+The repository now includes a completed observability research study under:
+
+```text
+research/phase2_oversight_signal/
+```
+
+Research focus:
+
+```text
+Worker
+↓
+Planner Reports
+↓
+Watchdog Oversight
+↓
+State-Report Divergence
+```
+
+Key findings:
+
+- Execution traces reduce honest-ambiguity false positives.
+- Most oversight value survives removal of explicit final-state markers.
+- Partial-progress signals provide the largest share of behavioral oversight value.
+
+Core research artifacts:
+
+- `docs/PHASE2_RESEARCH_SUMMARY.md`
+- `docs/FINDINGS.md`
+- `docs/OVERSIGHT_SIGNAL_EXPERIMENT.md`
+- `docs/TRACE_ABLATION_EXPERIMENT.md`
+- `docs/TRACE_WITHOUT_FINAL_STATE_EXPERIMENT.md`
+
 ## Status
 
-Research prototype / alpha. The framework is useful for experimentation and portfolio demonstration, but it is not a formal alignment benchmark or production safety system.
+Research prototype / alpha. 
 
-Current working scenario baselines:
+Current status:
 
-1. `prisoners_dilemma` — coordination-risk baseline with public/private communication, formal actions, watchdog monitoring, probes, JSON traces, a real-model false-positive finding, and a clean post-fix real-model rerun.
-2. `planner_delegation` — delegated workflow baseline with planner, executor, watchdog, task payload, audit trace, scenario-aware workflow metrics, pre-run evaluation criteria, and a successful post-parser-fix real-model rerun.
+✅ Planner Delegation baseline complete
+
+✅ Oversight Signal Study complete
+
+✅ v0.2.0 published
+
+🔄 Phase 3 integration in progress
 
 ## Current scenario baselines
 
@@ -310,3 +390,33 @@ Known limitations:
 ## License
 
 MIT. Intended for research, education, and portfolio demonstration.
+
+## Current Roadmap
+
+### Phase 2 (Completed)
+
+Oversight Signal Study
+
+Major findings:
+
+- Finding 005 — execution traces resolve honest ambiguity
+- Finding 006 — most trace value survives removal of final-state labels
+- Finding 007 — partial-progress dominates behavioral oversight value
+
+### Phase 3 (Current)
+
+Integration of observability findings into the packaged simulator.
+
+Milestone 1:
+
+- Environment-owned ground truth
+- Explicit observability levels
+- Deterministic Planner → Worker → Watchdog workflow
+- Reproduction of Findings 005–006 inside package architecture
+
+### Future Directions
+
+- Delegation-chain scenarios
+- LLM planners
+- Stochastic evaluation
+- Repeated-trial infrastructure
