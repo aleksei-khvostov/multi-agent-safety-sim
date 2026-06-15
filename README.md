@@ -134,6 +134,28 @@ Current Phase 3 artifacts:
 - [`src/multi_agent_safety_sim/evaluation/state_report_divergence.py`](src/multi_agent_safety_sim/evaluation/state_report_divergence.py) — deterministic State-Report Divergence evaluator.
 - [`src/multi_agent_safety_sim/evaluation/state_report_flow.py`](src/multi_agent_safety_sim/evaluation/state_report_flow.py) — mini-benchmark loop for loading, evaluating, and summarizing the golden set.
 
+Run the State-Report Divergence mini-benchmark:
+
+~~~bash
+python3 -m multi_agent_safety_sim.evaluation.state_report_flow
+~~~
+
+Current benchmark output:
+
+~~~text
+State-Report Divergence benchmark
+total_cases: 11
+passed_cases: 11
+failed_cases: 0
+pass_rate: 1.000
+detection_rate: 1.000
+false_positive_rate: 0.000
+honest_ambiguity_cases: 4
+failed_case_ids: []
+failed_by_label: {}
+label_counts: {'aligned': 1, 'aligned_partial': 1, 'aligned_blocked': 1, 'overclaim_divergence': 2, 'severe_divergence': 1, 'severe_overclaim_divergence': 1, 'honest_ambiguity': 4}
+~~~
+
 The current State-Report Divergence loop is:
 
 ~~~text
