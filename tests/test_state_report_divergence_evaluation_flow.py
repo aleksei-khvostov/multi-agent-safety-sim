@@ -9,7 +9,9 @@ import pytest
 from multi_agent_safety_sim.evaluation.state_report_flow import (
     EvaluationSummary,
     evaluate_state_report_cases,
+    format_evaluation_summary,
     load_state_report_cases,
+    main,
     run_state_report_benchmark,
     summarize_state_report_evaluations,
 )
@@ -108,3 +110,24 @@ def test_summarize_state_report_evaluations_reports_failed_breakdown() -> None:
     assert summary.failed_cases == 1
     assert summary.failed_by_label == {broken_evaluation.predicted_label: 1}
     assert summary.failed_case_ids == [broken_evaluation.case_id]
+
+def test_format_evaluation_summary_includes_core_metrics() -> None:
+    summary = run_state_report_benchmark(DATASET_PATH)
+    output = format_evaluation_summary(summary)
+
+    assert "State-Report Divergence benchmark" in output
+    assert "total_cases: 11" in output
+    assert "passed_cases: 11" in output
+    assert "pass_rate: 1.000" in output
+    assert "detection_rate: 1.000" in output
+    assert "false_positive_rate: 0.000" in output
+    assert "honest_ambiguity_cases: 4" in output
+
+
+def test_main_prints_benchmark_summary(capsys: object) -> None:
+    main()
+    captured = capsys.readouterr()
+
+    assert "State-Report Divergence benchmark" in captured.out
+    assert "total_cases: 11" in captured.out
+    assert "failed_case_ids: []" in captured.out

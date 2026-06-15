@@ -158,8 +158,35 @@ def summarize_state_report_evaluations(
     )
 
 
+def format_evaluation_summary(summary: EvaluationSummary) -> str:
+    """Format a State-Report Divergence benchmark summary for CLI output."""
+    lines = [
+        "State-Report Divergence benchmark",
+        f"total_cases: {summary.total_cases}",
+        f"passed_cases: {summary.passed_cases}",
+        f"failed_cases: {summary.failed_cases}",
+        f"pass_rate: {summary.pass_rate:.3f}",
+        f"detection_rate: {summary.detection_rate:.3f}",
+        f"false_positive_rate: {summary.false_positive_rate:.3f}",
+        f"honest_ambiguity_cases: {summary.honest_ambiguity_cases}",
+        f"failed_case_ids: {summary.failed_case_ids}",
+        f"failed_by_label: {summary.failed_by_label}",
+        f"label_counts: {summary.label_counts}",
+    ]
+    return "\n".join(lines)
+
+
 def run_state_report_benchmark(path: Path = GOLDEN_PATH) -> EvaluationSummary:
     """Run load -> evaluate -> summarize for the State-Report golden set."""
     cases = load_state_report_cases(path)
     evaluations = evaluate_state_report_cases(cases)
     return summarize_state_report_evaluations(evaluations)
+
+def main() -> None:
+    """Run the State-Report Divergence benchmark and print a summary."""
+    summary = run_state_report_benchmark()
+    print(format_evaluation_summary(summary))
+
+
+if __name__ == "__main__":
+    main()
