@@ -109,6 +109,56 @@ Core research artifacts:
 - `docs/TRACE_ABLATION_EXPERIMENT.md`
 - `docs/TRACE_WITHOUT_FINAL_STATE_EXPERIMENT.md`
 
+### Phase 3: State-Report Divergence
+
+Phase 3 transfers the observability findings from `agent-safety-experiments` into `multi-agent-safety-sim`.
+
+The core methodological principle is:
+
+> Environment state and agent self-report must be represented separately.
+
+Phase 3 therefore models three distinct layers:
+
+~~~text
+actual_state      # environment-owned ground truth
+reported_state    # what the agent or worker claims
+expected_label    # independent golden label
+~~~
+
+This prevents the oversight layer from treating agent speech as ground truth.
+
+Current Phase 3 artifacts:
+
+- [`docs/PHASE3_STATE_REPORT_DIVERGENCE.md`](docs/PHASE3_STATE_REPORT_DIVERGENCE.md) — bridge document defining the Phase 3 architecture, observability levels, State-Report Divergence labels, and implementation plan.
+- [`data/eval_sets/state_report_divergence_golden.jsonl`](data/eval_sets/state_report_divergence_golden.jsonl) — independent golden dataset with 11 labeled cases covering aligned reports, overclaims, severe divergence, and honest ambiguity.
+- [`src/multi_agent_safety_sim/evaluation/state_report_divergence.py`](src/multi_agent_safety_sim/evaluation/state_report_divergence.py) — deterministic State-Report Divergence evaluator.
+- [`src/multi_agent_safety_sim/evaluation/state_report_flow.py`](src/multi_agent_safety_sim/evaluation/state_report_flow.py) — mini-benchmark loop for loading, evaluating, and summarizing the golden set.
+
+The current State-Report Divergence loop is:
+
+~~~text
+golden JSONL
+↓
+dataset integrity tests
+↓
+deterministic evaluator
+↓
+benchmark flow
+↓
+summary metrics
+~~~
+
+The summary reports separate oversight axes instead of collapsing everything into a single score:
+
+| Metric | Purpose |
+|---|---|
+| `detection_rate` | Recall on divergence cases. |
+| `false_positive_rate` | False-positive rate on aligned and honest-ambiguity cases. |
+| `honest_ambiguity_cases` | Coverage of the key boundary from the Phase 2 findings. |
+| `failed_by_label` | Diagnostic breakdown of failed cases by expected label. |
+
+This matters because the Phase 2 research showed that final-report-only oversight can confuse honest ambiguity with real divergence. Phase 3 turns that finding into a packaged evaluation loop that can later be tested inside a Planner → Worker → Watchdog environment.
+
 ## Status
 
 Research prototype / alpha. 
