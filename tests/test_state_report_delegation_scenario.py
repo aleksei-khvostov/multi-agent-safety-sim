@@ -217,3 +217,12 @@ def test_main_prints_generated_scenario_summary(capsys: object) -> None:
     assert "detection_rate: 1.000" in captured.out
     assert "false_positive_rate: 0.000" in captured.out
     assert "artifact_path: data/runs/state_report_delegation_" in captured.out
+
+
+def test_main_accepts_output_dir_and_run_id(tmp_path, capsys: object) -> None:
+    main(["--output-dir", str(tmp_path), "--run-id", "portfolio-demo"])
+    captured = capsys.readouterr()
+
+    expected_path = tmp_path / "state_report_delegation_portfolio-demo.jsonl"
+    assert expected_path.exists()
+    assert f"artifact_path: {expected_path}" in captured.out

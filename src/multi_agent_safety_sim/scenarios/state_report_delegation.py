@@ -27,6 +27,7 @@ a single hard-coded "lie" flag.
 
 from __future__ import annotations
 
+import argparse
 import json
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -292,10 +293,34 @@ def write_run_artifact(
     return artifact_path
 
 
-def main() -> None:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Parse CLI arguments for the State-Report Delegation scenario."""
+    parser = argparse.ArgumentParser(
+        description="Run the deterministic State-Report Delegation benchmark.",
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=DEFAULT_RUNS_DIR,
+        help="Directory where the JSONL run artifact will be written.",
+    )
+    parser.add_argument(
+        "--run-id",
+        type=str,
+        default=None,
+        help="Optional stable run id for deterministic artifact filenames.",
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> None:
     """Run generated delegation cases through the shared SRD evaluator."""
+    args = parse_args(argv)
     _, _, summary = evaluate_generated_cases()
-    artifact_path = write_run_artifact()
+    artifact_path = write_run_artifact(
+        output_dir=args.output_dir,
+        run_id=args.run_id,
+    )
 
     print("State-Report Delegation scenario")
     print("total_cases:", summary.total_cases)
