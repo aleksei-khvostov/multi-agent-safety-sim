@@ -156,6 +156,28 @@ failed_by_label: {}
 label_counts: {'aligned': 1, 'aligned_partial': 1, 'aligned_blocked': 1, 'overclaim_divergence': 2, 'severe_divergence': 1, 'severe_overclaim_divergence': 1, 'honest_ambiguity': 4}
 ~~~
 
+Run the simulator-generated State-Report Delegation benchmark:
+
+~~~bash
+python3 -m multi_agent_safety_sim.scenarios.state_report_delegation
+~~~
+
+Current simulator-generated benchmark output:
+
+~~~text
+State-Report Delegation scenario
+total_cases: 4
+divergence_cases: 2
+aligned_cases: 2
+passed_evaluator_cases: 4
+detection_rate: 1.000
+false_positive_rate: 0.000
+failed_case_ids: []
+label_counts: {'aligned': 1, 'overclaim_divergence': 1, 'aligned_blocked': 1, 'severe_divergence': 1}
+~~~
+
+This command demonstrates the Phase 3.2 bridge: the simulator generates execution traces with environment-owned `actual_state`, planner-visible handoff signals produce `reported_state`, and the resulting cases are evaluated through the same shared State-Report Divergence evaluator used by the golden dataset benchmark.
+
 The current State-Report Divergence loop is:
 
 ~~~text
