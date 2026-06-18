@@ -181,6 +181,8 @@ artifact_path: data/runs/demo/state_report_delegation_portfolio-demo.jsonl
 
 This command demonstrates the Phase 3.4 bridge: the simulator generates execution traces with environment-owned `actual_state`, planner-visible handoff signals produce `reported_state`, and the resulting cases are evaluated through the same shared State-Report Divergence evaluator used by the golden dataset benchmark. The CLI writes a JSONL run artifact and now supports explicit `--output-dir` and `--run-id` controls, enabling deterministic demo artifacts such as `data/runs/demo/state_report_delegation_portfolio-demo.jsonl`.
 
+Demo artifacts under `data/runs/demo` are generated outputs and may be regenerated with `python3 -m multi_agent_safety_sim.scenarios.state_report_delegation --output-dir data/runs/demo --run-id portfolio-demo`.
+
 The current State-Report Divergence loop is:
 
 ~~~text
