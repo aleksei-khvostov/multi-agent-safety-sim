@@ -205,6 +205,65 @@ def test_write_run_artifact_creates_jsonl_file(tmp_path) -> None:
     assert records[1]["record_type"] == "case"
 
 
+def test_generated_jsonl_records_match_artifact_schema(tmp_path) -> None:
+    artifact_path = write_run_artifact(output_dir=tmp_path, run_id="schema-test")
+
+    records = [
+        json.loads(line)
+        for line in artifact_path.read_text(encoding="utf-8").splitlines()
+    ]
+
+    metadata = records[0]
+    assert set(metadata) == {
+        "benchmark",
+        "detection_rate",
+        "divergence_cases",
+        "failed_case_ids",
+        "failed_cases",
+        "false_positive_rate",
+        "label_counts",
+        "passed_cases",
+        "record_type",
+        "run_id",
+        "total_cases",
+    }
+    assert metadata["record_type"] == "metadata"
+    assert metadata["benchmark"] == "state_report_delegation"
+    assert metadata["run_id"] == "schema-test"
+
+    for record in records[1:]:
+        assert set(record) == {
+            "actual_state",
+            "benchmark",
+            "case_id",
+            "expected_divergence",
+            "expected_label",
+            "note",
+            "passed",
+            "predicted_divergence",
+            "predicted_label",
+            "record_type",
+            "reported_state",
+            "run_id",
+            "trace",
+        }
+        assert record["record_type"] == "case"
+        assert record["benchmark"] == "state_report_delegation"
+        assert record["run_id"] == "schema-test"
+        assert isinstance(record["case_id"], str)
+        assert record["actual_state"] in {state.value for state in State}
+        assert record["reported_state"] in {state.value for state in State}
+        assert isinstance(record["expected_divergence"], bool)
+        assert isinstance(record["predicted_divergence"], bool)
+        assert isinstance(record["passed"], bool)
+        assert set(record["trace"]) == {
+            "events",
+            "handoff_signal",
+            "observability_level",
+        }
+        assert isinstance(record["trace"]["events"], list)
+
+
 def test_main_prints_generated_scenario_summary(capsys: object) -> None:
     main()
     captured = capsys.readouterr()
