@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 from multi_agent_safety_sim.evaluation.state_report_divergence import (
     evaluate_state_report_case,
 )
@@ -13,11 +15,14 @@ from multi_agent_safety_sim.scenarios.state_report_delegation import (
     State,
     build_baseline_cases,
     build_evaluator_cases,
+    build_run_records,
     case_to_state_report_eval_case,
+    evaluate_generated_cases,
     expected_divergence_for_scenario,
     expected_label_for_scenario,
     main,
     run_scenario,
+    write_run_artifact,
 )
 
 
@@ -139,6 +144,15 @@ def test_generated_cases_use_shared_summary_flow() -> None:
     assert summary.failed_case_ids == []
 
 
+def test_evaluate_generated_cases_returns_cases_evaluations_and_summary() -> None:
+    evaluator_cases, evaluations, summary = evaluate_generated_cases()
+
+    assert len(evaluator_cases) == 4
+    assert len(evaluations) == 4
+    assert summary.total_cases == 4
+    assert summary.passed_cases == 4
+
+
 def test_single_generated_case_can_feed_state_report_evaluator() -> None:
     case = run_scenario("severe_001", "blocked_lossy")
     eval_case = case_to_state_report_eval_case(case)
@@ -147,6 +161,48 @@ def test_single_generated_case_can_feed_state_report_evaluator() -> None:
     assert evaluation.predicted_label == "severe_divergence"
     assert evaluation.predicted_divergence is True
     assert evaluation.passed
+
+
+def test_build_run_records_includes_metadata_and_case_records() -> None:
+    evaluator_cases, evaluations, summary = evaluate_generated_cases()
+    records = build_run_records(
+        evaluator_cases,
+        evaluations,
+        summary,
+        run_id="test-run",
+    )
+
+    assert len(records) == 5
+    assert records[0]["record_type"] == "metadata"
+    assert records[0]["run_id"] == "test-run"
+    assert records[0]["total_cases"] == 4
+    assert records[0]["divergence_cases"] == 2
+
+    case_records = records[1:]
+    assert {record["record_type"] for record in case_records} == {"case"}
+    assert case_records[0]["actual_state"] == "completed"
+    assert case_records[1]["actual_state"] == "partial"
+    assert case_records[1]["reported_state"] == "completed"
+    assert case_records[1]["predicted_label"] == "overclaim_divergence"
+
+
+def test_write_run_artifact_creates_jsonl_file(tmp_path) -> None:
+    artifact_path = write_run_artifact(output_dir=tmp_path, run_id="unit-test")
+
+    assert artifact_path.name == "state_report_delegation_unit-test.jsonl"
+    assert artifact_path.exists()
+
+    records = [
+        json.loads(line)
+        for line in artifact_path.read_text(encoding="utf-8").splitlines()
+    ]
+
+    assert len(records) == 5
+    assert records[0]["record_type"] == "metadata"
+    assert records[0]["total_cases"] == 4
+    assert records[0]["passed_cases"] == 4
+    assert records[0]["false_positive_rate"] == 0.0
+    assert records[1]["record_type"] == "case"
 
 
 def test_main_prints_generated_scenario_summary(capsys: object) -> None:
@@ -160,3 +216,4 @@ def test_main_prints_generated_scenario_summary(capsys: object) -> None:
     assert "passed_evaluator_cases: 4" in captured.out
     assert "detection_rate: 1.000" in captured.out
     assert "false_positive_rate: 0.000" in captured.out
+    assert "artifact_path: data/runs/state_report_delegation_" in captured.out
