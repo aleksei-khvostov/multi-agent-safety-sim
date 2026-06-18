@@ -174,9 +174,10 @@ detection_rate: 1.000
 false_positive_rate: 0.000
 failed_case_ids: []
 label_counts: {'aligned': 1, 'overclaim_divergence': 1, 'aligned_blocked': 1, 'severe_divergence': 1}
+artifact_path: data/runs/state_report_delegation_20260618-221830.jsonl
 ~~~
 
-This command demonstrates the Phase 3.2 bridge: the simulator generates execution traces with environment-owned `actual_state`, planner-visible handoff signals produce `reported_state`, and the resulting cases are evaluated through the same shared State-Report Divergence evaluator used by the golden dataset benchmark.
+This command demonstrates the Phase 3.3 bridge: the simulator generates execution traces with environment-owned `actual_state`, planner-visible handoff signals produce `reported_state`, and the resulting cases are evaluated through the same shared State-Report Divergence evaluator used by the golden dataset benchmark. The CLI also writes a JSONL run artifact under `data/runs/`, preserving benchmark metadata plus per-case `actual_state`, `reported_state`, evaluator labels, and trace fields.
 
 The current State-Report Divergence loop is:
 
