@@ -75,6 +75,10 @@ This project is accompanied by short research notes and governance artifacts tha
 - [Planner Delegation Evaluation Criteria](docs/PLANNER_DELEGATION_EVALUATION_CRITERIA.md) — defines pre-run success and failure criteria for delegated workflow traces.
 - [Planner Delegation Baseline](docs/PLANNER_DELEGATION_BASELINE.md) — records the working `planner_delegation` baseline, task-payload fix, action-label parser fix, dry-run baseline, and successful post-parser-fix real-model rerun.
 
+### Experimental
+
+- [Agent Cemetery v0.3](docs/AGENT_CEMETERY.md) — experimental survival-style stress-test harness for comparing simulated multi-agent architecture lineups under configurable oversight pressure. It is designed for evaluation-method development, not as a validated real-world risk metric.
+
 ### Oversight Signal Research
 
 The repository now includes a completed observability research study under:
