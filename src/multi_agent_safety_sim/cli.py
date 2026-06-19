@@ -3,6 +3,7 @@ Typer CLI for multi_agent_safety_sim.
 
 Commands:
 - run
+- cemetery
 - list-scenarios
 - validate-config
 """
@@ -17,6 +18,7 @@ from rich.console import Console
 from rich.table import Table
 
 from .config import load_config
+from .simulation.cemetery_runner import parse_architecture_ids, run_tournament
 from .simulation.runner import SimulationRunner
 
 app = typer.Typer(
@@ -186,6 +188,88 @@ def run(
             "[yellow]Note:[/yellow] This was a dry-run. "
             "DummyLLMClient was used, so no real model API was called."
         )
+
+
+@app.command()
+def cemetery(
+    architectures: str | None = typer.Option(
+        None,
+        "--architectures",
+        "-a",
+        help="Comma-separated architecture IDs. Defaults to all built-in Cemetery architectures.",
+    ),
+    episodes: int = typer.Option(5, "--episodes", "-e", help="Episodes per architecture"),
+    rounds: int = typer.Option(12, "--rounds", "-r", help="Maximum rounds per episode"),
+    seed: int = typer.Option(0, "--seed", help="Deterministic tournament seed"),
+    dry_run: bool = typer.Option(True, help="Use deterministic dry-run harness behavior"),
+    output_root: Path = typer.Option(
+        "data/runs/cemetery",
+        "--output-root",
+        help="Where to store generated Cemetery artifacts",
+    ),
+    death_threshold: float = typer.Option(
+        1.0,
+        "--death-threshold",
+        help="Toy death threshold for survival events",
+    ),
+    oversight_pressure: float = typer.Option(
+        0.05,
+        "--oversight-pressure",
+        help="Configurable toy oversight pressure added per round",
+    ),
+    model: str | None = typer.Option(
+        None,
+        "--model",
+        "-m",
+        help="Model metadata to record. Dry-run defaults to dummy-llm.",
+    ),
+) -> None:
+    """Run the experimental Agent Cemetery survival-analysis harness."""
+    try:
+        architecture_ids = parse_architecture_ids(architectures)
+        result = run_tournament(
+            architectures=architecture_ids,
+            episodes=episodes,
+            rounds=rounds,
+            seed=seed,
+            dry_run=dry_run,
+            output_root=output_root,
+            death_threshold=death_threshold,
+            oversight_pressure=oversight_pressure,
+            model=model,
+        )
+    except Exception as exc:
+        console.print(f"[red]Agent Cemetery failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+
+    metadata = result.tournament_summary["metadata"]
+    console.print("[bold cyan]Agent Cemetery v0.3[/bold cyan]")
+    console.print("Harness validation only: dry-run results are not empirical model findings.")
+    console.print(f"  architectures : {metadata['architectures']}")
+    console.print(f"  episodes      : {metadata['episodes']}")
+    console.print(f"  rounds        : {metadata['rounds']}")
+    console.print(f"  seed          : {metadata['seed']}")
+    console.print(f"  dry_run       : {metadata['dry_run']}")
+    console.print(f"  output_dir    : {result.output_dir}")
+
+    table = Table(title="Cemetery Leaderboard", show_header=True, header_style="bold magenta")
+    table.add_column("Rank", style="dim")
+    table.add_column("Architecture", style="cyan")
+    table.add_column("Survival", justify="right")
+    table.add_column("Mean lifespan", justify="right")
+    table.add_column("Deaths", justify="right")
+    table.add_column("Censored", justify="right")
+
+    for row in result.tournament_summary["leaderboard"]:
+        table.add_row(
+            str(row["rank"]),
+            row["architecture_id"],
+            f"{row['survival_rate']:.3f}",
+            f"{row['mean_lifespan_rounds']:.2f}",
+            str(row["deaths"]),
+            str(row["censored"]),
+        )
+    console.print(table)
 
 
 @app.command()
