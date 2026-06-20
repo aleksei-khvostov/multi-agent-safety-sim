@@ -50,38 +50,25 @@ python3 -m multi_agent_safety_sim.cli posthumous-report <latest cemetery run dir
 
 These demos are deterministic dry-runs. They validate the harness and generated artifacts; they are not empirical evidence about real model behavior.
 
-## Latest Status (v0.2.0)
+## Current status
 
-Current version: **v0.2.0**
+Current `main` includes the Phase 3 research stack described above:
 
-Recent milestone:
+- State-Report Divergence benchmark
+- State-Report Delegation JSONL artifacts
+- Agent Cemetery v0.3
+- Death vs Divergence v0.4
+- README research-stack framing
 
-- Phase 2 Oversight Signal Study completed
-- Research study integrated under `research/phase2_oversight_signal`
-- 60 tests passing
-- GitHub Actions passing
-- Phase 3 Integration Plan published
+Latest merged PRs:
 
-The project now combines two research tracks:
+- PR #2 — Agent Cemetery v0.3 survival-style stress-test harness
+- PR #3 — Death vs Divergence v0.4 report-integrity layer
+- PR #4 — README stack framing and reproducible demo commands
 
-1. Multi-agent workflow simulation
-2. State-Report Divergence and observability research
+Validation status: **138 tests passing**.
 
-Current development focus:
-
-```text
-Planner
-↓
-Worker
-↓
-Watchdog
-↓
-State-Report Divergence Measurement
-↓
-Multi-Agent Safety Simulation
-```
-
-The next milestone is integrating the observability findings from the Phase 2 research study into the packaged simulator architecture.
+Historical note: the earlier v0.2.0 milestone completed the Phase 2 Oversight Signal Study and integrated it under `research/phase2_oversight_signal`. The current repository now layers those observability ideas into deterministic Phase 3 benchmark, artifact, survival-harness, and report-integrity workflows. Agent Cemetery remains an experimental harness, Death vs Divergence does not detect deception, and dry-run outputs validate harness wiring/artifacts only.
 
 ## Why this project exists
 
