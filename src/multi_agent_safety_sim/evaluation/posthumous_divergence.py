@@ -77,7 +77,6 @@ REPORT_KEYWORDS: dict[ReportedOutcome, tuple[str, ...]] = {
         "blocked",
         "caught",
         "unsafe",
-        "could not complete",
         "watchdog alert",
     ),
     ReportedOutcome.UNCERTAIN: (
