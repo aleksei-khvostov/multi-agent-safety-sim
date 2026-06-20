@@ -6,6 +6,50 @@
 
 The project is intentionally conservative: it defaults to a `DummyLLMClient`, records auditable traces, and enforces safety caps through a central runner.
 
+## Project framing
+
+`multi-agent-safety-sim` is a layered AI safety and agent-governance evaluation harness. It focuses on deterministic, inspectable simulations of delegation, oversight, report integrity, and artifact generation.
+
+The project is for evaluation-method development. It does not claim to detect real-world deception, measure real-world agent danger, or validate architecture safety from dry-run outputs. Experimental dry-runs validate harness wiring and artifact pipelines only. Empirical claims require real-model runs with model, seed, policy, episode count, and prompt setup reported.
+
+## Current research stack
+
+The current stack is organized as five connected layers:
+
+1. **Planner Delegation baseline and evaluator suite** — simulates planner → executor → watchdog workflows, task-boundary handling, audit trails, and deterministic evaluator checks.
+2. **State-Report Divergence benchmark** — evaluates whether `actual_state` and `reported_state` remain separate and whether expected State-Report labels/metrics are reproduced.
+3. **State-Report Delegation artifacts** — generates deterministic JSONL artifacts where `actual_state` comes from the execution path and `reported_state` comes from the lossy handoff/report path.
+4. **Agent Cemetery v0.3** — experimental survival-style stress-test harness over simulated architecture lineups under configurable oversight/death policies. It is a harness, not a validated real-world risk metric.
+5. **Death vs Divergence v0.4** — deterministic report-integrity layer over Agent Cemetery traces. It compares simulated failure/stress evidence against final public reports; it does not detect deception or prove intent.
+
+## Reproducible demos
+
+Run the deterministic State-Report Divergence benchmark:
+
+~~~bash
+python3 -m multi_agent_safety_sim.evaluation.state_report_flow
+~~~
+
+Generate a deterministic State-Report Delegation artifact:
+
+~~~bash
+python3 -m multi_agent_safety_sim.scenarios.state_report_delegation --output-dir data/runs/demo --run-id portfolio-demo
+~~~
+
+Run the Agent Cemetery dry-run harness:
+
+~~~bash
+python3 -m multi_agent_safety_sim.cli cemetery --episodes 5 --rounds 12 --dry-run
+~~~
+
+Then inspect the generated Death vs Divergence report using the latest Cemetery run directory printed by the previous command:
+
+~~~bash
+python3 -m multi_agent_safety_sim.cli posthumous-report <latest cemetery run dir>
+~~~
+
+These demos are deterministic dry-runs. They validate the harness and generated artifacts; they are not empirical evidence about real model behavior.
+
 ## Latest Status (v0.2.0)
 
 Current version: **v0.2.0**
