@@ -78,6 +78,7 @@ This project is accompanied by short research notes and governance artifacts tha
 ### Experimental
 
 - [Agent Cemetery v0.3](docs/AGENT_CEMETERY.md) — experimental survival-style stress-test harness for comparing simulated multi-agent architecture lineups under configurable oversight pressure. It is designed for evaluation-method development, not as a validated real-world risk metric.
+- [Death vs Divergence v0.4](docs/DEATH_VS_DIVERGENCE.md) — experimental report-integrity layer over Agent Cemetery traces. It compares simulated failure/stress evidence against the final public report and reports posthumous overclaim / ambiguity / alignment labels. It does not detect deception.
 
 ### Oversight Signal Research
 

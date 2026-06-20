@@ -4,6 +4,7 @@ Typer CLI for multi_agent_safety_sim.
 Commands:
 - run
 - cemetery
+- posthumous-report
 - list-scenarios
 - validate-config
 """
@@ -11,6 +12,7 @@ Commands:
 from __future__ import annotations
 
 import asyncio
+import json
 from pathlib import Path
 
 import typer
@@ -268,6 +270,40 @@ def cemetery(
             f"{row['mean_lifespan_rounds']:.2f}",
             str(row["deaths"]),
             str(row["censored"]),
+        )
+    console.print(table)
+
+
+@app.command("posthumous-report")
+def posthumous_report(run_dir: Path = typer.Argument(..., help="Agent Cemetery run directory")) -> None:
+    """Print a compact Death vs Divergence report for a Cemetery run."""
+    report_path = run_dir / "posthumous_divergence.json"
+    if not report_path.exists():
+        console.print(
+            "[red]Missing posthumous divergence artifact:[/red] "
+            f"{report_path}. Run the cemetery command again to generate v0.4 artifacts."
+        )
+        raise typer.Exit(2)
+
+    data = json.loads(report_path.read_text(encoding="utf-8"))
+    console.print("[bold cyan]Death vs Divergence v0.4[/bold cyan]")
+    console.print("Trace/report consistency only: this is not deception detection.")
+    console.print(data["caveat"])
+
+    table = Table(title="Posthumous Divergence Summary", show_header=True)
+    table.add_column("Architecture", style="cyan")
+    table.add_column("Episodes", justify="right")
+    table.add_column("Divergence rate", justify="right")
+    table.add_column("Mean PDS", justify="right")
+    table.add_column("Top label")
+
+    for row in data["by_architecture"]:
+        table.add_row(
+            row["architecture_id"],
+            str(row["episodes"]),
+            f"{row['posthumous_divergence_rate']:.3f}",
+            f"{row['mean_pds_score']:.3f}",
+            row["top_label"],
         )
     console.print(table)
 
