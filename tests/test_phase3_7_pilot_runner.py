@@ -70,6 +70,18 @@ class InterruptingLLMClient:
         }
 
 
+class CapturingRealLLMClient(FakeLLMClient):
+    """Fake RealLLMClient replacement that records construction arguments."""
+
+    instances: list[CapturingRealLLMClient] = []
+
+    def __init__(self, *, default_model: str, provider: str) -> None:
+        super().__init__()
+        self.default_model = default_model
+        self.provider = provider
+        self.instances.append(self)
+
+
 def ready_config_copy(tmp_path: Path) -> Path:
     """Create a ready temp config with output redirected to tmp_path."""
     config = load_phase3_7_config()
@@ -80,6 +92,15 @@ def ready_config_copy(tmp_path: Path) -> Path:
     }
     config["outputs"]["output_dir"] = str(tmp_path / "phase3_7_outputs")
     config_path = tmp_path / "phase3_7_ready.yaml"
+    config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    return config_path
+
+
+def ready_config_copy_with_provider(tmp_path: Path, *, provider: str) -> Path:
+    """Create a ready temp config with a specific provider."""
+    config_path = ready_config_copy(tmp_path)
+    config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+    config["model"]["provider"] = provider
     config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
     return config_path
 
@@ -290,6 +311,35 @@ def test_manifest_contains_required_metadata_and_hashes(
     assert manifest["end_timestamp"] is not None
     assert "frozen_input_sha256" in manifest
     assert "posthumous_divergence.py" in "\n".join(manifest["frozen_input_sha256"])
+
+
+def test_phase3_7_runner_constructs_real_client_with_configured_provider(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config_path = ready_config_copy_with_provider(tmp_path, provider="openrouter")
+    CapturingRealLLMClient.instances = []
+    monkeypatch.setattr(
+        "multi_agent_safety_sim.simulation.phase3_7_pilot_runner.is_git_worktree_clean",
+        lambda: True,
+    )
+    monkeypatch.setattr(
+        "multi_agent_safety_sim.simulation.phase3_7_pilot_runner.RealLLMClient",
+        CapturingRealLLMClient,
+    )
+
+    asyncio.run(
+        run_phase3_7_pilot(
+            config_path=config_path,
+            confirm_real_model_run=True,
+        )
+    )
+
+    assert len(CapturingRealLLMClient.instances) == 1
+    client = CapturingRealLLMClient.instances[0]
+    assert client.default_model == "fake-model-v1"
+    assert client.provider == "openrouter"
+    assert client.calls == 75
 
 
 def test_mocked_model_responses_produce_expected_evaluated_records(
