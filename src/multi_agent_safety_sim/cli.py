@@ -5,6 +5,7 @@ Commands:
 - run
 - cemetery
 - posthumous-report
+- gravestone analyze
 - phase3-7-preflight
 - phase3-7-run
 - list-scenarios
@@ -22,6 +23,11 @@ from rich.console import Console
 from rich.table import Table
 
 from .config import load_config
+from .evaluation.gravestone import (
+    GravestoneArtifactError,
+    build_gravestone_summary,
+    write_gravestone_summary,
+)
 from .simulation.cemetery_runner import parse_architecture_ids, run_tournament
 from .simulation.phase3_7_pilot_runner import (
     compute_frozen_input_hashes,
@@ -33,6 +39,11 @@ from .simulation.runner import SimulationRunner
 app = typer.Typer(
     name="massim",
     help="Safety-first multi-agent alignment simulator",
+    add_completion=False,
+)
+gravestone_app = typer.Typer(
+    name="gravestone",
+    help="Metric-honesty analysis for report-integrity artifacts",
     add_completion=False,
 )
 console = Console()
@@ -313,6 +324,75 @@ def posthumous_report(run_dir: Path = typer.Argument(..., help="Agent Cemetery r
             row["top_label"],
         )
     console.print(table)
+
+
+@gravestone_app.command("analyze")
+def gravestone_analyze(
+    run_dir: Path = typer.Argument(..., help="Agent Cemetery run directory"),
+    write_json: bool = typer.Option(
+        True,
+        "--write-json/--no-write-json",
+        help="Write gravestone_summary.json into the run directory",
+    ),
+) -> None:
+    """Recompute report-integrity rates with explicit denominators from cemetery artifacts."""
+    try:
+        summary = build_gravestone_summary(run_dir)
+        if write_json:
+            output_path = write_gravestone_summary(run_dir, summary=summary)
+        else:
+            output_path = run_dir / "gravestone_summary.json"
+    except GravestoneArtifactError as exc:
+        console.print(f"[red]Missing or invalid report-integrity artifacts:[/red] {exc}")
+        raise typer.Exit(2) from exc
+    except Exception as exc:
+        console.print(f"[red]Gravestone analysis failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+
+    overall = summary["summary"]
+    console.print("[bold cyan]Gravestone Analyzer[/bold cyan]")
+    console.print(summary["caveat"])
+    console.print(f"[dim]{summary['legacy_field_note']}[/dim]")
+    if write_json:
+        console.print(f"[dim]Wrote {output_path}[/dim]")
+
+    console.print(
+        "\nDenominator: "
+        f"{overall['denominator']['name']} = {overall['denominator']['eligible_records']}"
+    )
+    console.print(
+        f"  posthumous_overclaim_rate          : "
+        f"{overall['posthumous_overclaim_rate']:.3f} "
+        f"({overall['posthumous_overclaim_count']}/{overall['denominator']['eligible_records']})"
+    )
+    console.print(
+        f"  report_integrity_divergence_rate   : "
+        f"{overall['report_integrity_divergence_rate']:.3f} "
+        f"({overall['report_integrity_divergence_count']}/"
+        f"{overall['denominator']['eligible_records']})"
+    )
+    console.print(f"  mean_pds_score                     : {overall['mean_pds_score']:.3f}")
+
+    table = Table(title="Gravestone by Architecture", show_header=True)
+    table.add_column("Architecture", style="cyan")
+    table.add_column("Eligible", justify="right")
+    table.add_column("Overclaim rate", justify="right")
+    table.add_column("Divergence rate", justify="right")
+    table.add_column("Mean PDS", justify="right")
+
+    for row in summary["by_architecture"]:
+        denom = row["denominator"]["eligible_records"]
+        table.add_row(
+            row["architecture_id"],
+            str(denom),
+            f"{row['posthumous_overclaim_rate']:.3f}",
+            f"{row['report_integrity_divergence_rate']:.3f}",
+            f"{row['mean_pds_score']:.3f}",
+        )
+    console.print(table)
+
+
+app.add_typer(gravestone_app)
 
 
 @app.command("phase3-7-preflight")
