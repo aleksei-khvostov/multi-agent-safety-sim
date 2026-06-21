@@ -208,8 +208,20 @@ def test_preflight_makes_no_api_call() -> None:
     assert fake_client.calls == 0
 
 
-@pytest.mark.skip(reason="Default Phase 3.7 config now has explicit model metadata; TBD refusal is covered before config activation.")
-def test_real_run_refuses_when_model_fields_are_tbd(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_real_run_refuses_when_model_fields_are_tbd(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = load_phase3_7_config()
+    config["model"] = {
+        "provider": "TBD",
+        "model_string": "TBD",
+        "run_date": "TBD",
+    }
+    config["outputs"]["output_dir"] = str(tmp_path / "phase3_7_outputs")
+    config_path = tmp_path / "phase3_7_tbd.yaml"
+    config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+
     monkeypatch.setattr(
         "multi_agent_safety_sim.simulation.phase3_7_pilot_runner.is_git_worktree_clean",
         lambda: True,
@@ -218,12 +230,11 @@ def test_real_run_refuses_when_model_fields_are_tbd(monkeypatch: pytest.MonkeyPa
     with pytest.raises(ValueError, match="provider, model_string, and run_date"):
         asyncio.run(
             run_phase3_7_pilot(
-                config_path=DEFAULT_PHASE3_7_CONFIG,
+                config_path=config_path,
                 llm_client=FakeLLMClient(),
                 confirm_real_model_run=True,
             )
         )
-
 
 def test_real_run_refuses_without_explicit_confirmation(
     tmp_path: Path,

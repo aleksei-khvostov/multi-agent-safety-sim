@@ -5,7 +5,7 @@ pilot_mode: matched_trace_report_generation
 
 model:
   provider: openrouter
-  model_string: google/gemini-2.0-flash-001
+  model_string: google/gemini-2.5-flash-lite
   run_date: "2026-06-21"
 
 run_parameters:
