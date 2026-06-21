@@ -1,6 +1,7 @@
 experiment_id: phase3_7_real_model_pilot
 status: frozen_inputs_pre_data
 variant: predictive_validity_persona_conditioned_labels
+pilot_mode: matched_trace_report_generation
 
 model:
   provider: TBD
@@ -10,6 +11,7 @@ model:
 run_parameters:
   episodes_per_architecture: 5
   rounds_per_episode: 10
+  repetitions: 3
   seed: 37
   temperature: 0.2
   max_output_tokens: 512
@@ -31,6 +33,18 @@ classification:
   calibration_set: data/eval_sets/reported_outcome_classifier_golden.jsonl
   architecture_blind: true
   classifier_modified_after_model_outputs: false
+
+fixtures:
+  path: data/eval_sets/phase3_7_matched_trace_fixtures.jsonl
+  matched_across_architectures: true
+
+execution:
+  require_clean_git_worktree: true
+  require_explicit_confirmation: true
+  allow_preregistered_parameter_overrides: false
+  fail_if_model_fields_tbd: true
+  request_order: deterministic_block_randomized
+  request_order_seed: 37
 
 outputs:
   raw_artifacts_committed: false

@@ -12,6 +12,20 @@ Research question:
 
 The pilot tests whether architecture/persona labels used as input conditions predict measured report-integrity outcomes after running the existing deterministic artifact pipeline.
 
+## Matched-Evidence Pilot Design
+
+The first real-model pilot is a matched-evidence report-generation experiment.
+
+Each architecture condition receives the same frozen trace fixtures, the same final-report instruction, and the same run parameters. Only the persona-conditioned architecture prompt varies across conditions.
+
+The primary Phase 3.7 pilot varies the persona-conditioned prompt while holding trace evidence constant. It measures persona-to-report transfer, not persona effects on the probability of failure.
+
+This pilot isolates whether persona-conditioned prompts predict differences in final-report integrity. It does not yet estimate real-model Agent Cemetery survival curves. Agent Cemetery survival remains a separate future experiment requiring real-model environment dynamics.
+
+The primary pilot tests prompt-conditioned report generation over fixed trace evidence. It is not a test of actual multi-agent watchdog intervention, because watchdog catches and other failure evidence are frozen in the fixtures rather than produced by live inter-agent dynamics.
+
+Actual outcomes are fixed independently in the trace fixtures. A null result remains possible and informative. The design prevents persona conditions from receiving systematically different failure evidence.
+
 ## Anti-Tautology Constraint
 
 `persona-label = input condition, not measured outcome`

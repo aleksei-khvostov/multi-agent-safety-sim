@@ -5,6 +5,8 @@ Commands:
 - run
 - cemetery
 - posthumous-report
+- phase3-7-preflight
+- phase3-7-run
 - list-scenarios
 - validate-config
 """
@@ -21,6 +23,11 @@ from rich.table import Table
 
 from .config import load_config
 from .simulation.cemetery_runner import parse_architecture_ids, run_tournament
+from .simulation.phase3_7_pilot_runner import (
+    compute_frozen_input_hashes,
+    run_phase3_7_pilot,
+    validate_preflight,
+)
 from .simulation.runner import SimulationRunner
 
 app = typer.Typer(
@@ -306,6 +313,85 @@ def posthumous_report(run_dir: Path = typer.Argument(..., help="Agent Cemetery r
             row["top_label"],
         )
     console.print(table)
+
+
+@app.command("phase3-7-preflight")
+def phase3_7_preflight(
+    config: Path = typer.Option(
+        "configs/phase3_7_real_model_pilot.yaml",
+        "--config",
+        help="Frozen Phase 3.7 pilot config",
+    ),
+    require_ready: bool = typer.Option(
+        False,
+        "--require-ready",
+        help="Fail if provider/model/run_date remain TBD",
+    ),
+) -> None:
+    """Validate frozen Phase 3.7 pilot inputs without making model calls."""
+    try:
+        preflight = validate_preflight(config_path=config, require_ready=require_ready)
+        hashes = compute_frozen_input_hashes(config_path=config, config=preflight["config"])
+    except Exception as exc:
+        console.print(f"[red]Phase 3.7 preflight failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+
+    cfg = preflight["config"]
+    console.print("[bold cyan]Phase 3.7 matched-evidence preflight[/bold cyan]")
+    console.print(f"experiment_id : {cfg['experiment_id']}")
+    console.print(f"pilot_mode    : {cfg['pilot_mode']}")
+    console.print(f"architectures : {cfg['architectures']}")
+    console.print(f"fixtures      : {[fixture.fixture_id for fixture in preflight['fixtures']]}")
+    console.print(f"repetitions   : {cfg['run_parameters']['repetitions']}")
+    console.print(f"request_order : {cfg['execution']['request_order']}")
+    console.print(f"order_seed    : {cfg['execution']['request_order_seed']}")
+    console.print(f"request_count : {preflight['request_count']}")
+    console.print(f"worktree_clean: {preflight['git_worktree_clean']}")
+
+    table = Table(title="Frozen Input SHA-256", show_header=True)
+    table.add_column("Path", style="cyan")
+    table.add_column("SHA-256")
+    for path, digest in sorted(hashes.items()):
+        table.add_row(path, digest)
+    console.print(table)
+    console.print("No model call was made.")
+
+
+@app.command("phase3-7-run")
+def phase3_7_run(
+    config: Path = typer.Option(
+        "configs/phase3_7_real_model_pilot.yaml",
+        "--config",
+        help="Frozen Phase 3.7 pilot config",
+    ),
+    confirm_real_model_run: bool = typer.Option(
+        False,
+        "--confirm-real-model-run",
+        help="Required confirmation for real-model API execution",
+    ),
+) -> None:
+    """Run the preregistered Phase 3.7 matched-evidence pilot."""
+    if not confirm_real_model_run:
+        console.print("[red]Refusing real-model run:[/red] --confirm-real-model-run is required.")
+        raise typer.Exit(2)
+
+    try:
+        output_dir = asyncio.run(
+            run_phase3_7_pilot(
+                config_path=config,
+                confirm_real_model_run=confirm_real_model_run,
+            )
+        )
+    except Exception as exc:
+        console.print(f"[red]Phase 3.7 run refused or failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+
+    console.print("[bold cyan]Phase 3.7 pilot complete[/bold cyan]")
+    console.print(f"output_dir: {output_dir}")
+    console.print(
+        "Caveat: pilot data from one model/configuration does not establish "
+        "general model behavior, deception detection, intent, or real-world risk."
+    )
 
 
 @app.command()
