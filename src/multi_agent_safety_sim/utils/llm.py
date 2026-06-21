@@ -123,26 +123,67 @@ class RealLLMClient:
 
     - Prefers LiteLLM for provider support.
     - Falls back to direct AsyncOpenAI for OpenAI-compatible endpoints.
-    - Detects XAI_API_KEY, OPENAI_API_KEY, and ANTHROPIC_API_KEY.
+    - Detects XAI_API_KEY, OPENROUTER_API_KEY, OPENAI_API_KEY, and ANTHROPIC_API_KEY.
     - Supports json_mode for structured outputs used by LLMAgent and WatchdogAgent.
     """
 
-    def __init__(self, default_model: str = "grok-4.3"):
+    PROVIDERS: dict[str, dict[str, str | None]] = {
+        "xai": {
+            "env_var": "XAI_API_KEY",
+            "base_url": "https://api.x.ai/v1",
+        },
+        "openrouter": {
+            "env_var": "OPENROUTER_API_KEY",
+            "base_url": "https://openrouter.ai/api/v1",
+        },
+        "openai": {
+            "env_var": "OPENAI_API_KEY",
+            "base_url": None,
+        },
+        "anthropic": {
+            "env_var": "ANTHROPIC_API_KEY",
+            "base_url": None,
+        },
+    }
+    AUTO_DETECTION_ORDER = ("xai", "openrouter", "openai", "anthropic")
+
+    def __init__(self, default_model: str | None = "grok-4.3", provider: str | None = None):
         self.default_model = default_model
         self.provider = "unknown"
         self.api_key = None
         self.base_url = None
 
-        if os.getenv("XAI_API_KEY"):
-            self.provider = "xai"
-            self.api_key = os.getenv("XAI_API_KEY")
-            self.base_url = "https://api.x.ai/v1"
-        elif os.getenv("OPENAI_API_KEY"):
-            self.provider = "openai"
-            self.api_key = os.getenv("OPENAI_API_KEY")
-        elif os.getenv("ANTHROPIC_API_KEY"):
-            self.provider = "anthropic"
-            self.api_key = os.getenv("ANTHROPIC_API_KEY")
+        if provider is not None:
+            self._configure_explicit_provider(provider)
+        else:
+            self._configure_auto_detected_provider()
+
+    def _configure_explicit_provider(self, provider: str) -> None:
+        provider_name = provider.strip().lower()
+        if provider_name not in self.PROVIDERS:
+            supported = ", ".join(sorted(self.PROVIDERS))
+            raise ValueError(f"Unsupported LLM provider: {provider}. Supported providers: {supported}")
+
+        provider_config = self.PROVIDERS[provider_name]
+        env_var = str(provider_config["env_var"])
+        api_key = os.getenv(env_var)
+        if not api_key:
+            raise RuntimeError(f"{env_var} must be set when provider='{provider_name}'")
+
+        self.provider = provider_name
+        self.api_key = api_key
+        self.base_url = provider_config["base_url"]
+
+    def _configure_auto_detected_provider(self) -> None:
+        for provider_name in self.AUTO_DETECTION_ORDER:
+            provider_config = self.PROVIDERS[provider_name]
+            env_var = str(provider_config["env_var"])
+            api_key = os.getenv(env_var)
+            if api_key:
+                self.provider = provider_name
+                self.api_key = api_key
+                self.base_url = provider_config["base_url"]
+                return
 
     async def complete(
         self,
@@ -158,6 +199,16 @@ class RealLLMClient:
         temperature = temperature if temperature is not None else 0.2
         max_tokens = max_tokens or 1500
 
+        if HAS_OPENAI and self.provider == "openrouter":
+            return await self._complete_with_openai_direct(
+                model=model,
+                system=system,
+                user=user,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                json_mode=json_mode,
+            )
+
         if HAS_LITELLM:
             return await self._complete_with_litellm(
                 model=model,
@@ -168,7 +219,7 @@ class RealLLMClient:
                 json_mode=json_mode,
             )
 
-        if HAS_OPENAI and self.provider in {"openai", "xai"}:
+        if HAS_OPENAI and self.provider in {"openai", "xai", "openrouter"}:
             return await self._complete_with_openai_direct(
                 model=model,
                 system=system,
@@ -180,7 +231,7 @@ class RealLLMClient:
 
         raise RuntimeError(
             "No real LLM backend available. Install optional LLM dependencies and set "
-            "XAI_API_KEY, OPENAI_API_KEY, or ANTHROPIC_API_KEY."
+            "XAI_API_KEY, OPENROUTER_API_KEY, OPENAI_API_KEY, or ANTHROPIC_API_KEY."
         )
 
     async def _complete_with_litellm(

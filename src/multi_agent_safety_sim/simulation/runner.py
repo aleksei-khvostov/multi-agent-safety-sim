@@ -549,18 +549,19 @@ class SimulationRunner:
         logger.info(
             "using_real_llm_client",
             model=chosen_model,
-            provider="auto (xai/openai/anthropic)",
+            provider="auto (xai/openrouter/openai/anthropic)",
         )
         return RealLLMClient(default_model=chosen_model)
 
     def _ensure_api_key(self) -> None:
         """Fail fast if no API key is present for a real experiment."""
-        keys = ["XAI_API_KEY", "OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
+        keys = ["XAI_API_KEY", "OPENROUTER_API_KEY", "OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
         if not any(os.getenv(key) for key in keys):
             raise RuntimeError(
                 "No API key found for real LLM calls.\n"
                 "Please set one of the following environment variables (or in .env):\n"
                 "  XAI_API_KEY     (recommended for Grok models)\n"
+                "  OPENROUTER_API_KEY\n"
                 "  OPENAI_API_KEY\n"
                 "  ANTHROPIC_API_KEY\n\n"
                 "You can also run with --dry-run for safe testing."

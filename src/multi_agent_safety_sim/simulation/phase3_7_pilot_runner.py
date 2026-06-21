@@ -587,7 +587,10 @@ async def run_phase3_7_pilot(
     _write_json(manifest_path, manifest)
 
     try:
-        client = llm_client or RealLLMClient(default_model=model["model_string"])
+        client = llm_client or RealLLMClient(
+            default_model=model["model_string"],
+            provider=model["provider"],
+        )
         for request in requests:
             request_metadata = {
                 "request_id": request.request_id,

@@ -438,6 +438,8 @@ massim run \
   --no-dry-run
 ```
 
+Real-model runs require one supported provider key in the environment, such as `XAI_API_KEY`, `OPENROUTER_API_KEY`, `OPENAI_API_KEY`, or `ANTHROPIC_API_KEY`. For Phase 3.7 OpenRouter runs, record the OpenRouter model string exactly in the frozen config before execution.
+
 The successful post-parser-fix rerun is documented in [`docs/PLANNER_DELEGATION_BASELINE.md`](docs/PLANNER_DELEGATION_BASELINE.md).
 
 ## Repository structure

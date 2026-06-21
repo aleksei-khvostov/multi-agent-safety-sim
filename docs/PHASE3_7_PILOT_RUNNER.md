@@ -37,6 +37,8 @@ python3 -m multi_agent_safety_sim.cli phase3-7-run \
   --confirm-real-model-run
 ```
 
+For OpenRouter runs, set `OPENROUTER_API_KEY` in the environment and record the OpenRouter model string exactly in `configs/phase3_7_real_model_pilot.yaml` before execution. The config `provider` field is passed explicitly to the real LLM client so it does not auto-select another provider when multiple API keys are present.
+
 ## Refusal Conditions
 
 The real runner refuses execution when:
