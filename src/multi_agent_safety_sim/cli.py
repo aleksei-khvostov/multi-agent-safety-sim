@@ -5,6 +5,7 @@ Commands:
 - run
 - cemetery
 - posthumous-report
+- rib-16 run
 - phase3-7-preflight
 - phase3-7-run
 - list-scenarios
@@ -22,6 +23,13 @@ from rich.console import Console
 from rich.table import Table
 
 from .config import load_config
+from .evaluation.report_integrity_benchmark import (
+    REFERENCE_RATES_NOTE,
+    RIB_16_CAVEAT,
+    RIB_16_PATH,
+    Rib16BenchmarkError,
+    run_rib_16_benchmark,
+)
 from .simulation.cemetery_runner import parse_architecture_ids, run_tournament
 from .simulation.phase3_7_pilot_runner import (
     compute_frozen_input_hashes,
@@ -33,6 +41,11 @@ from .simulation.runner import SimulationRunner
 app = typer.Typer(
     name="massim",
     help="Safety-first multi-agent alignment simulator",
+    add_completion=False,
+)
+rib_16_app = typer.Typer(
+    name="rib-16",
+    help="RIB-16 frozen report integrity benchmark (API-free)",
     add_completion=False,
 )
 console = Console()
@@ -392,6 +405,79 @@ def phase3_7_run(
         "Caveat: pilot data from one model/configuration does not establish "
         "general model behavior, deception detection, intent, or real-world risk."
     )
+
+
+@rib_16_app.command("run")
+def rib_16_run(
+    path: Path = typer.Option(
+        RIB_16_PATH,
+        "--path",
+        help="RIB-16 JSONL fixture path",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Emit JSON summary only",
+    ),
+) -> None:
+    """Run the frozen RIB-16 report integrity benchmark (no API calls)."""
+    try:
+        benchmark = run_rib_16_benchmark(path)
+    except FileNotFoundError as exc:
+        console.print(f"[red]RIB-16 fixture file not found:[/red] {exc}")
+        raise typer.Exit(2) from exc
+    except Rib16BenchmarkError as exc:
+        console.print(f"[red]RIB-16 benchmark failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+    except Exception as exc:
+        console.print(f"[red]RIB-16 benchmark failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+
+    summary = benchmark["summary"]
+    if json_output:
+        typer.echo(json.dumps(summary, indent=2))
+        return
+
+    console.print("[bold cyan]RIB-16 Report Integrity Benchmark[/bold cyan]")
+    console.print(RIB_16_CAVEAT)
+    console.print(
+        f"[yellow]Reference rates:[/yellow] {REFERENCE_RATES_NOTE}"
+    )
+    console.print(
+        f"  passed: {summary['passed']}/{summary['total_cases']}  "
+        f"failed: {summary['failed']}"
+    )
+    console.print(
+        f"  eligible_posthumous_records: {summary['eligible_posthumous_records']}"
+    )
+    console.print(
+        "  posthumous_overclaim_rate (frozen reference): "
+        f"{summary['posthumous_overclaim_rate']:.3f} "
+        f"({summary['posthumous_overclaim_count']}/"
+        f"{summary['eligible_posthumous_records']})"
+    )
+    console.print(
+        "  report_integrity_divergence_rate (frozen reference): "
+        f"{summary['report_integrity_divergence_rate']:.3f} "
+        f"({summary['report_integrity_divergence_count']}/"
+        f"{summary['eligible_posthumous_records']})"
+    )
+
+    table = Table(title="RIB-16 by Family", show_header=True)
+    table.add_column("Family", style="cyan")
+    table.add_column("Cases", justify="right")
+    for family, count in sorted(summary["by_family"].items()):
+        table.add_row(family, str(count))
+    console.print(table)
+
+    if summary["failed"]:
+        console.print(f"[red]Failed cases:[/red] {summary['failed_case_ids']}")
+        raise typer.Exit(2)
+
+    console.print("[green]No model API was called.[/green]")
+
+
+app.add_typer(rib_16_app)
 
 
 @app.command()
