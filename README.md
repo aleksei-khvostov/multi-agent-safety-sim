@@ -46,9 +46,10 @@ Then inspect the generated Death vs Divergence report using the latest Cemetery 
 
 ~~~bash
 python3 -m multi_agent_safety_sim.cli posthumous-report <latest cemetery run dir>
+python3 -m multi_agent_safety_sim.cli gravestone analyze <latest cemetery run dir>
 ~~~
 
-These demos are deterministic dry-runs. They validate the harness and generated artifacts; they are not empirical evidence about real model behavior.
+These demos are deterministic dry-runs. They validate the harness and generated artifacts; they are not empirical evidence about real model behavior. Use `gravestone analyze` for separate `posthumous_overclaim_rate` and `report_integrity_divergence_rate` with explicit denominators.
 
 ## Current status
 
@@ -69,6 +70,17 @@ Latest merged PRs:
 Validation status: **138 tests passing**.
 
 Historical note: the earlier v0.2.0 milestone completed the Phase 2 Oversight Signal Study and integrated it under `research/phase2_oversight_signal`. The current repository now layers those observability ideas into deterministic Phase 3 benchmark, artifact, survival-harness, and report-integrity workflows. Agent Cemetery remains an experimental harness, Death vs Divergence does not detect deception, and dry-run outputs validate harness wiring/artifacts only.
+
+### Phase 3.7 status note
+
+Phase 3.7 Run 001 completed as a matched-evidence real-model pilot with 75/75 successful evaluations and 0 provider failures. The original classifier-v1 result remains preserved. A post-run audit identified a likely lexical negation artifact in stable-fixture false alarms; classifier-v2 was pre-registered before reuse, and the Run 001 classifier-v2 diagnostic rescore is diagnostic-only rather than a replacement result.
+
+See:
+
+- [Run 001 post-run audit](docs/reports/PHASE3_7_RUN_001_POSTRUN_AUDIT.md)
+- [Classifier-v2 pre-registration](docs/PHASE3_7_CLASSIFIER_V2_PREREGISTRATION.md)
+- [Run 001 classifier-v2 diagnostic rescore](docs/PHASE3_7_RUN_001_CLASSIFIER_V2_DIAGNOSTIC_RESCORE.md)
+- [Phase 3.7 status after Run 001 classifier-v2 diagnostic](docs/PHASE3_7_STATUS_AFTER_RUN_001_V2_DIAGNOSTIC.md)
 
 ## Why this project exists
 
@@ -110,6 +122,7 @@ This project is accompanied by short research notes and governance artifacts tha
 
 - [Agent Cemetery v0.3](docs/AGENT_CEMETERY.md) — experimental survival-style stress-test harness for comparing simulated multi-agent architecture lineups under configurable oversight pressure. It is designed for evaluation-method development, not as a validated real-world risk metric.
 - [Death vs Divergence v0.4](docs/DEATH_VS_DIVERGENCE.md) — experimental report-integrity layer over Agent Cemetery traces. It compares simulated failure/stress evidence against the final public report and reports posthumous overclaim / ambiguity / alignment labels. It does not detect deception.
+- [Gravestone Analyzer](docs/GRAVESTONE_ANALYZER.md) — post-hoc metric-honesty layer that reads cemetery artifacts and reports separate overclaim vs broader report-integrity divergence rates. Harness analysis only; not empirical model-safety evidence.
 
 ### Oversight Signal Research
 
