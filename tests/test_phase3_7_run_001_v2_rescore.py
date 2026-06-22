@@ -16,6 +16,7 @@ from multi_agent_safety_sim.evaluation.phase3_7_rescore import (
     rescore_run_with_classifier_v2,
     write_diagnostic_rescore,
 )
+from tests.conftest import plain_cli_output
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -261,9 +262,11 @@ def test_missing_required_artifact_file_produces_clear_failure(tmp_path: Path) -
         ],
     )
 
+    output = plain_cli_output(result.output)
+
     assert result.exit_code == 2
-    assert "missing required Phase 3.7 Run 001" in result.output
-    assert "summary.json" in result.output
+    assert "missing required Phase 3.7 Run 001" in output
+    assert "summary.json" in output
 
 
 def test_load_run_001_artifacts_reads_expected_inputs(tmp_path: Path) -> None:

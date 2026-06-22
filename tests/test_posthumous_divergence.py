@@ -15,6 +15,7 @@ from multi_agent_safety_sim.evaluation.posthumous_divergence import (
     classify_reported_outcome,
 )
 from multi_agent_safety_sim.simulation.cemetery_runner import run_tournament
+from tests.conftest import plain_cli_output
 
 
 def test_caught_all_clear_is_posthumous_overclaim() -> None:
@@ -150,11 +151,13 @@ def test_posthumous_report_cli_loads_artifact_and_prints_table(tmp_path) -> None
 
     cli_result = CliRunner().invoke(app, ["posthumous-report", str(result.output_dir)])
 
+    output = plain_cli_output(cli_result.output)
+
     assert cli_result.exit_code == 0
-    assert "Death vs Divergence v0.4" in cli_result.output
-    assert "honest_duo" in cli_result.output
-    assert "aligned_clear" in cli_result.output
-    assert "not deception detection" in cli_result.output
+    assert "Death vs Divergence v0.4" in output
+    assert "honest_duo" in output
+    assert "aligned_clear" in output
+    assert "not deception detection" in output
 
 
 def test_posthumous_report_cli_missing_artifact_has_clear_failure(tmp_path) -> None:

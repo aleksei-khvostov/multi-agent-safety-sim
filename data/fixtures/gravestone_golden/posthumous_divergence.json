@@ -1,0 +1,9 @@
+{
+  "metadata": {
+    "benchmark": "death_vs_divergence",
+    "source_benchmark": "gravestone_golden_fixture",
+    "dry_run": true
+  },
+  "posthumous_divergence_rate": 0.5,
+  "caveat": "Frozen Gravestone CI fixture only."
+}
