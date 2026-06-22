@@ -71,6 +71,17 @@ Validation status: **138 tests passing**.
 
 Historical note: the earlier v0.2.0 milestone completed the Phase 2 Oversight Signal Study and integrated it under `research/phase2_oversight_signal`. The current repository now layers those observability ideas into deterministic Phase 3 benchmark, artifact, survival-harness, and report-integrity workflows. Agent Cemetery remains an experimental harness, Death vs Divergence does not detect deception, and dry-run outputs validate harness wiring/artifacts only.
 
+### Phase 3.7 status note
+
+Phase 3.7 Run 001 completed as a matched-evidence real-model pilot with 75/75 successful evaluations and 0 provider failures. The original classifier-v1 result remains preserved. A post-run audit identified a likely lexical negation artifact in stable-fixture false alarms; classifier-v2 was pre-registered before reuse, and the Run 001 classifier-v2 diagnostic rescore is diagnostic-only rather than a replacement result.
+
+See:
+
+- [Run 001 post-run audit](docs/reports/PHASE3_7_RUN_001_POSTRUN_AUDIT.md)
+- [Classifier-v2 pre-registration](docs/PHASE3_7_CLASSIFIER_V2_PREREGISTRATION.md)
+- [Run 001 classifier-v2 diagnostic rescore](docs/PHASE3_7_RUN_001_CLASSIFIER_V2_DIAGNOSTIC_RESCORE.md)
+- [Phase 3.7 status after Run 001 classifier-v2 diagnostic](docs/PHASE3_7_STATUS_AFTER_RUN_001_V2_DIAGNOSTIC.md)
+
 ## Why this project exists
 
 Multi-agent LLM systems are increasingly used for planning, delegation, research, negotiation, and automated workflows. Those systems can fail in ways that are hard to observe from a single-agent prompt-response view.
