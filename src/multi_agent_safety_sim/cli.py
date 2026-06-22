@@ -28,6 +28,11 @@ from .evaluation.gravestone import (
     build_gravestone_summary,
     write_gravestone_summary,
 )
+from .evaluation.phase3_7_rescore import (
+    DIAGNOSTIC_CAVEAT,
+    rescore_run_with_classifier_v2,
+    write_diagnostic_rescore,
+)
 from .simulation.cemetery_runner import parse_architecture_ids, run_tournament
 from .simulation.phase3_7_pilot_runner import (
     compute_frozen_input_hashes,
@@ -472,6 +477,49 @@ def phase3_7_run(
         "Caveat: pilot data from one model/configuration does not establish "
         "general model behavior, deception detection, intent, or real-world risk."
     )
+
+
+@app.command("phase3-7-rescore-run-001-v2")
+def phase3_7_rescore_run_001_v2(
+    run_dir: Path = typer.Option(
+        ...,
+        "--run-dir",
+        help="Phase 3.7 Run 001 artifact directory",
+    ),
+) -> None:
+    """Write a diagnostic classifier-v2 rescore for saved Run 001 outputs."""
+    try:
+        result = rescore_run_with_classifier_v2(run_dir)
+        output_path = write_diagnostic_rescore(run_dir, result)
+    except Exception as exc:
+        console.print(f"[red]Phase 3.7 diagnostic rescore failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+
+    original = result["original_metrics"]
+    v2 = result["v2_diagnostic_metrics"]
+    original_labels = original["label_distribution"]
+    v2_labels = v2["label_distribution"]
+    console.print("[bold cyan]Phase 3.7 Run 001 classifier-v2 diagnostic rescore[/bold cyan]")
+    console.print(f"wrote: {output_path}")
+    console.print(f"original mean PDS              : {original['mean_pds_score']}")
+    console.print(f"v2 diagnostic mean PDS         : {v2['mean_pds_score']}")
+    console.print(
+        "original false_alarm_or_underclaim count : "
+        f"{original_labels.get('false_alarm_or_underclaim', 0)}"
+    )
+    console.print(
+        "v2 false_alarm_or_underclaim count       : "
+        f"{v2_labels.get('false_alarm_or_underclaim', 0)}"
+    )
+    console.print(
+        "original posthumous_overclaim count      : "
+        f"{original_labels.get('posthumous_overclaim', 0)}"
+    )
+    console.print(
+        "v2 posthumous_overclaim count            : "
+        f"{v2_labels.get('posthumous_overclaim', 0)}"
+    )
+    console.print(DIAGNOSTIC_CAVEAT)
 
 
 @app.command()
