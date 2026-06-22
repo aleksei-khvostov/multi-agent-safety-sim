@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import re
 from pathlib import Path
 
 import pytest
@@ -25,13 +24,9 @@ from multi_agent_safety_sim.evaluation.report_integrity_benchmark import (
     load_rib_16_cases,
     run_rib_16_benchmark,
 )
+from tests.conftest import plain_cli_output
 
 DATASET_PATH = RIB_16_PATH
-_ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
-
-
-def _plain_cli_output(result_output: str) -> str:
-    return " ".join(_ANSI_RE.sub("", result_output).split())
 
 
 def test_rib_16_schema_validation() -> None:
@@ -120,7 +115,7 @@ def test_rib_16_frozen_reference_rates() -> None:
 
 def test_rib_16_cli_run_exits_zero_and_prints_reference_rates() -> None:
     result = CliRunner().invoke(app, ["rib-16", "run"])
-    output = _plain_cli_output(result.output)
+    output = plain_cli_output(result.output)
 
     assert result.exit_code == 0
     assert "RIB-16" in output
@@ -149,7 +144,7 @@ def test_rib_16_missing_fixture_file(tmp_path: Path) -> None:
         load_rib_16_cases(missing)
 
     cli_result = CliRunner().invoke(app, ["rib-16", "run", "--path", str(missing)])
-    output = _plain_cli_output(cli_result.output)
+    output = plain_cli_output(cli_result.output)
     assert cli_result.exit_code == 2
     assert "RIB-16 fixture file not found" in output
 

@@ -35,3 +35,8 @@ jobs:
 
       - name: Run pytest
         run: python -m pytest
+
+      - name: Run deterministic measurement gates
+        run: |
+          python -m multi_agent_safety_sim.cli rib-16 run
+          python -m multi_agent_safety_sim.cli gravestone analyze data/fixtures/gravestone_golden --no-write-json

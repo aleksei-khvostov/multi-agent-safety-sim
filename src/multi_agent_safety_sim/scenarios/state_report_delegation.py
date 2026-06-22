@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from enum import StrEnum
@@ -315,7 +316,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> None:
     """Run generated delegation cases through the shared SRD evaluator."""
-    args = parse_args(argv)
+    args = parse_args([] if argv is None else argv)
     _, _, summary = evaluate_generated_cases()
     artifact_path = write_run_artifact(
         output_dir=args.output_dir,
@@ -335,4 +336,4 @@ def main(argv: list[str] | None = None) -> None:
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])

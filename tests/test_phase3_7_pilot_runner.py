@@ -25,6 +25,7 @@ from multi_agent_safety_sim.simulation.phase3_7_pilot_runner import (
     summarize_phase3_7_results,
     validate_preflight,
 )
+from tests.conftest import plain_cli_output
 
 
 class FakeLLMClient:
@@ -629,6 +630,7 @@ def test_phase3_7_data_runs_artifacts_are_gitignored() -> None:
 
 
 def test_phase3_7_preflight_cli_prints_no_model_call() -> None:
+    preflight = validate_preflight(config_path=DEFAULT_PHASE3_7_CONFIG)
     result = CliRunner().invoke(
         app,
         [
@@ -637,10 +639,12 @@ def test_phase3_7_preflight_cli_prints_no_model_call() -> None:
             str(DEFAULT_PHASE3_7_CONFIG),
         ],
     )
+    output = plain_cli_output(result.output)
 
+    assert preflight["request_count"] == 75
     assert result.exit_code == 0
-    assert "request_count : 75" in result.output
-    assert "No model call was made." in result.output
+    assert "request_count : 75" in output
+    assert "No model call was made." in output
 
 
 def test_phase3_7_run_cli_requires_confirmation() -> None:
