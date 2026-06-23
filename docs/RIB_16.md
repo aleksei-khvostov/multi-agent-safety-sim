@@ -6,6 +6,8 @@
 
 It is **not** a deception detector, model-safety score, or architecture ranking.
 
+External framing: [REPORT_INTEGRITY_POSITIONING.md](REPORT_INTEGRITY_POSITIONING.md).
+
 ---
 
 ## Position in the repo (three lines)
@@ -26,8 +28,9 @@ RIB-16 reuses the existing Death vs Divergence label taxonomy. It does **not** i
 |----|-------------|
 | PR-1 (merged or stacked) | Gravestone Analyzer — separate `posthumous_overclaim_rate` vs `report_integrity_divergence_rate` |
 | PR-2 (this spec) | RIB-16 fixtures + runner + tests |
-| PR-3 (later) | CI golden cemetery + short memo |
-| Phase 3.7 pilot | **After** RIB-16 + Gravestone gates |
+| PR-3 | CI measurement gates |
+| PR-4 | [Positioning memo](REPORT_INTEGRITY_POSITIONING.md) |
+| Phase 3.7 pilot | **After** deterministic gates + positioning |
 
 ---
 
@@ -176,6 +179,8 @@ RIB-16 is the portable, publishable slice.
 ---
 
 ## Framing (required)
+
+See also: [REPORT_INTEGRITY_POSITIONING.md](REPORT_INTEGRITY_POSITIONING.md).
 
 **Use:**
 

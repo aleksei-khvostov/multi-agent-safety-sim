@@ -34,6 +34,8 @@ Denominator: **`eligible_posthumous_records`** — one record per episode with f
 
 Gravestone performs **harness/artifact analysis only**.
 
+External framing: [REPORT_INTEGRITY_POSITIONING.md](REPORT_INTEGRITY_POSITIONING.md).
+
 ## Why `posthumous_divergence_rate` is too broad
 
 Legacy `posthumous_divergence.json` exposes `posthumous_divergence_rate`, which equals `count(divergence is true) / episodes` — the same as **`report_integrity_divergence_rate`**, not overclaim alone.
@@ -72,5 +74,5 @@ Writes `gravestone_summary.json` into the run directory by default.
 | Agent Cemetery | Produces survival + posthumous artifacts (toy dry-run harness) |
 | Death vs Divergence | Classifies episodes at write time |
 | Gravestone Analyzer | Re-reads artifacts; separates headline metrics for honest reporting |
-| RIB-16 (planned) | Frozen benchmark fixtures, no Cemetery run required |
-| Phase 3.7 pilot (later) | Consumer of the same label taxonomy after metric gates are clean |
+| RIB-16 | Frozen scorer benchmark; see [RIB_16.md](RIB_16.md) |
+| Phase 3.7 pilot (later) | Empirical layer; interpret separately from dry-run artifact rates |
