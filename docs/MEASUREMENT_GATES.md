@@ -2,6 +2,8 @@
 
 These gates catch **measurement drift** in the report-integrity layer before empirical pilots (e.g. Phase 3.7). They are API-free and use frozen inputs only.
 
+For external framing — what these gates do and do **not** mean — see [REPORT_INTEGRITY_POSITIONING.md](REPORT_INTEGRITY_POSITIONING.md).
+
 ---
 
 ## What each gate checks
@@ -54,5 +56,6 @@ CI runs both commands after ruff and pytest. Failures block merge when:
 | PR-1 Gravestone | Metric honesty (separate overclaim vs divergence) |
 | PR-2 RIB-16 | Frozen scorer benchmark |
 | **PR-3 (this)** | **CI gates — prevent measurement drift** |
-| PR-4 (later) | Positioning memo — report integrity ≠ deception |
+| PR-4 | [Positioning memo](REPORT_INTEGRITY_POSITIONING.md) — report integrity ≠ deception |
 | PR-5 (later) | Phase 3.7 empirical pilot on top of these gates |
+| PR-4.1 (optional) | SHA locks on frozen fixtures |

@@ -12,6 +12,8 @@ The project is intentionally conservative: it defaults to a `DummyLLMClient`, re
 
 The project is for evaluation-method development. It does not claim to detect real-world deception, measure real-world agent danger, or validate architecture safety from dry-run outputs. Experimental dry-runs validate harness wiring and artifact pipelines only. Empirical claims require real-model runs with model, seed, policy, episode count, and prompt setup reported.
 
+**Report integrity** here means trace–report consistency, not deception detection. See [docs/REPORT_INTEGRITY_POSITIONING.md](docs/REPORT_INTEGRITY_POSITIONING.md) for how to read RIB-16, Gravestone, and future empirical pilots without misinterpreting rates as model safety scores.
+
 ## Current research stack
 
 The current stack is organized as five connected layers:
