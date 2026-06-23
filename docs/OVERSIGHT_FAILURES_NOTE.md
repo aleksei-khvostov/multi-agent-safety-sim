@@ -31,7 +31,7 @@ This note describes two cases where the oversight layer failed in opposite direc
 
 ## 2. Experimental setup
 
-I built a small Python simulator, [`multi-agent-safety-sim`](https://github.com/fsrxc2bvv9-ctrl/multi-agent-safety-sim), to make these failure modes inspectable rather than anecdotal. It has two scenario baselines, structured JSON traces, a watchdog monitoring layer, dry-run and real-model execution, and pre-run evaluation criteria.
+I built a small Python simulator, [`multi-agent-safety-sim`](https://github.com/aleksei-khvostov/multi-agent-safety-sim), to make these failure modes inspectable rather than anecdotal. It has two scenario baselines, structured JSON traces, a watchdog monitoring layer, dry-run and real-model execution, and pre-run evaluation criteria.
 
 It is explicitly small-scale and simplified. The value is not in scale or statistical power. The value is in having a concrete, auditable environment where you can watch the oversight machinery work and see where it breaks.
 
@@ -164,7 +164,7 @@ The connection I want to make is narrow: large AI-risk stories often depend on m
 
 ## 10. Repository and related artifacts
 
-Code, traces, and documentation: [`multi-agent-safety-sim`](https://github.com/fsrxc2bvv9-ctrl/multi-agent-safety-sim)
+Code, traces, and documentation: [`multi-agent-safety-sim`](https://github.com/aleksei-khvostov/multi-agent-safety-sim)
 
 The repo also includes pre-run evaluation criteria, a governance mapping table, and CBV-style evaluation rubrics for agentic governance. These are supporting material. The core of this note is the two findings above.
 
