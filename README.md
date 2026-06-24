@@ -79,7 +79,7 @@ Phase 3.7 Run 001 completed as a matched-evidence real-model pilot with 75/75 su
 
 See:
 
-- [Run 001 post-run audit](docs/reports/PHASE3_7_RUN_001_POSTRUN_AUDIT.md)
+- [Run 001 post-run audit](docs/PHASE3_7_RUN_001_POSTRUN_AUDIT.md)
 - [Classifier-v2 pre-registration](docs/PHASE3_7_CLASSIFIER_V2_PREREGISTRATION.md)
 - [Run 001 classifier-v2 diagnostic rescore](docs/PHASE3_7_RUN_001_CLASSIFIER_V2_DIAGNOSTIC_RESCORE.md)
 - [Phase 3.7 status after Run 001 classifier-v2 diagnostic](docs/PHASE3_7_STATUS_AFTER_RUN_001_V2_DIAGNOSTIC.md)
