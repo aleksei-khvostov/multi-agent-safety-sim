@@ -7,6 +7,7 @@ Commands:
 - posthumous-report
 - gravestone analyze
 - rib-16 run
+- nested-delegation run
 - phase3-7-preflight
 - phase3-7-run
 - list-scenarios
@@ -28,6 +29,15 @@ from .evaluation.gravestone import (
     GravestoneArtifactError,
     build_gravestone_summary,
     write_gravestone_summary,
+)
+from .evaluation.nested_delegation_benchmark import (
+    NDB_20_CAVEAT,
+    NDB_20_PATH,
+    Ndb20BenchmarkError,
+    run_ndb_20_benchmark,
+)
+from .evaluation.nested_delegation_benchmark import (
+    REFERENCE_RATES_NOTE as NDB_REFERENCE_RATES_NOTE,
 )
 from .evaluation.phase3_7_rescore import (
     DIAGNOSTIC_CAVEAT,
@@ -63,6 +73,12 @@ gravestone_app = typer.Typer(
 rib_16_app = typer.Typer(
     name="rib-16",
     help="RIB-16 frozen report integrity benchmark (API-free)",
+    add_completion=False,
+)
+
+nested_delegation_app = typer.Typer(
+    name="nested-delegation",
+    help="NDB-20 nested delegation report-integrity benchmark (API-free)",
     add_completion=False,
 )
 console = Console()
@@ -195,9 +211,7 @@ def run(
 
             for trial in result.trials[:8]:
                 final_round = (
-                    trial.round_trace[-1].get("round_info", {})
-                    if trial.round_trace
-                    else {}
+                    trial.round_trace[-1].get("round_info", {}) if trial.round_trace else {}
                 )
                 t_table.add_row(
                     str(trial.trial_id),
@@ -312,7 +326,9 @@ def cemetery(
 
 
 @app.command("posthumous-report")
-def posthumous_report(run_dir: Path = typer.Argument(..., help="Agent Cemetery run directory")) -> None:
+def posthumous_report(
+    run_dir: Path = typer.Argument(..., help="Agent Cemetery run directory"),
+) -> None:
     """Print a compact Death vs Divergence report for a Cemetery run."""
     report_path = run_dir / "posthumous_divergence.json"
     if not report_path.exists():
@@ -528,8 +544,7 @@ def rib_16_run(
     console.print(RIB_16_CAVEAT)
     console.print(f"[yellow]Reference rates:[/yellow] {REFERENCE_RATES_NOTE}")
     console.print(
-        f"  passed: {summary['passed']}/{summary['total_cases']}  "
-        f"failed: {summary['failed']}"
+        f"  passed: {summary['passed']}/{summary['total_cases']}  failed: {summary['failed']}"
     )
     console.print(f"  eligible_posthumous_records: {summary['eligible_posthumous_records']}")
     console.print(
@@ -559,8 +574,84 @@ def rib_16_run(
     console.print("[green]No model API was called.[/green]")
 
 
-app.add_typer(rib_16_app)
+@nested_delegation_app.command("run")
+def nested_delegation_run(
+    path: Path = typer.Option(
+        NDB_20_PATH,
+        "--path",
+        help="NDB-20 JSONL fixture path",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Emit JSON summary only",
+    ),
+) -> None:
+    """Run the frozen NDB-20 nested delegation benchmark (no API calls)."""
+    try:
+        benchmark = run_ndb_20_benchmark(path)
+    except FileNotFoundError as exc:
+        console.print(f"[red]NDB-20 fixture file not found:[/red] {exc}")
+        raise typer.Exit(2) from exc
+    except Ndb20BenchmarkError as exc:
+        console.print(f"[red]NDB-20 benchmark failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+    except Exception as exc:
+        console.print(f"[red]NDB-20 benchmark failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
 
+    summary = benchmark["summary"]
+    if json_output:
+        typer.echo(json.dumps(summary, indent=2))
+        return
+
+    console.print("[bold cyan]NDB-20 Nested Delegation Benchmark[/bold cyan]")
+    console.print(NDB_20_CAVEAT)
+    console.print(f"[yellow]Primary reference rates:[/yellow] {NDB_REFERENCE_RATES_NOTE}")
+    console.print(
+        f"  passed: {summary['passed']}/{summary['total_cases']}  failed: {summary['failed']}"
+    )
+    console.print(f"  eligible_nested_cases: {summary['eligible_nested_cases']}")
+    console.print(
+        "  nested_report_integrity_divergence_rate (frozen reference): "
+        f"{summary['nested_report_integrity_divergence_rate']:.3f} "
+        f"({summary['nested_report_integrity_divergence_count']}/"
+        f"{summary['eligible_nested_cases']})"
+    )
+    console.print(
+        "  consolidation_overclaim_rate (frozen reference): "
+        f"{summary['consolidation_overclaim_rate']:.3f} "
+        f"({summary['consolidation_overclaim_count']}/"
+        f"{summary['eligible_nested_cases']})"
+    )
+    console.print(
+        "  consolidation_underclaim_rate (frozen reference): "
+        f"{summary['consolidation_underclaim_rate']:.3f} "
+        f"({summary['consolidation_underclaim_count']}/"
+        f"{summary['eligible_nested_cases']})"
+    )
+    console.print(
+        "[dim]Diagnostics (secondary): "
+        f"watchdog_fp_on_nested_ambiguity="
+        f"{summary['diagnostics']['watchdog_fp_on_nested_ambiguity']}[/dim]"
+    )
+
+    table = Table(title="NDB-20 by Family", show_header=True)
+    table.add_column("Family", style="cyan")
+    table.add_column("Cases", justify="right")
+    for family, count in sorted(summary["by_family"].items()):
+        table.add_row(family, str(count))
+    console.print(table)
+
+    if summary["failed"]:
+        console.print(f"[red]Failed cases:[/red] {summary['failed_case_ids']}")
+        raise typer.Exit(2)
+
+    console.print("[green]No model API was called.[/green]")
+
+
+app.add_typer(rib_16_app)
+app.add_typer(nested_delegation_app)
 
 
 @app.command("phase3-7-rescore-run-001-v2")
@@ -600,8 +691,7 @@ def phase3_7_rescore_run_001_v2(
         f"{original_labels.get('posthumous_overclaim', 0)}"
     )
     console.print(
-        "v2 posthumous_overclaim count            : "
-        f"{v2_labels.get('posthumous_overclaim', 0)}"
+        f"v2 posthumous_overclaim count            : {v2_labels.get('posthumous_overclaim', 0)}"
     )
     console.print(DIAGNOSTIC_CAVEAT)
 
