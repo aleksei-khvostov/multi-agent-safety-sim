@@ -16,6 +16,8 @@ The project is for evaluation-method development. It does not claim to detect re
 
 **NDB-20** extends report integrity to nested delegation: `python3 -m multi_agent_safety_sim.cli nested-delegation run` (API-free; primary rates only).
 
+For the current frozen report-integrity regression stack, see [`docs/MEASUREMENT_GATES.md`](docs/MEASUREMENT_GATES.md). The gates separate primary reference rates from diagnostic-only watchdog observations.
+
 ## Current research stack
 
 The current stack is organized as five connected layers:

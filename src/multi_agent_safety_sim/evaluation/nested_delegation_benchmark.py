@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from .fixture_locks import NDB_20_FIXTURE_SHA256, assert_fixture_sha256
 from .nested_watchdog_v1 import evaluate_nested_watchdog_v1
 from .state_report_divergence import (
     DIVERGENCE_LABELS,
@@ -392,6 +393,12 @@ def assert_ndb_20_reference_rates(summary: dict[str, Any]) -> None:
 
 def run_ndb_20_benchmark(path: Path = NDB_20_PATH) -> dict[str, Any]:
     """Load, evaluate, and summarize all NDB-20 cases."""
+    if path == NDB_20_PATH:
+        assert_fixture_sha256(
+            path,
+            NDB_20_FIXTURE_SHA256,
+            fixture_name="NDB-20",
+        )
     cases = load_ndb_20_cases(path)
     results = [evaluate_ndb_20_case(case) for case in cases]
     summary = ndb_20_summary_dict(results)

@@ -40,3 +40,4 @@ jobs:
         run: |
           python -m multi_agent_safety_sim.cli rib-16 run
           python -m multi_agent_safety_sim.cli gravestone analyze data/fixtures/gravestone_golden --no-write-json
+          python -m multi_agent_safety_sim.cli nested-delegation run
