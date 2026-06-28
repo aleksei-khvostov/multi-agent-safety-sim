@@ -8,6 +8,7 @@ Commands:
 - gravestone analyze
 - rib-16 run
 - nested-delegation run
+- report-integrity run-all
 - phase3-7-preflight
 - phase3-7-run
 - list-scenarios
@@ -81,7 +82,17 @@ nested_delegation_app = typer.Typer(
     help="NDB-20 nested delegation report-integrity benchmark (API-free)",
     add_completion=False,
 )
+
+report_integrity_app = typer.Typer(
+    name="report-integrity",
+    help="Frozen report-integrity measurement gate convenience commands",
+    add_completion=False,
+)
 console = Console()
+
+GRAVESTONE_GOLDEN_FIXTURE = Path("data/fixtures/gravestone_golden")
+GRAVESTONE_GATE_OVERCLAIM_RATE = 0.25
+GRAVESTONE_GATE_DIVERGENCE_RATE = 0.5
 
 
 @app.command()
@@ -650,8 +661,87 @@ def nested_delegation_run(
     console.print("[green]No model API was called.[/green]")
 
 
+@report_integrity_app.command("run-all")
+def report_integrity_run_all() -> None:
+    """Run all frozen report-integrity CI gates and print a compact summary."""
+    rows: list[tuple[str, int, str, str]] = []
+
+    try:
+        rib = run_rib_16_benchmark()
+        rib_summary = rib["summary"]
+        rib_pass = rib_summary["failed"] == 0
+        rib_rates = (
+            f"overclaim={rib_summary['posthumous_overclaim_rate']:.2f}, "
+            f"divergence={rib_summary['report_integrity_divergence_rate']:.2f}"
+        )
+        rows.append(("rib_16", rib_summary["total_cases"], rib_rates, "pass" if rib_pass else "fail"))
+        if not rib_pass:
+            raise Rib16BenchmarkError(f"RIB-16 failed cases: {rib_summary['failed_case_ids']}")
+    except Exception as exc:
+        console.print(f"[red]RIB-16 gate failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+
+    try:
+        gravestone = build_gravestone_summary(GRAVESTONE_GOLDEN_FIXTURE)
+        overall = gravestone["summary"]
+        gravestone_pass = (
+            overall["posthumous_overclaim_rate"] == GRAVESTONE_GATE_OVERCLAIM_RATE
+            and overall["report_integrity_divergence_rate"] == GRAVESTONE_GATE_DIVERGENCE_RATE
+        )
+        gravestone_rates = (
+            f"overclaim={overall['posthumous_overclaim_rate']:.2f}, "
+            f"divergence={overall['report_integrity_divergence_rate']:.2f}"
+        )
+        rows.append(
+            (
+                "gravestone_golden",
+                overall["denominator"]["eligible_records"],
+                gravestone_rates,
+                "pass" if gravestone_pass else "fail",
+            )
+        )
+        if not gravestone_pass:
+            raise GravestoneArtifactError("Gravestone golden fixture rates drifted")
+    except Exception as exc:
+        console.print(f"[red]Gravestone gate failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+
+    try:
+        ndb = run_ndb_20_benchmark()
+        ndb_summary = ndb["summary"]
+        ndb_pass = ndb_summary["failed"] == 0
+        ndb_rates = (
+            f"divergence={ndb_summary['nested_report_integrity_divergence_rate']:.2f}, "
+            f"overclaim={ndb_summary['consolidation_overclaim_rate']:.2f}, "
+            f"underclaim={ndb_summary['consolidation_underclaim_rate']:.2f}"
+        )
+        rows.append(("ndb_20", ndb_summary["total_cases"], ndb_rates, "pass" if ndb_pass else "fail"))
+        if not ndb_pass:
+            raise Ndb20BenchmarkError(f"NDB-20 failed cases: {ndb_summary['failed_case_ids']}")
+    except Exception as exc:
+        console.print(f"[red]NDB-20 gate failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+
+    console.print("[bold cyan]Report Integrity Gates — run-all[/bold cyan]")
+    table = Table(title="Frozen measurement gates", show_header=True)
+    table.add_column("Benchmark", style="cyan")
+    table.add_column("Cases", justify="right")
+    table.add_column("Primary rates", style="dim")
+    table.add_column("Result", justify="center")
+    for benchmark, cases, rates, result in rows:
+        style = "green" if result == "pass" else "red"
+        table.add_row(benchmark, str(cases), rates, f"[{style}]{result}[/{style}]")
+    console.print(table)
+    console.print(
+        "[dim]Watchdog diagnostics on NDB-20 are not gate criteria. "
+        "See docs/MEASUREMENT_GATES.md for the report-integrity ladder.[/dim]"
+    )
+    console.print("[green]All frozen report-integrity gates passed. No model API was called.[/green]")
+
+
 app.add_typer(rib_16_app)
 app.add_typer(nested_delegation_app)
+app.add_typer(report_integrity_app)
 
 
 @app.command("phase3-7-rescore-run-001-v2")

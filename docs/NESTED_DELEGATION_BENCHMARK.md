@@ -1,6 +1,6 @@
 # PR-5: Nested Delegation Benchmark (Spec Only)
 
-**Status:** Implemented — fixtures, runner, tests, and CLI in PR-5. CI gate deferred to PR-5.1.
+**Status:** Implemented — fixtures, runner, tests, CLI (PR-5). CI gate + SHA lock (PR-5.1).
 
 **Audience:** maintainers, reviewers, future implementers.
 
