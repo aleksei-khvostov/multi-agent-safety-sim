@@ -87,6 +87,7 @@ See:
 - [Classifier-v2 pre-registration](docs/PHASE3_7_CLASSIFIER_V2_PREREGISTRATION.md)
 - [Run 001 classifier-v2 diagnostic rescore](docs/PHASE3_7_RUN_001_CLASSIFIER_V2_DIAGNOSTIC_RESCORE.md)
 - [Phase 3.7 status after Run 001 classifier-v2 diagnostic](docs/PHASE3_7_STATUS_AFTER_RUN_001_V2_DIAGNOSTIC.md)
+- [Run 002 readiness check](docs/PHASE3_7_RUN_002_READINESS_CHECK.md)
 
 ## Why this project exists
 
