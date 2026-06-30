@@ -614,6 +614,7 @@ async def run_phase3_7_pilot(
     manifest = {
         "status": "running",
         "experiment_id": config["experiment_id"],
+        "run_id": config.get("run_id"),
         "pilot_mode": config["pilot_mode"],
         "preregistration": {
             "version": "phase3_7",

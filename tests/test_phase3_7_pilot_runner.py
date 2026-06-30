@@ -414,6 +414,7 @@ def test_manifest_contains_required_metadata_and_hashes(
     manifest = json.loads((output_dir / "run_manifest.json").read_text(encoding="utf-8"))
 
     assert manifest["experiment_id"] == "phase3_7_real_model_pilot"
+    assert manifest["run_id"] is None
     assert manifest["status"] == "completed"
     assert manifest["pilot_mode"] == "matched_trace_report_generation"
     assert manifest["request_order"] == "deterministic_block_randomized"
@@ -429,6 +430,42 @@ def test_manifest_contains_required_metadata_and_hashes(
     assert manifest["end_timestamp"] is not None
     assert "frozen_input_sha256" in manifest
     assert "posthumous_divergence.py" in "\n".join(manifest["frozen_input_sha256"])
+
+
+def test_run_002_manifest_records_config_run_id_with_fake_client(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    output_dir = tmp_path / "run_002_fake_client"
+    client = FakeLLMClient()
+    monkeypatch.setattr(
+        "multi_agent_safety_sim.simulation.phase3_7_pilot_runner.is_git_worktree_clean",
+        lambda: True,
+    )
+    monkeypatch.setattr(
+        "multi_agent_safety_sim.simulation.phase3_7_pilot_runner.current_git_commit",
+        lambda: "abc123",
+    )
+
+    completed_output_dir = asyncio.run(
+        run_phase3_7_pilot(
+            config_path=RUN_002_CONFIG,
+            llm_client=client,
+            confirm_real_model_run=True,
+            output_dir_override=output_dir,
+        )
+    )
+    manifest = json.loads(
+        (completed_output_dir / "run_manifest.json").read_text(encoding="utf-8")
+    )
+
+    assert completed_output_dir == output_dir
+    assert client.calls == 75
+    assert manifest["run_id"] == RUN_002_ID
+    assert manifest["request_count"] == 75
+    assert manifest["successful_evaluation_count"] == 75
+    assert manifest["failed_request_count"] == 0
+    assert manifest["classifier_version"] == "frozen_lexical_v2_negation"
 
 
 def test_phase3_7_runner_constructs_real_client_with_configured_provider(
