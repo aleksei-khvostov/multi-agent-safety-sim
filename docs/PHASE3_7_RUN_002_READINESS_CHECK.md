@@ -31,6 +31,20 @@ This document records the documentation-only readiness check before Phase 3.7 Ru
 - `data/runs` remains ignored.
 - No generated run artifacts committed.
 
+## Run 002 Config/Preflight Status
+
+- Run 002 config: `configs/phase3_7_run_002_real_model_pilot.yaml`
+- Run 002 classifier regime: `frozen_lexical_v2_negation`
+- Config/preflight preparation does not run a model, call OpenRouter, add credentials, or create `data/runs` artifacts.
+- Run 002 is a new model run under the frozen classifier-v2 measurement regime, not a correction or replacement of Run 001 or the Run 001-v2 diagnostic rescore.
+
+Preflight command:
+
+```bash
+PYTHONPATH=src python3 -m multi_agent_safety_sim.cli phase3-7-preflight \
+  --config configs/phase3_7_run_002_real_model_pilot.yaml
+```
+
 ## Commands To Run Before Run 002
 
 ```bash

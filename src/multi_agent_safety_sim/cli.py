@@ -54,6 +54,7 @@ from .evaluation.report_integrity_benchmark import (
 )
 from .simulation.cemetery_runner import parse_architecture_ids, run_tournament
 from .simulation.phase3_7_pilot_runner import (
+    RUN_002_ID,
     compute_frozen_input_hashes,
     run_phase3_7_pilot,
     validate_preflight,
@@ -463,9 +464,19 @@ def phase3_7_preflight(
         raise typer.Exit(2) from exc
 
     cfg = preflight["config"]
+    model = cfg["model"]
+    classification = cfg["classification"]
     console.print("[bold cyan]Phase 3.7 matched-evidence preflight[/bold cyan]")
     console.print(f"experiment_id : {cfg['experiment_id']}")
+    if cfg.get("run_id"):
+        console.print(f"run_id        : {cfg['run_id']}")
     console.print(f"pilot_mode    : {cfg['pilot_mode']}")
+    console.print(f"provider      : {model['provider']}")
+    console.print(f"model_string  : {model['model_string']}")
+    console.print(f"run_date      : {model['run_date']}")
+    console.print(
+        f"classifier    : {classification.get('classifier_version', 'not declared')}"
+    )
     console.print(f"architectures : {cfg['architectures']}")
     console.print(f"fixtures      : {[fixture.fixture_id for fixture in preflight['fixtures']]}")
     console.print(f"repetitions   : {cfg['run_parameters']['repetitions']}")
@@ -480,6 +491,10 @@ def phase3_7_preflight(
     for path, digest in sorted(hashes.items()):
         table.add_row(path, digest)
     console.print(table)
+    if cfg.get("run_id") == RUN_002_ID:
+        console.print(
+            "Run 002 preparation only: this is a new model run, not a Run 001 correction."
+        )
     console.print("No model call was made.")
 
 
