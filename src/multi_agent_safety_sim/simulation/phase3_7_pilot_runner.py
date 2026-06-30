@@ -21,13 +21,21 @@ from typing import Any
 import yaml
 
 from multi_agent_safety_sim.evaluation.posthumous_divergence import (
+    CLASSIFIER_VERSION_V2,
+    DIVERGENCE_LABELS,
+    PosthumousDivergenceRecord,
     actual_outcome_from_episode,
     build_posthumous_record,
+    classify_reported_outcome_v2,
+    label_posthumous_divergence,
+    score_posthumous_divergence,
 )
 from multi_agent_safety_sim.utils.llm import LLMClient, RealLLMClient
 
 DEFAULT_PHASE3_7_CONFIG = Path("configs/phase3_7_real_model_pilot.yaml")
+RUN_002_ID = "phase3_7_run_002"
 PREREGISTRATION_PATH = Path("docs/PHASE3_7_REAL_MODEL_PILOT_PREREGISTRATION.md")
+RUN_002_READINESS_PATH = Path("docs/PHASE3_7_RUN_002_READINESS_CHECK.md")
 CLASSIFIER_PATH = Path("src/multi_agent_safety_sim/evaluation/posthumous_divergence.py")
 PROMPT_DIR = Path("prompts/phase3_7")
 SYSTEM_PROMPT_PATH = PROMPT_DIR / "system_base.md"
@@ -174,6 +182,24 @@ def _is_tbd(value: Any) -> bool:
     return str(value).strip().upper() == "TBD"
 
 
+def _validate_run_002_classifier_gate(config: dict[str, Any]) -> None:
+    """Require the frozen classifier-v2 regime for Run 002 preparation."""
+    if config.get("run_id") != RUN_002_ID:
+        return
+    model = config["model"]
+    for field in ("provider", "model_string", "run_date"):
+        if not str(model.get(field, "")).strip() or _is_tbd(model.get(field)):
+            raise ValueError(f"Run 002 model.{field} must be explicit and not TBD")
+    classifier_version = config["classification"].get("classifier_version")
+    if _is_tbd(classifier_version) or classifier_version != CLASSIFIER_VERSION_V2:
+        raise ValueError(
+            f"Run 002 classifier_version must be exactly {CLASSIFIER_VERSION_V2}"
+        )
+    readiness_text = RUN_002_READINESS_PATH.read_text(encoding="utf-8")
+    if "report-integrity run-all" not in readiness_text:
+        raise ValueError("Run 002 readiness doc must reference report-integrity run-all")
+
+
 def validate_preflight(
     *,
     config_path: Path = DEFAULT_PHASE3_7_CONFIG,
@@ -218,6 +244,7 @@ def validate_preflight(
         raise ValueError("classifier must be architecture_blind")
     if config["classification"]["classifier_modified_after_model_outputs"]:
         raise ValueError("classifier must not be modified after model outputs")
+    _validate_run_002_classifier_gate(config)
 
     if require_ready and any(
         _is_tbd(model[field]) for field in ("provider", "model_string", "run_date")
@@ -346,6 +373,49 @@ def _input_hash_refs(
         "architecture_prompt": hashes[str(PROMPT_DIR / f"{architecture_id}.md")],
         "final_report_instruction": hashes[str(FINAL_REPORT_PROMPT_PATH)],
     }
+
+
+def _build_phase3_7_record(
+    *,
+    classification: dict[str, Any],
+    architecture_id: str,
+    episode_id: int,
+    lifespan_rounds: int,
+    death_event: bool,
+    death_cause: str | None,
+    risk_score: float,
+    final_report: str,
+) -> PosthumousDivergenceRecord:
+    if classification.get("classifier_version") != CLASSIFIER_VERSION_V2:
+        return build_posthumous_record(
+            architecture_id=architecture_id,
+            episode_id=episode_id,
+            lifespan_rounds=lifespan_rounds,
+            death_event=death_event,
+            death_cause=death_cause,
+            risk_score=risk_score,
+            final_report=final_report,
+        )
+
+    actual_outcome = actual_outcome_from_episode(
+        death_event=death_event,
+        risk_score=risk_score,
+    )
+    reported_outcome = classify_reported_outcome_v2(final_report)
+    label = label_posthumous_divergence(actual_outcome, reported_outcome)
+    return PosthumousDivergenceRecord(
+        architecture_id=architecture_id,
+        episode_id=episode_id,
+        actual_outcome=actual_outcome,
+        reported_outcome=reported_outcome,
+        label=label,
+        divergence=label in DIVERGENCE_LABELS,
+        pds_score=score_posthumous_divergence(actual_outcome, reported_outcome),
+        lifespan_rounds=lifespan_rounds,
+        death_event=death_event,
+        death_cause=death_cause,
+        final_report_excerpt=final_report[:240],
+    )
 
 
 def summarize_phase3_7_results(
@@ -569,6 +639,7 @@ async def run_phase3_7_pilot(
         "fixture_ids": [fixture.fixture_id for fixture in fixtures],
         "death_policy": config["death_policy"],
         "classifier_name": config["classification"]["reported_outcome_classifier"],
+        "classifier_version": config["classification"].get("classifier_version"),
         "classifier_priority_order": CLASSIFIER_PRIORITY_ORDER,
         "calibration_path": config["classification"]["calibration_set"],
         "git_commit": current_git_commit(),
@@ -629,7 +700,8 @@ async def run_phase3_7_pilot(
                     failure_rows.append(failure_row)
                     _append_jsonl(failures_path, failure_row)
                     continue
-                record = build_posthumous_record(
+                record = _build_phase3_7_record(
+                    classification=config["classification"],
                     architecture_id=request.architecture_id,
                     episode_id=fixtures.index(request.fixture) + 1,
                     lifespan_rounds=request.fixture.lifespan_rounds,
