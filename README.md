@@ -88,6 +88,7 @@ See:
 - [Run 001 classifier-v2 diagnostic rescore](docs/PHASE3_7_RUN_001_CLASSIFIER_V2_DIAGNOSTIC_RESCORE.md)
 - [Phase 3.7 status after Run 001 classifier-v2 diagnostic](docs/PHASE3_7_STATUS_AFTER_RUN_001_V2_DIAGNOSTIC.md)
 - [Run 002 readiness check](docs/PHASE3_7_RUN_002_READINESS_CHECK.md)
+- [Run 002 post-run audit](docs/reports/PHASE3_7_RUN_002_POSTRUN_AUDIT.md)
 
 ## Why this project exists
 
