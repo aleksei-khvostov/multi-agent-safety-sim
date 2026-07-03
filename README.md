@@ -91,6 +91,7 @@ See:
 - [Run 002 post-run audit](docs/reports/PHASE3_7_RUN_002_POSTRUN_AUDIT.md)
 - [Classifier-v3 issue note](docs/PHASE3_7_CLASSIFIER_V3_ISSUE_NOTE.md)
 - [Classifier-v3 preregistration](docs/PHASE3_7_CLASSIFIER_V3_PREREGISTRATION.md)
+- [Phase 3.7 measurement-audit case study](docs/reports/PHASE3_7_MEASUREMENT_AUDIT_CASE_STUDY.md)
 
 ## Why this project exists
 
