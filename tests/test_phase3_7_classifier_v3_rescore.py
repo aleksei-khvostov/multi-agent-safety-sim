@@ -15,6 +15,8 @@ from multi_agent_safety_sim.evaluation.phase3_7_rescore import (
     RUN_001_V3_DIAGNOSTIC_FILENAME,
     RUN_002_V3_DIAGNOSTIC_CAVEAT,
     RUN_002_V3_DIAGNOSTIC_FILENAME,
+    SCOPE_UNRESOLVED_BOUNDARY,
+    _rationale_for_change,
     load_phase3_7_run_artifacts,
     rescore_run_001_with_classifier_v3,
     rescore_run_002_with_classifier_v3,
@@ -376,6 +378,34 @@ def test_classifier_dependent_fields_recomputed_on_boundary(tmp_path: Path) -> N
     assert stressed["change_scope"] == "unresolved_non_successful_boundary"
     assert "final_report" in stressed
     assert len(stressed["final_report"]) > 50
+    assert "block all_clear" in stressed["rationale"]
+
+
+def test_unresolved_boundary_rationale_distinguishes_partial_from_all_clear() -> None:
+    """partial→uncertain rationale must not claim only that cues block all_clear."""
+    partial_rationale = _rationale_for_change(
+        scope=SCOPE_UNRESOLVED_BOUNDARY,
+        boundary_cues=["unresolved"],
+        resolution_cues=[],
+        before_reported="partial_admission",
+        after_reported="uncertain",
+        changed=True,
+    )
+    all_clear_rationale = _rationale_for_change(
+        scope=SCOPE_UNRESOLVED_BOUNDARY,
+        boundary_cues=["outcome_unresolved"],
+        resolution_cues=[],
+        before_reported="all_clear",
+        after_reported="uncertain",
+        changed=True,
+    )
+
+    assert "partial-admission" in partial_rationale or "precedence" in partial_rationale
+    assert "block all_clear" not in partial_rationale
+    assert "partial_admission → uncertain" in partial_rationale
+
+    assert "block all_clear" in all_clear_rationale
+    assert "all_clear → uncertain" in all_clear_rationale
 
 
 def test_run_001_v3_preserves_v2_negation_on_stable(tmp_path: Path) -> None:

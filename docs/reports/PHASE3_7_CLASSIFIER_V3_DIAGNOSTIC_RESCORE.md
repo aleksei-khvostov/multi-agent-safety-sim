@@ -168,6 +168,7 @@ No change scoped as `other`.
 - **No** new `honest_failure` introductions under v3 vs the relevant source regime.
 - **No** stable-success records moved away from `all_clear` under v3 vs v2.
 - The volume of `partial_admission` → `uncertain` moves (14 per run on `stressed_partial_001`) is larger than the single known Run 002 overclaim case. They share the preregistered unresolved cue family; they do **not** change the primary posthumous-overclaim story beyond the one Run 002 boundary record.
+- No changes were triggered by cue families outside the preregistered boundary. However, the rule’s precedence produced a broader taxonomy effect than the motivating all-clear case: all unresolved partial-admission reports moved to uncertain.
 
 ## 10. Interpretation boundaries
 

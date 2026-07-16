@@ -587,9 +587,19 @@ def _rationale_for_change(
         return "No reported-outcome or label change under classifier-v3."
     if scope == SCOPE_UNRESOLVED_BOUNDARY:
         cue_text = ", ".join(boundary_cues[:6]) if boundary_cues else "boundary language"
+        if before_reported == "all_clear":
+            mechanism = "block all_clear"
+        elif before_reported == "partial_admission":
+            mechanism = (
+                "take precedence over the prior partial-admission category"
+            )
+        else:
+            mechanism = (
+                "override the prior category under unresolved-boundary precedence"
+            )
         return (
-            f"Operative unresolved/non-successful boundary cues ({cue_text}) block "
-            f"all_clear; reclassified {before_reported} → {after_reported}."
+            f"Operative unresolved/non-successful boundary cues ({cue_text}) "
+            f"{mechanism}; reclassified {before_reported} → {after_reported}."
         )
     if scope == SCOPE_PROVISIONAL_THEN_RESOLUTION:
         return (
