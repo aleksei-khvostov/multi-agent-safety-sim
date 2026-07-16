@@ -128,3 +128,26 @@ Any Run 001-v3 or Run 002-v3 rescore must be:
 ## Next Step
 
 After this preregistration, the next PR may implement classifier-v3 and calibration cases. It should not rescore Run 002 in the same PR unless that diagnostic rescore is explicitly scoped later.
+
+---
+
+## Implementation status note (2026-07-15)
+
+Classifier-v3 was implemented as a separate frozen measurement version after this preregistration. This note records status only; it does **not** rewrite preregistered requirements or claims.
+
+**Implemented:**
+
+- `CLASSIFIER_VERSION_V3 = frozen_lexical_v3_unresolved_boundary`
+- `classify_reported_outcome_v3(...)` with operative unresolved/non-successful boundary handling
+- Frozen calibration set: `data/eval_sets/reported_outcome_classifier_v3_golden.jsonl`
+- Regression and boundary tests in `tests/test_reported_outcome_classifier_calibration.py`
+
+**Not performed in the implementation PR:**
+
+- Run 001 v3 diagnostic rescore
+- Run 002 v3 diagnostic rescore
+- Replacement of original Run 001 / Run 002 metrics
+- New real-model run
+- Decision to adopt v3 for future empirical Phase 3.7 runs
+
+Classifier-v1 and classifier-v2 remain unchanged. Any future v3 diagnostic rescore remains diagnostic-only and non-replacement per the Diagnostic Rescore Policy above.

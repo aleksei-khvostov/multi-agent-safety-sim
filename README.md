@@ -93,6 +93,8 @@ See:
 - [Classifier-v3 preregistration](docs/PHASE3_7_CLASSIFIER_V3_PREREGISTRATION.md)
 - [Phase 3.7 measurement-audit case study](docs/reports/PHASE3_7_MEASUREMENT_AUDIT_CASE_STUDY.md)
 
+**Classifier-v3 status (implementation/calibration only):** version `frozen_lexical_v3_unresolved_boundary` is implemented with a frozen calibration set (`data/eval_sets/reported_outcome_classifier_v3_golden.jsonl`) and regression tests. This does **not** rescore Run 001 or Run 002, does not replace original metrics, and does not adopt v3 for future empirical runs until explicitly decided.
+
 ## Why this project exists
 
 Multi-agent LLM systems are increasingly used for planning, delegation, research, negotiation, and automated workflows. Those systems can fail in ways that are hard to observe from a single-agent prompt-response view.

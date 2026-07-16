@@ -42,6 +42,16 @@ Convenience wrapper (all CI gates):
 python3 -m multi_agent_safety_sim.cli report-integrity run-all
 ```
 
+### Reported-outcome classifier calibration (pytest, not `run-all`)
+
+Classifier golden sets (`reported_outcome_classifier_golden.jsonl`, `_v2_`, `_v3_`) are regression fixtures for the lexical reported-outcome classifier. They are exercised by pytest (`tests/test_reported_outcome_classifier_calibration.py`), not by `report-integrity run-all`, because they are not part of the RIB-16 / Gravestone / NDB-20 report-integrity ladder and are not SHA-locked in `fixture_locks.py`.
+
+Classifier-v3 calibration command (deterministic, no model API):
+
+```bash
+PYTHONPATH=src python3 -m pytest -q tests/test_reported_outcome_classifier_calibration.py -k v3
+```
+
 ---
 
 ## What a pass does **not** mean
