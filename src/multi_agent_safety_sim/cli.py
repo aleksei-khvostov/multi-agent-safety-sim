@@ -11,6 +11,9 @@ Commands:
 - report-integrity run-all
 - phase3-7-preflight
 - phase3-7-run
+- phase3-7-rescore-run-001-v2
+- phase3-7-rescore-run-001-v3
+- phase3-7-rescore-run-002-v3
 - list-scenarios
 - validate-config
 """
@@ -42,8 +45,14 @@ from .evaluation.nested_delegation_benchmark import (
 )
 from .evaluation.phase3_7_rescore import (
     DIAGNOSTIC_CAVEAT,
+    RUN_001_V3_DIAGNOSTIC_CAVEAT,
+    RUN_002_V3_DIAGNOSTIC_CAVEAT,
+    rescore_run_001_with_classifier_v3,
+    rescore_run_002_with_classifier_v3,
     rescore_run_with_classifier_v2,
     write_diagnostic_rescore,
+    write_run_001_v3_diagnostic_rescore,
+    write_run_002_v3_diagnostic_rescore,
 )
 from .evaluation.report_integrity_benchmark import (
     REFERENCE_RATES_NOTE,
@@ -799,6 +808,85 @@ def phase3_7_rescore_run_001_v2(
         f"v2 posthumous_overclaim count            : {v2_labels.get('posthumous_overclaim', 0)}"
     )
     console.print(DIAGNOSTIC_CAVEAT)
+
+
+@app.command("phase3-7-rescore-run-001-v3")
+def phase3_7_rescore_run_001_v3(
+    run_dir: Path = typer.Option(
+        ...,
+        "--run-dir",
+        help="Phase 3.7 Run 001 artifact directory",
+    ),
+) -> None:
+    """Write a diagnostic classifier-v3 rescore for saved Run 001 outputs."""
+    try:
+        result = rescore_run_001_with_classifier_v3(run_dir)
+        output_path = write_run_001_v3_diagnostic_rescore(run_dir, result)
+    except Exception as exc:
+        console.print(f"[red]Phase 3.7 Run 001-v3 diagnostic rescore failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+
+    original = result["original_metrics"]
+    v2 = result["v2_diagnostic_metrics"]
+    v3 = result["v3_diagnostic_metrics"]
+    console.print("[bold cyan]Phase 3.7 Run 001 classifier-v3 diagnostic rescore[/bold cyan]")
+    console.print(f"wrote: {output_path}")
+    console.print(f"original (v1) mean PDS         : {original['mean_pds_score']}")
+    console.print(f"v2 diagnostic mean PDS         : {v2['mean_pds_score']}")
+    console.print(f"v3 diagnostic mean PDS         : {v3['mean_pds_score']}")
+    console.print(
+        "v1→v3 changed records           : "
+        f"{result['changed_record_count_original_to_v3']}"
+    )
+    console.print(
+        f"v2→v3 changed records           : {result['changed_record_count_v2_to_v3']}"
+    )
+    console.print(
+        "original posthumous_overclaim   : "
+        f"{original.get('label_distribution', {}).get('posthumous_overclaim', 0)}"
+    )
+    console.print(
+        "v3 posthumous_overclaim         : "
+        f"{v3['label_distribution'].get('posthumous_overclaim', 0)}"
+    )
+    console.print(RUN_001_V3_DIAGNOSTIC_CAVEAT)
+
+
+@app.command("phase3-7-rescore-run-002-v3")
+def phase3_7_rescore_run_002_v3(
+    run_dir: Path = typer.Option(
+        ...,
+        "--run-dir",
+        help="Phase 3.7 Run 002 artifact directory",
+    ),
+) -> None:
+    """Write a diagnostic classifier-v3 rescore for saved Run 002 outputs."""
+    try:
+        result = rescore_run_002_with_classifier_v3(run_dir)
+        output_path = write_run_002_v3_diagnostic_rescore(run_dir, result)
+    except Exception as exc:
+        console.print(f"[red]Phase 3.7 Run 002-v3 diagnostic rescore failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+
+    original = result["original_metrics"]
+    v3 = result["v3_diagnostic_metrics"]
+    console.print("[bold cyan]Phase 3.7 Run 002 classifier-v3 diagnostic rescore[/bold cyan]")
+    console.print(f"wrote: {output_path}")
+    console.print(f"original (v2) mean PDS         : {original['mean_pds_score']}")
+    console.print(f"v3 diagnostic mean PDS         : {v3['mean_pds_score']}")
+    console.print(
+        "v2→v3 changed records           : "
+        f"{result['changed_record_count_original_to_v3']}"
+    )
+    console.print(
+        "original posthumous_overclaim   : "
+        f"{original.get('label_distribution', {}).get('posthumous_overclaim', 0)}"
+    )
+    console.print(
+        "v3 posthumous_overclaim         : "
+        f"{v3['label_distribution'].get('posthumous_overclaim', 0)}"
+    )
+    console.print(RUN_002_V3_DIAGNOSTIC_CAVEAT)
 
 
 @app.command()
