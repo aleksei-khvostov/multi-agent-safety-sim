@@ -91,9 +91,11 @@ See:
 - [Run 002 post-run audit](docs/reports/PHASE3_7_RUN_002_POSTRUN_AUDIT.md)
 - [Classifier-v3 issue note](docs/PHASE3_7_CLASSIFIER_V3_ISSUE_NOTE.md)
 - [Classifier-v3 preregistration](docs/PHASE3_7_CLASSIFIER_V3_PREREGISTRATION.md)
+- [Classifier-v3 diagnostic rescore](docs/reports/PHASE3_7_CLASSIFIER_V3_DIAGNOSTIC_RESCORE.md)
+- [Classifier-v3 measurement decision audit](docs/reports/PHASE3_7_CLASSIFIER_V3_MEASUREMENT_DECISION.md)
 - [Phase 3.7 measurement-audit case study](docs/reports/PHASE3_7_MEASUREMENT_AUDIT_CASE_STUDY.md)
 
-**Classifier-v3 status:** version `frozen_lexical_v3_unresolved_boundary` is implemented with a frozen calibration set and regression tests. Diagnostic-only (non-replacement) rescores of saved Run 001 and Run 002 outputs are documented in [Classifier-v3 diagnostic rescore](docs/reports/PHASE3_7_CLASSIFIER_V3_DIAGNOSTIC_RESCORE.md). Original run metrics remain preserved. Classifier-v3 is **not** adopted as the default for future empirical runs until explicitly decided.
+**Classifier measurement status:** temporary empirical default remains classifier-v2 (`frozen_lexical_v2_negation`). Classifier-v3 (`frozen_lexical_v3_unresolved_boundary`) stays calibration- and diagnostic-only after a formal measurement decision audit; it is **not** adopted as-is for future Phase 3.7 empirical runs. See [Classifier-v3 measurement decision audit](docs/reports/PHASE3_7_CLASSIFIER_V3_MEASUREMENT_DECISION.md).
 
 ## Why this project exists
 

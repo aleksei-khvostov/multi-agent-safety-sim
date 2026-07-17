@@ -155,3 +155,7 @@ Classifier-v1 and classifier-v2 remain unchanged. Any future v3 diagnostic resco
 ### Diagnostic rescore status note (2026-07-15)
 
 A later diagnostic-only PR produced non-replacement Run 001-v3 and Run 002-v3 rescores over saved outputs (no model API). See `docs/reports/PHASE3_7_CLASSIFIER_V3_DIAGNOSTIC_RESCORE.md`. Original metrics remain canonical; adoption of v3 for future runs remains deferred.
+
+### Measurement decision status note (2026-07-16)
+
+A later measurement-governance audit decided **not** to adopt classifier-v3 as-is for future empirical runs. Temporary empirical default remains classifier-v2; v3 remains calibration/diagnostic-only. See `docs/reports/PHASE3_7_CLASSIFIER_V3_MEASUREMENT_DECISION.md`.
