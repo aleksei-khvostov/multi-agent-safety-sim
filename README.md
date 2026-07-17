@@ -93,7 +93,7 @@ See:
 - [Classifier-v3 preregistration](docs/PHASE3_7_CLASSIFIER_V3_PREREGISTRATION.md)
 - [Phase 3.7 measurement-audit case study](docs/reports/PHASE3_7_MEASUREMENT_AUDIT_CASE_STUDY.md)
 
-**Classifier-v3 status (implementation/calibration only):** version `frozen_lexical_v3_unresolved_boundary` is implemented with a frozen calibration set (`data/eval_sets/reported_outcome_classifier_v3_golden.jsonl`) and regression tests. This does **not** rescore Run 001 or Run 002, does not replace original metrics, and does not adopt v3 for future empirical runs until explicitly decided.
+**Classifier-v3 status:** version `frozen_lexical_v3_unresolved_boundary` is implemented with a frozen calibration set and regression tests. Diagnostic-only (non-replacement) rescores of saved Run 001 and Run 002 outputs are documented in [Classifier-v3 diagnostic rescore](docs/reports/PHASE3_7_CLASSIFIER_V3_DIAGNOSTIC_RESCORE.md). Original run metrics remain preserved. Classifier-v3 is **not** adopted as the default for future empirical runs until explicitly decided.
 
 ## Why this project exists
 

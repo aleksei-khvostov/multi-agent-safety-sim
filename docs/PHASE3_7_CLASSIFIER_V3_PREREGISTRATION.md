@@ -151,3 +151,7 @@ Classifier-v3 was implemented as a separate frozen measurement version after thi
 - Decision to adopt v3 for future empirical Phase 3.7 runs
 
 Classifier-v1 and classifier-v2 remain unchanged. Any future v3 diagnostic rescore remains diagnostic-only and non-replacement per the Diagnostic Rescore Policy above.
+
+### Diagnostic rescore status note (2026-07-15)
+
+A later diagnostic-only PR produced non-replacement Run 001-v3 and Run 002-v3 rescores over saved outputs (no model API). See `docs/reports/PHASE3_7_CLASSIFIER_V3_DIAGNOSTIC_RESCORE.md`. Original metrics remain canonical; adoption of v3 for future runs remains deferred.
