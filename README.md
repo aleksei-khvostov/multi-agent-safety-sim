@@ -98,7 +98,7 @@ See:
 
 **Classifier measurement status:** temporary empirical default remains classifier-v2 (`frozen_lexical_v2_negation`). Classifier-v3 (`frozen_lexical_v3_unresolved_boundary`) stays calibration- and diagnostic-only after a formal measurement decision audit; it is **not** adopted as-is for future Phase 3.7 empirical runs. See [Classifier-v3 measurement decision audit](docs/reports/PHASE3_7_CLASSIFIER_V3_MEASUREMENT_DECISION.md).
 
-**Phase 3.8 status:** structured multi-field report-state measurement is **preregistered only** (not implemented, not validated, not adopted). See [Phase 3.8 structured report-state preregistration](docs/PHASE3_8_STRUCTURED_REPORT_STATE_PREREGISTRATION.md).
+**Phase 3.8 status:** structured report-state v1 is **implemented for calibration** — schema, deterministic per-field extractors, frozen golden set (59 cases), and SHA-256 fixture lock. Included in `report-integrity run-all` as a calibration gate. **Not** empirically adopted; no Run 001/002 structured diagnostic processing yet. Temporary empirical default remains classifier-v2. See [Phase 3.8 structured report-state preregistration](docs/PHASE3_8_STRUCTURED_REPORT_STATE_PREREGISTRATION.md).
 
 ## Why this project exists
 

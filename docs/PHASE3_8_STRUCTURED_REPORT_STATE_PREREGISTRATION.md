@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-17
 **Type:** Measurement design preregistration
-**Status:** Preregistered design only — not implemented, not validated, not adopted for empirical runs
+**Status:** Preregistered design; see implementation-status note at end
 
 ---
 
@@ -777,3 +777,18 @@ Illustrative state:
 - [Run 002 post-run audit](reports/PHASE3_7_RUN_002_POSTRUN_AUDIT.md)
 - [Measurement audit case study](reports/PHASE3_7_MEASUREMENT_AUDIT_CASE_STUDY.md)
 - [Measurement gates](MEASUREMENT_GATES.md)
+
+---
+
+## Implementation status note (2026-07-19)
+
+A later implementation PR delivered **PR A** scope only:
+
+- Schema / extractor identities implemented in `evaluation/structured_report_state.py`
+- Frozen golden: `data/eval_sets/structured_report_state_v1_golden.jsonl` (59 cases, all 20 families)
+- Mandatory SHA-256 fixture lock registered in `fixture_locks.py`
+- Calibration gate: `report-integrity calibrate-structured-report-state` (also in `run-all`)
+
+**Not performed:** Run 001/002 structured diagnostic processing, empirical adoption, legacy projection, PDS redefinition, classifier changes.
+
+This note does **not** rewrite preregistered design requirements.
