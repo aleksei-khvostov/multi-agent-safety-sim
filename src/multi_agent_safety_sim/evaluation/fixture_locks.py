@@ -23,6 +23,14 @@ STATE_REPORT_GOLDEN_SHA256 = (
 
 GRAVESTONE_GOLDEN_PATH = Path("data/fixtures/gravestone_golden/")
 
+STRUCTURED_REPORT_STATE_V1_GOLDEN_PATH = Path(
+    "data/eval_sets/structured_report_state_v1_golden.jsonl"
+)
+STRUCTURED_REPORT_STATE_V1_GOLDEN_SHA256 = (
+    "42e8ba6fc1185abca50888336307143adccf72a75c169a4793c036725af496a7"
+)
+STRUCTURED_REPORT_STATE_V1_EXPECTED_CASE_COUNT = 59
+
 
 class FixtureLockError(ValueError):
     """Raised when a frozen fixture SHA does not match the lock."""
@@ -89,6 +97,19 @@ FROZEN_FIXTURE_LOCKS: tuple[FrozenFixtureLock, ...] = (
             "consolidation_overclaim_rate, consolidation_underclaim_rate"
         ),
         diagnostic_fields="watchdog_fp_on_nested_ambiguity, watchdog_flag_matches_expected",
+        ci_gate=True,
+    ),
+    FrozenFixtureLock(
+        name="structured_report_state_v1_golden",
+        path=str(STRUCTURED_REPORT_STATE_V1_GOLDEN_PATH),
+        case_count=STRUCTURED_REPORT_STATE_V1_EXPECTED_CASE_COUNT,
+        sha256=STRUCTURED_REPORT_STATE_V1_GOLDEN_SHA256,
+        status="frozen",
+        what_it_tests=(
+            "Phase 3.8 structured multi-field report-state deterministic extraction"
+        ),
+        primary_rates="structured full-state exact-match (calibration)",
+        diagnostic_fields="contradiction_flags, matched_cues_by_field",
         ci_gate=True,
     ),
 )

@@ -29,6 +29,10 @@ from rich.console import Console
 from rich.table import Table
 
 from .config import load_config
+from .evaluation.fixture_locks import (
+    STRUCTURED_REPORT_STATE_V1_GOLDEN_PATH,
+    STRUCTURED_REPORT_STATE_V1_GOLDEN_SHA256,
+)
 from .evaluation.gravestone import (
     GravestoneArtifactError,
     build_gravestone_summary,
@@ -60,6 +64,10 @@ from .evaluation.report_integrity_benchmark import (
     RIB_16_PATH,
     Rib16BenchmarkError,
     run_rib_16_benchmark,
+)
+from .evaluation.structured_report_state import (
+    StructuredReportStateCalibrationError,
+    run_structured_report_state_calibration,
 )
 from .simulation.cemetery_runner import parse_architecture_ids, run_tournament
 from .simulation.phase3_7_pilot_runner import (
@@ -685,6 +693,29 @@ def nested_delegation_run(
     console.print("[green]No model API was called.[/green]")
 
 
+@report_integrity_app.command("calibrate-structured-report-state")
+def report_integrity_calibrate_structured_report_state() -> None:
+    """Run frozen Phase 3.8 structured report-state calibration (API-free)."""
+    try:
+        summary = run_structured_report_state_calibration(
+            STRUCTURED_REPORT_STATE_V1_GOLDEN_PATH,
+            expected_sha256=STRUCTURED_REPORT_STATE_V1_GOLDEN_SHA256,
+        )
+    except (StructuredReportStateCalibrationError, FileNotFoundError, OSError) as exc:
+        console.print(f"[red]Structured report-state calibration failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+
+    console.print("[bold cyan]Structured report-state v1 calibration[/bold cyan]")
+    console.print(f"fixture       : {summary['fixture']}")
+    console.print(f"schema        : {summary['schema_version']}")
+    console.print(f"extractor     : {summary['extractor_version']}")
+    console.print(
+        f"full match    : {summary['full_state_exact_match']}/{summary['total_cases']}"
+    )
+    console.print(f"failed        : {summary['failed']}")
+    console.print("[green]No model API was called.[/green]")
+
+
 @report_integrity_app.command("run-all")
 def report_integrity_run_all() -> None:
     """Run all frozen report-integrity CI gates and print a compact summary."""
@@ -746,6 +777,32 @@ def report_integrity_run_all() -> None:
         console.print(f"[red]NDB-20 gate failed:[/red] {exc}")
         raise typer.Exit(2) from exc
 
+    try:
+        structured = run_structured_report_state_calibration(
+            STRUCTURED_REPORT_STATE_V1_GOLDEN_PATH,
+            expected_sha256=STRUCTURED_REPORT_STATE_V1_GOLDEN_SHA256,
+        )
+        structured_pass = structured["failed"] == 0
+        structured_rates = (
+            f"full_match={structured['full_state_exact_match']}/"
+            f"{structured['total_cases']}"
+        )
+        rows.append(
+            (
+                "structured_report_state_v1",
+                structured["total_cases"],
+                structured_rates,
+                "pass" if structured_pass else "fail",
+            )
+        )
+        if not structured_pass:
+            raise StructuredReportStateCalibrationError(
+                f"structured calibration failed: {structured['failed_case_ids']}"
+            )
+    except Exception as exc:
+        console.print(f"[red]Structured report-state gate failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+
     console.print("[bold cyan]Report Integrity Gates — run-all[/bold cyan]")
     table = Table(title="Frozen measurement gates", show_header=True)
     table.add_column("Benchmark", style="cyan")
@@ -758,6 +815,7 @@ def report_integrity_run_all() -> None:
     console.print(table)
     console.print(
         "[dim]Watchdog diagnostics on NDB-20 are not gate criteria. "
+        "Structured report-state is calibration-only (not empirical adoption). "
         "See docs/MEASUREMENT_GATES.md for the report-integrity ladder.[/dim]"
     )
     console.print("[green]All frozen report-integrity gates passed. No model API was called.[/green]")

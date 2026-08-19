@@ -13,6 +13,7 @@ state_report_divergence_golden  →  single-layer state/report mismatch
 rib_16                          →  cemetery evidence / report integrity
 gravestone_golden               →  artifact rate honesty (cemetery-style)
 ndb_20                          →  nested delegation / consolidation mismatch
+structured_report_state_v1      →  multi-field report-state extraction (Phase 3.8)
 ```
 
 | Gate | Fixture | Cases | What it tests | Primary rates | Diagnostic-only fields | CI |
@@ -21,6 +22,7 @@ ndb_20                          →  nested delegation / consolidation mismatch
 | **RIB-16** | `data/eval_sets/rib_16_report_integrity.jsonl` | 16 | Cemetery evidence vs final report | `posthumous_overclaim_rate`, `report_integrity_divergence_rate` | none | yes |
 | **Gravestone** | `data/fixtures/gravestone_golden/` | 4 | Analyzer denominators on cemetery artifacts | `posthumous_overclaim_rate`, `report_integrity_divergence_rate` | `legacy_field_note` | yes |
 | **NDB-20** | `data/eval_sets/ndb_20_nested_delegation.jsonl` | 20 | Nested rollup vs consolidated report | `nested_report_integrity_divergence_rate`, `consolidation_overclaim_rate`, `consolidation_underclaim_rate` | `watchdog_fp_on_nested_ambiguity`, `watchdog_flag_matches_expected` | yes |
+| **Structured report-state v1** | `data/eval_sets/structured_report_state_v1_golden.jsonl` | 59 | Deterministic multi-field report-state extraction | full-state exact-match on frozen goldens | `contradiction_flags`, `matched_cues_by_field` | yes |
 
 **Primary rates** are CI regression targets. **Watchdog fields** on NDB-20 are diagnostic only unless explicitly promoted in a future PR.
 
@@ -35,6 +37,7 @@ Passing these gates does **not** mean the system is robust to all report-integri
 | **RIB-16** | `python3 -m multi_agent_safety_sim.cli rib-16 run` | Scorer regression on 16 frozen evidence+report fixtures. Labels and divergence flags match `expected_*` fields. Reference rates (0.25 overclaim, 0.50 divergence) describe the **fixture set**, not a model. |
 | **Gravestone** | `python3 -m multi_agent_safety_sim.cli gravestone analyze data/fixtures/gravestone_golden --no-write-json` | Analyzer regression on frozen cemetery-style artifacts. Separate `posthumous_overclaim_rate` and `report_integrity_divergence_rate` with explicit denominator. |
 | **NDB-20** | `python3 -m multi_agent_safety_sim.cli nested-delegation run` | Nested delegation scorer regression on 20 frozen fixtures. Primary reference rates: 0.40 divergence, 0.20 overclaim, 0.20 underclaim. Watchdog output is logged under `diagnostics` only. |
+| **Structured report-state v1** | `python3 -m multi_agent_safety_sim.cli report-integrity calibrate-structured-report-state` | SHA-locked multi-field report-state extractor regression. Full-state exact match on 59 frozen goldens. Calibration-only — not empirical model evaluation or adoption. |
 
 Convenience wrapper (all CI gates):
 
@@ -76,8 +79,9 @@ A Gravestone pass on dry-run or fixture artifacts means the analyzer still compu
 | `rib_16_report_integrity` | `data/eval_sets/rib_16_report_integrity.jsonl` | 16 | `256651e0e62cd4c5b9b3ded6ecd85a5233017e590bfa16d9135eec2335925baa` | frozen |
 | `gravestone_golden` | `data/fixtures/gravestone_golden/` | 4 | directory fixture (no single-file lock) | frozen |
 | `ndb_20_nested_delegation` | `data/eval_sets/ndb_20_nested_delegation.jsonl` | 20 | `0d34a69c05f08b4a46f3495698f402087fc2302c3ac03e8cdc824a1cc66179db` | frozen |
+| `structured_report_state_v1_golden` | `data/eval_sets/structured_report_state_v1_golden.jsonl` | 59 | `42e8ba6fc1185abca50888336307143adccf72a75c169a4793c036725af496a7` | frozen |
 
-NDB-20 CI verifies the SHA lock before running the benchmark. Fixture drift fails the gate immediately.
+NDB-20 and structured report-state CI verify SHA locks before running. Fixture drift fails the gate immediately.
 
 Registry source: `src/multi_agent_safety_sim/evaluation/fixture_locks.py`
 
