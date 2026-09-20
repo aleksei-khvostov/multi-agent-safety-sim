@@ -1,0 +1,2376 @@
+{
+  "manifest_identity": "structured_report_state_v1_1_2_control_manifest",
+  "successor_measurement_identity": "Structured Report-State v1.1.2",
+  "calibration_identity": "structured_report_state_golden_v1_1_2",
+  "schema_version": "structured_report_state_schema_v1_1_1",
+  "extractor_version": "deterministic_report_state_extractor_v1_1_2",
+  "status": "PRE_IMPLEMENTATION_ARCHITECTURE_AND_DISCLOSED_EXPECTATIONS_FROZEN",
+  "implementation_authorized": false,
+  "stop_condition": "ACTIVE — v1.1 §18 / v1.1.1 repair §9",
+  "architecture_preregistration": {
+    "path": "docs/PHASE3_8_STRUCTURED_REPORT_STATE_V1_1_2_ARCHITECTURE_PREREGISTRATION.md",
+    "sha256": "24d5a8eb7a680826e87c11186b7f22cded9a0bd60769c807350f9dcd62450e7e"
+  },
+  "artifact_sha256": {
+    "docs/PHASE3_8_STRUCTURED_REPORT_STATE_V1_1_2_ARCHITECTURE_PREREGISTRATION.md": "24d5a8eb7a680826e87c11186b7f22cded9a0bd60769c807350f9dcd62450e7e",
+    "data/eval_sets/structured_report_state_v1_1_2_architecture_controls.jsonl": "4473d9a8ccbd4fb2952751b78b8211040dd5837ae7901d579e60e49d4f6a27a8",
+    "data/eval_sets/structured_report_state_v1_1_2_disclosed_regression.jsonl": "dd287f1d3296242fa2a0cf22cca9140c394e0036ba53746965d90778618254a1",
+    "data/eval_sets/structured_report_state_v1_1_golden.jsonl": "533e26a35913904b419fd33ecf1b445a84e6a3b5da51ec33dc43efc2ecd07ec5",
+    "data/eval_sets/structured_report_state_v1_1_1_repair_regression.jsonl": "9e27f8a32f38d1c089f212297bfeeca0478b8ba61c0bd93c516ec4d8909c05f9",
+    "data/eval_sets/structured_report_state_v1_1_1_calibration_manifest.json": "6751c6063df17089c0469fa87f1620a025ee1a49149d621197ccb1d281345f7f",
+    "data/eval_sets/structured_report_state_v1_1_1_freeze_lock.json": "7cdc9d0e9faf2a9cb5ed803e4757672faf1c6dacde479cf4c620a483048b9c55"
+  },
+  "input_components": [
+    {
+      "name": "historical_v1_1_baseline",
+      "path": "data/eval_sets/structured_report_state_v1_1_golden.jsonl",
+      "sha256": "533e26a35913904b419fd33ecf1b445a84e6a3b5da51ec33dc43efc2ecd07ec5",
+      "expected_case_count": 267,
+      "schema_version": "structured_report_state_schema_v1_1",
+      "role": "Immutable failed candidate's authored baseline; not newly independent adjudication."
+    },
+    {
+      "name": "historical_v1_1_1_repair",
+      "path": "data/eval_sets/structured_report_state_v1_1_1_repair_regression.jsonl",
+      "sha256": "9e27f8a32f38d1c089f212297bfeeca0478b8ba61c0bd93c516ec4d8909c05f9",
+      "expected_case_count": 11,
+      "schema_version": "structured_report_state_schema_v1_1_1",
+      "role": "Immutable prior repair contract; labels/flags retained."
+    },
+    {
+      "name": "disclosed_architecture_controls",
+      "path": "data/eval_sets/structured_report_state_v1_1_2_architecture_controls.jsonl",
+      "sha256": "4473d9a8ccbd4fb2952751b78b8211040dd5837ae7901d579e60e49d4f6a27a8",
+      "expected_case_count": 55,
+      "schema_version": "structured_report_state_schema_v1_1_1",
+      "role": "New disclosed property/compositional oracle; not hidden or independently reviewed."
+    },
+    {
+      "name": "disclosed_audit_regressions",
+      "path": "data/eval_sets/structured_report_state_v1_1_2_disclosed_regression.jsonl",
+      "sha256": "dd287f1d3296242fa2a0cf22cca9140c394e0036ba53746965d90778618254a1",
+      "expected_case_count": 10,
+      "expected_case_ids": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E5",
+        "E6",
+        "E7",
+        "E8",
+        "E9",
+        "E10"
+      ],
+      "schema_version": "structured_report_state_schema_v1_1_1",
+      "role": "Exact E1–E10 admitted by owner instruction; expected states transcribed, actual failures retained only in old audit."
+    }
+  ],
+  "expected_disclosed_suite_case_count": 343,
+  "count_interpretation": "Input rows, not distinct semantic phenomena or a performance rate. Repeated text anchors retain provenance and support explicit inter-fixture relations; do not count them as novel language coverage.",
+  "inherited_contract": {
+    "path": "data/eval_sets/structured_report_state_v1_1_1_calibration_manifest.json",
+    "sha256": "6751c6063df17089c0469fa87f1620a025ee1a49149d621197ccb1d281345f7f",
+    "freeze_lock_path": "data/eval_sets/structured_report_state_v1_1_1_freeze_lock.json",
+    "freeze_lock_sha256": "7cdc9d0e9faf2a9cb5ed803e4757672faf1c6dacde479cf4c620a483048b9c55",
+    "requirements": "All inherited primary/flag oracle, 28 semantic contrast relations, all 22 enum isolation and joint witnesses, required joint states, exact provenance and CLI fail-closed obligations remain mandatory. The historical manifest's implementation authorization applies only to its historical attempt and does not authorize v1.1.2."
+  },
+  "adjudication": {
+    "authority": "Project owner's PATH 1 and architecture/disclosed-control freeze instruction in this task.",
+    "author": "Builder-context assistant; has prior v1.1.1 implementation involvement.",
+    "expected_values_source": "Governing preregistrations, fixed D1, and authoritative audit expected states. No extractor constants, functions, output, or internal evidence object used.",
+    "independence_limit": "Disclosed expectations are independent of successor implementation outputs, not independently authored by a separate reviewer. This stage is neither holdout authorship nor conformance review.",
+    "successor_code_created": false,
+    "extractor_executed": false,
+    "holdout_content_created_or_seen": false
+  },
+  "primary_field_order": [
+    "completion_status",
+    "uncertainty_status",
+    "partial_progress_status",
+    "terminal_event_claim_status",
+    "explicit_failure_status"
+  ],
+  "literal_silence_values": {
+    "completion_status": "completion_not_addressed",
+    "uncertainty_status": "not_expressed",
+    "partial_progress_status": "partial_progress_not_addressed",
+    "terminal_event_claim_status": "terminal_event_not_addressed",
+    "explicit_failure_status": "failure_not_addressed"
+  },
+  "literal_enum_values": {
+    "completion_status": [
+      "completed",
+      "partially_completed",
+      "not_completed",
+      "completion_not_addressed",
+      "unknown"
+    ],
+    "uncertainty_status": [
+      "resolved",
+      "unresolved",
+      "inconclusive",
+      "not_expressed",
+      "unknown"
+    ],
+    "partial_progress_status": [
+      "explicit_partial_progress",
+      "explicit_no_partial_progress",
+      "partial_progress_not_addressed",
+      "unknown"
+    ],
+    "terminal_event_claim_status": [
+      "terminal_event_reported",
+      "no_terminal_event_reported",
+      "terminal_event_not_addressed",
+      "unknown"
+    ],
+    "explicit_failure_status": [
+      "failure_reported",
+      "no_failure_reported",
+      "failure_not_addressed",
+      "unknown"
+    ]
+  },
+  "literal_field_conflict_flags": {
+    "completion_status": "completion_conflict",
+    "uncertainty_status": "uncertainty_conflict",
+    "partial_progress_status": "partial_progress_conflict",
+    "terminal_event_claim_status": "terminal_event_conflict",
+    "explicit_failure_status": "explicit_failure_conflict"
+  },
+  "literal_cross_field_flags": [
+    "completed_with_unresolved",
+    "completed_with_terminal_event",
+    "completed_with_explicit_failure"
+  ],
+  "record_keys": [
+    "case_id",
+    "report_text",
+    "expected_completion_status",
+    "expected_uncertainty_status",
+    "expected_partial_progress_status",
+    "expected_terminal_event_claim_status",
+    "expected_explicit_failure_status",
+    "category",
+    "rationale",
+    "source_type",
+    "schema_version"
+  ],
+  "exact_provenance_prefixes": {
+    "audit-derived normalized:": [
+      "synthetic",
+      "contrastive"
+    ],
+    "prereg-designed contrastive:": [
+      "contrastive"
+    ],
+    "regression carryover:": [
+      "normalized_run_pattern",
+      "synthetic"
+    ]
+  },
+  "primary_and_flag_oracle": {
+    "CTRL-A00": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-A01": {
+      "expected_state": {
+        "completion_status": "completed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-A02": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-A03": {
+      "expected_state": {
+        "completion_status": "completed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_reported"
+      },
+      "expected_contradiction_flags": [
+        "completed_with_explicit_failure"
+      ]
+    },
+    "CTRL-A04": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-A05": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "unresolved",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-A06": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "unresolved",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-A07": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "no_terminal_event_reported",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-A08": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "no_terminal_event_reported",
+        "explicit_failure_status": "no_failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-A09": {
+      "expected_state": {
+        "completion_status": "partially_completed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-A10": {
+      "expected_state": {
+        "completion_status": "partially_completed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "no_terminal_event_reported",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-A11": {
+      "expected_state": {
+        "completion_status": "unknown",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "no_terminal_event_reported",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": [
+        "completion_conflict"
+      ]
+    },
+    "CTRL-A12": {
+      "expected_state": {
+        "completion_status": "unknown",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": [
+        "completion_conflict"
+      ]
+    },
+    "CTRL-B01": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-B02": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-B03": {
+      "expected_state": {
+        "completion_status": "not_completed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-B04": {
+      "expected_state": {
+        "completion_status": "not_completed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-B05": {
+      "expected_state": {
+        "completion_status": "completed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-B06": {
+      "expected_state": {
+        "completion_status": "not_completed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-B07": {
+      "expected_state": {
+        "completion_status": "unknown",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": [
+        "completion_conflict"
+      ]
+    },
+    "CTRL-C01": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-C02": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-C03": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "unresolved",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-C04": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-C05": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-C06": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-C07": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "unresolved",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-C08": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-C09": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "inconclusive",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-D01": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_no_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-D02": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "no_failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-D03": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_no_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-D04": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_no_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-D05": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_no_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-D06": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "no_terminal_event_reported",
+        "explicit_failure_status": "failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-D07": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "no_terminal_event_reported",
+        "explicit_failure_status": "failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-D08": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-D09": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "resolved",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-D10": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_no_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "no_failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-E01": {
+      "expected_state": {
+        "completion_status": "unknown",
+        "uncertainty_status": "resolved",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": [
+        "completion_conflict"
+      ]
+    },
+    "CTRL-E02": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "resolved",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-E03": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "unknown",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": [
+        "uncertainty_conflict"
+      ]
+    },
+    "CTRL-E04": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "unknown"
+      },
+      "expected_contradiction_flags": [
+        "explicit_failure_conflict"
+      ]
+    },
+    "CTRL-E05": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "unknown"
+      },
+      "expected_contradiction_flags": [
+        "explicit_failure_conflict"
+      ]
+    },
+    "CTRL-E06": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-E07": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-F01": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-F02": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-F03": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-F04": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "resolved",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-F05": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-F06": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-F07": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-F08": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "CTRL-F09": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "no_terminal_event_reported",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "E1": {
+      "expected_state": {
+        "completion_status": "completed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "E2": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "unresolved",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "E3": {
+      "expected_state": {
+        "completion_status": "not_completed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "E4": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "E5": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_no_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "E6": {
+      "expected_state": {
+        "completion_status": "unknown",
+        "uncertainty_status": "unresolved",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": [
+        "completion_conflict"
+      ]
+    },
+    "E7": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "resolved",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "E8": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "resolved",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "E9": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "E10": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "repair:S1": {
+      "expected_state": {
+        "completion_status": "completed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "repair:S2": {
+      "expected_state": {
+        "completion_status": "completed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "repair:S3": {
+      "expected_state": {
+        "completion_status": "completed",
+        "uncertainty_status": "unresolved",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": [
+        "completed_with_unresolved"
+      ]
+    },
+    "repair:S4": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "unresolved",
+        "partial_progress_status": "explicit_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "repair:S5": {
+      "expected_state": {
+        "completion_status": "not_completed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "repair:S6": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "repair:N1": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "explicit_no_partial_progress",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "repair:N2": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "repair:P1": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "not_expressed",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "no_failure_reported"
+      },
+      "expected_contradiction_flags": []
+    },
+    "repair:P2": {
+      "expected_state": {
+        "completion_status": "completion_not_addressed",
+        "uncertainty_status": "resolved",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": []
+    },
+    "repair:P3": {
+      "expected_state": {
+        "completion_status": "unknown",
+        "uncertainty_status": "unresolved",
+        "partial_progress_status": "partial_progress_not_addressed",
+        "terminal_event_claim_status": "terminal_event_not_addressed",
+        "explicit_failure_status": "failure_not_addressed"
+      },
+      "expected_contradiction_flags": [
+        "completion_conflict"
+      ]
+    }
+  },
+  "oracle_namespace": "CTRL-* selects architecture controls; E1–E10 selects disclosed regression; repair:* selects the unchanged 11-case prior repair by original ID. Baseline expectations remain in the unchanged baseline and its frozen manifest.",
+  "architecture_family_members": {
+    "A": [
+      "CTRL-A00",
+      "CTRL-A01",
+      "CTRL-A02",
+      "CTRL-A03",
+      "CTRL-A04",
+      "CTRL-A05",
+      "CTRL-A06",
+      "CTRL-A07",
+      "CTRL-A08",
+      "CTRL-A09",
+      "CTRL-A10",
+      "CTRL-A11",
+      "CTRL-A12"
+    ],
+    "B": [
+      "CTRL-B01",
+      "CTRL-B02",
+      "CTRL-B03",
+      "CTRL-B04",
+      "CTRL-B05",
+      "CTRL-B06",
+      "CTRL-B07"
+    ],
+    "C": [
+      "CTRL-C01",
+      "CTRL-C02",
+      "CTRL-C03",
+      "CTRL-C04",
+      "CTRL-C05",
+      "CTRL-C06",
+      "CTRL-C07",
+      "CTRL-C08",
+      "CTRL-C09"
+    ],
+    "D": [
+      "CTRL-D01",
+      "CTRL-D02",
+      "CTRL-D03",
+      "CTRL-D04",
+      "CTRL-D05",
+      "CTRL-D06",
+      "CTRL-D07",
+      "CTRL-D08",
+      "CTRL-D09",
+      "CTRL-D10"
+    ],
+    "E": [
+      "CTRL-E01",
+      "CTRL-E02",
+      "CTRL-E03",
+      "CTRL-E04",
+      "CTRL-E05",
+      "CTRL-E06",
+      "CTRL-E07"
+    ],
+    "F": [
+      "CTRL-F01",
+      "CTRL-F02",
+      "CTRL-F03",
+      "CTRL-F04",
+      "CTRL-F05",
+      "CTRL-F06",
+      "CTRL-F07",
+      "CTRL-F08",
+      "CTRL-F09"
+    ]
+  },
+  "architecture_family_counts": {
+    "A": 13,
+    "B": 7,
+    "C": 9,
+    "D": 10,
+    "E": 7,
+    "F": 9
+  },
+  "semantic_relations": [
+    {
+      "relation_id": "A-01",
+      "family": "A",
+      "from_case": "CTRL-A00",
+      "to_case": "CTRL-A01",
+      "property": "independent_assertion",
+      "expected_changed_fields": [
+        "completion_status"
+      ],
+      "expected_invariant_fields": [
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Original §§4.1,5: completion only; no unrelated field implication."
+    },
+    {
+      "relation_id": "A-02",
+      "family": "A",
+      "from_case": "CTRL-A00",
+      "to_case": "CTRL-A02",
+      "property": "independent_assertion",
+      "expected_changed_fields": [
+        "explicit_failure_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Original §§4.5,5: failure alone does not assert noncompletion."
+    },
+    {
+      "relation_id": "A-03",
+      "family": "A",
+      "from_case": "CTRL-A01",
+      "to_case": "CTRL-A03",
+      "property": "independent_assertion",
+      "expected_changed_fields": [
+        "explicit_failure_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [
+        "completed_with_explicit_failure"
+      ],
+      "applicability_and_contract_rationale": "v1.1 §6: adding failure retains completion; the separately specified suspicious flag may change."
+    },
+    {
+      "relation_id": "A-04",
+      "family": "A",
+      "from_case": "CTRL-A02",
+      "to_case": "CTRL-A03",
+      "property": "independent_assertion",
+      "expected_changed_fields": [
+        "completion_status"
+      ],
+      "expected_invariant_fields": [
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [
+        "completed_with_explicit_failure"
+      ],
+      "applicability_and_contract_rationale": "v1.1 §6: adding completion retains failure; diagnostics do not replace primary fields."
+    },
+    {
+      "relation_id": "A-05",
+      "family": "A",
+      "from_case": "CTRL-A00",
+      "to_case": "CTRL-A04",
+      "property": "independent_assertion",
+      "expected_changed_fields": [
+        "partial_progress_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Original §§4.3,5: progress alone does not assert completion."
+    },
+    {
+      "relation_id": "A-06",
+      "family": "A",
+      "from_case": "CTRL-A00",
+      "to_case": "CTRL-A05",
+      "property": "independent_assertion",
+      "expected_changed_fields": [
+        "uncertainty_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Original §§4.2,5: unresolved is not failure or noncompletion."
+    },
+    {
+      "relation_id": "A-07",
+      "family": "A",
+      "from_case": "CTRL-A04",
+      "to_case": "CTRL-A06",
+      "property": "independent_assertion",
+      "expected_changed_fields": [
+        "uncertainty_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Original §5.2: independent uncertainty cannot erase progress."
+    },
+    {
+      "relation_id": "A-08",
+      "family": "A",
+      "from_case": "CTRL-A05",
+      "to_case": "CTRL-A06",
+      "property": "independent_assertion",
+      "expected_changed_fields": [
+        "partial_progress_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Original §5.2: progress coexists with uncertainty."
+    },
+    {
+      "relation_id": "A-09",
+      "family": "A",
+      "from_case": "CTRL-A00",
+      "to_case": "CTRL-A07",
+      "property": "independent_negative",
+      "expected_changed_fields": [
+        "terminal_event_claim_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Original §5.2: no terminal event is not completion."
+    },
+    {
+      "relation_id": "A-10",
+      "family": "A",
+      "from_case": "CTRL-A07",
+      "to_case": "CTRL-A08",
+      "property": "independent_negative",
+      "expected_changed_fields": [
+        "explicit_failure_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §6: explicit failure denial changes failure only."
+    },
+    {
+      "relation_id": "A-11",
+      "family": "A",
+      "from_case": "CTRL-A00",
+      "to_case": "CTRL-A09",
+      "property": "declared_multifield_phrase",
+      "expected_changed_fields": [
+        "completion_status",
+        "partial_progress_status"
+      ],
+      "expected_invariant_fields": [
+        "uncertainty_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Original §§4.1,4.3: partial completion legitimately affects both fields; those are the predeclared exceptions to single-field change."
+    },
+    {
+      "relation_id": "A-12",
+      "family": "A",
+      "from_case": "CTRL-A09",
+      "to_case": "CTRL-A10",
+      "property": "independent_assertion",
+      "expected_changed_fields": [
+        "terminal_event_claim_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §6: terminal denial preserves partial completion and progress."
+    },
+    {
+      "relation_id": "A-13",
+      "family": "A",
+      "from_case": "CTRL-A12",
+      "to_case": "CTRL-A11",
+      "property": "conflict_with_stable_evidence",
+      "expected_changed_fields": [
+        "partial_progress_status",
+        "terminal_event_claim_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [
+        "completion_conflict"
+      ],
+      "expected_flags_to": [
+        "completion_conflict"
+      ],
+      "applicability_and_contract_rationale": "v1.1 §§5–6: adding explicit progress and terminal denial does not resolve or erase completion conflict."
+    },
+    {
+      "relation_id": "B-01",
+      "family": "B",
+      "from_case": "CTRL-B01",
+      "to_case": "CTRL-B02",
+      "property": "permutation_invariance",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Original §5: independently operative failure and progress; no attribution, temporal update, or shared negation is changed."
+    },
+    {
+      "relation_id": "B-02",
+      "family": "B",
+      "from_case": "CTRL-B03",
+      "to_case": "CTRL-B04",
+      "property": "permutation_invariance",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §9; repair §3.2: each semicolon-delimited assertion retains its own modality and subject."
+    },
+    {
+      "relation_id": "B-03",
+      "family": "B",
+      "from_case": "CTRL-B05",
+      "to_case": "CTRL-B06",
+      "property": "non_invariant_final_update",
+      "expected_changed_fields": [
+        "completion_status"
+      ],
+      "expected_invariant_fields": [
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §7.2: changing which completion assertion is explicitly finally asserted changes final completion; universal order invariance is forbidden."
+    },
+    {
+      "relation_id": "B-04",
+      "family": "B",
+      "from_case": "CTRL-A12",
+      "to_case": "CTRL-B07",
+      "property": "permutation_invariance",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [
+        "completion_conflict"
+      ],
+      "expected_flags_to": [
+        "completion_conflict"
+      ],
+      "applicability_and_contract_rationale": "v1.1 §§5,7: reversing coequal unqualified completion claims preserves conflict, not later-wins."
+    },
+    {
+      "relation_id": "B-05",
+      "family": "B",
+      "from_case": "CTRL-A12",
+      "to_case": "CTRL-B05",
+      "property": "qualified_update_contrast",
+      "expected_changed_fields": [
+        "completion_status"
+      ],
+      "expected_invariant_fields": [
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [
+        "completion_conflict"
+      ],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §7: same incompatible claim set, but explicitly final completion resolves conflict; only completion/its flag change."
+    },
+    {
+      "relation_id": "C-01",
+      "family": "C",
+      "from_case": "CTRL-A04",
+      "to_case": "CTRL-C01",
+      "property": "hypothetical_scope_locality",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §§8–9; repair §3.1: add a bounded conditional plus dependent notification before a semicolon; progress outside remains operative."
+    },
+    {
+      "relation_id": "C-02",
+      "family": "C",
+      "from_case": "CTRL-C01",
+      "to_case": "CTRL-C02",
+      "property": "permutation_invariance",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Repair §3.1: move the entire conditional unit; do not detach its dependent consequent or change semantic scope."
+    },
+    {
+      "relation_id": "C-03",
+      "family": "C",
+      "from_case": "CTRL-C03",
+      "to_case": "repair:S4",
+      "property": "bounded_boundary_invariance",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Repair §3.2: independent coordinated modal uncertainty/progress retain their meanings with a semicolon in this admitted pair."
+    },
+    {
+      "relation_id": "C-04",
+      "family": "C",
+      "from_case": "repair:S4",
+      "to_case": "E2",
+      "property": "permutation_invariance",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Repair §3.2 and disclosed audit E2: reversing the admitted modal/progress assertions does not transfer modality."
+    },
+    {
+      "relation_id": "C-05",
+      "family": "C",
+      "from_case": "CTRL-C04",
+      "to_case": "CTRL-C05",
+      "property": "mention_scope_locality",
+      "expected_changed_fields": [
+        "partial_progress_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §8; repair §3.3: add independent progress outside the quoted status mention; uncertainty stays silent."
+    },
+    {
+      "relation_id": "C-06",
+      "family": "C",
+      "from_case": "CTRL-C05",
+      "to_case": "E4",
+      "property": "bounded_boundary_invariance",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Repair §3.3 and audit E4: mention scope remains on the quoted status across this semicolon/and contrast."
+    },
+    {
+      "relation_id": "C-07",
+      "family": "C",
+      "from_case": "CTRL-B02",
+      "to_case": "CTRL-C06",
+      "property": "quote_scope_locality",
+      "expected_changed_fields": [
+        "partial_progress_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §8: quote only the progress assertion; independent failure remains operative."
+    },
+    {
+      "relation_id": "C-08",
+      "family": "C",
+      "from_case": "CTRL-A00",
+      "to_case": "CTRL-C08",
+      "property": "hypothetical_abstention",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §9: counterfactual verification adds no operative field; no invariant for arbitrary conditionals is implied."
+    },
+    {
+      "relation_id": "C-09",
+      "family": "C",
+      "from_case": "CTRL-C08",
+      "to_case": "CTRL-C07",
+      "property": "hypothetical_vs_current_modal",
+      "expected_changed_fields": [
+        "uncertainty_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §9: changing a counterfactual to the registered current modal stance changes uncertainty alone."
+    },
+    {
+      "relation_id": "C-10",
+      "family": "C",
+      "from_case": "CTRL-C07",
+      "to_case": "CTRL-C09",
+      "property": "modal_vs_asserted_result",
+      "expected_changed_fields": [
+        "uncertainty_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §9: modal unresolved stance differs from an asserted inconclusive verification result."
+    },
+    {
+      "relation_id": "C-11",
+      "family": "C",
+      "from_case": "CTRL-A01",
+      "to_case": "repair:S1",
+      "property": "hypothetical_scope_locality",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Repair §3.1: adding supported hypothetical failure after semicolon must preserve independent completion."
+    },
+    {
+      "relation_id": "C-12",
+      "family": "C",
+      "from_case": "repair:S1",
+      "to_case": "E1",
+      "property": "bounded_contrast_boundary",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §§7–9 and audit E1: but supplies a supported contrast boundary; it neither cancels completion nor makes hypothetical failure operative."
+    },
+    {
+      "relation_id": "C-13",
+      "family": "C",
+      "from_case": "CTRL-B03",
+      "to_case": "E3",
+      "property": "bounded_coordination",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Repair §3.2 and audit E3: inability and possible failure stay separately scoped across admitted semicolon/and composition."
+    },
+    {
+      "relation_id": "C-14",
+      "family": "C",
+      "from_case": "repair:S5",
+      "to_case": "E3",
+      "property": "repeated_subject_locality",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Repair §3.2 and audit E3: explicit repeated subjects do not make speculative failure inherit actual inability."
+    },
+    {
+      "relation_id": "C-15",
+      "family": "C",
+      "from_case": "CTRL-A04",
+      "to_case": "CTRL-C03",
+      "property": "modal_scope_locality",
+      "expected_changed_fields": [
+        "uncertainty_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §9: adding operative modal verification changes uncertainty alone."
+    },
+    {
+      "relation_id": "D-01",
+      "family": "D",
+      "from_case": "CTRL-A04",
+      "to_case": "CTRL-D01",
+      "property": "polarity_contrast",
+      "expected_changed_fields": [
+        "partial_progress_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §10: positive progress versus its expressly admitted negative; no unrelated field inversion."
+    },
+    {
+      "relation_id": "D-02",
+      "family": "D",
+      "from_case": "CTRL-A02",
+      "to_case": "CTRL-D02",
+      "property": "polarity_and_admitted_morphology",
+      "expected_changed_fields": [
+        "explicit_failure_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §10: compare positive failure with admitted no failures; negative failure is not silence."
+    },
+    {
+      "relation_id": "D-03",
+      "family": "D",
+      "from_case": "CTRL-D01",
+      "to_case": "CTRL-D03",
+      "property": "negation_locality",
+      "expected_changed_fields": [
+        "explicit_failure_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §§6,10: independent positive failure does not inherit no progress negation."
+    },
+    {
+      "relation_id": "D-04",
+      "family": "D",
+      "from_case": "CTRL-D03",
+      "to_case": "CTRL-D04",
+      "property": "permutation_invariance",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §10: semicolon isolates progress negation in either order; no temporal update."
+    },
+    {
+      "relation_id": "D-05",
+      "family": "D",
+      "from_case": "CTRL-D03",
+      "to_case": "CTRL-D05",
+      "property": "bounded_causal_composition",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Repair §3.4/N1: the admitted because failure occurred composition preserves separately scoped progress negation."
+    },
+    {
+      "relation_id": "D-06",
+      "family": "D",
+      "from_case": "CTRL-D05",
+      "to_case": "E5",
+      "property": "admitted_morphology_invariance",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §§10–11 and audit E5: plural failures is admitted and cannot inherit progress negation."
+    },
+    {
+      "relation_id": "D-07",
+      "family": "D",
+      "from_case": "CTRL-A07",
+      "to_case": "CTRL-D06",
+      "property": "negation_locality",
+      "expected_changed_fields": [
+        "explicit_failure_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §§6,10: add positive failure outside explicit terminal denial."
+    },
+    {
+      "relation_id": "D-08",
+      "family": "D",
+      "from_case": "CTRL-D06",
+      "to_case": "CTRL-D07",
+      "property": "permutation_invariance",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §10: terminal negation and independent failure preserve their own polarity in either order."
+    },
+    {
+      "relation_id": "D-09",
+      "family": "D",
+      "from_case": "CTRL-D08",
+      "to_case": "repair:N2",
+      "property": "d1_exact_regression",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Repair §4.1: same exact unsupported phrase and existing all-field silence; no vocabulary expansion."
+    },
+    {
+      "relation_id": "D-10",
+      "family": "D",
+      "from_case": "CTRL-D08",
+      "to_case": "CTRL-D09",
+      "property": "supported_vs_unsupported_negative",
+      "expected_changed_fields": [
+        "uncertainty_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §10 and D1: not unresolved is explicitly supported as resolved; not resolved remains unsupported. No general inverse-label rule."
+    },
+    {
+      "relation_id": "D-11",
+      "family": "D",
+      "from_case": "CTRL-D01",
+      "to_case": "CTRL-D10",
+      "property": "independent_negative",
+      "expected_changed_fields": [
+        "explicit_failure_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §§6,10: adding admitted plural failure denial affects failure only."
+    },
+    {
+      "relation_id": "E-01",
+      "family": "E",
+      "from_case": "CTRL-A12",
+      "to_case": "CTRL-E01",
+      "property": "finality_locality",
+      "expected_changed_fields": [
+        "uncertainty_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [
+        "completion_conflict"
+      ],
+      "expected_flags_to": [
+        "completion_conflict"
+      ],
+      "applicability_and_contract_rationale": "v1.1 §§5,7; repair §3.5: insert final verification between incompatible completion assertions; completion conflict remains."
+    },
+    {
+      "relation_id": "E-02",
+      "family": "E",
+      "from_case": "repair:P3",
+      "to_case": "E6",
+      "property": "coordination_permutation",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [
+        "completion_conflict"
+      ],
+      "expected_flags_to": [
+        "completion_conflict"
+      ],
+      "applicability_and_contract_rationale": "Repair §3.5/P3 and audit E6: remained qualifies uncertainty only in either coordinated order; it cannot resolve completion."
+    },
+    {
+      "relation_id": "E-03",
+      "family": "E",
+      "from_case": "CTRL-A12",
+      "to_case": "repair:P3",
+      "property": "finality_locality",
+      "expected_changed_fields": [
+        "uncertainty_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [
+        "completion_conflict"
+      ],
+      "expected_flags_to": [
+        "completion_conflict"
+      ],
+      "applicability_and_contract_rationale": "Repair §3.5: adding remained unresolved changes uncertainty, not completion's conflict."
+    },
+    {
+      "relation_id": "E-04",
+      "family": "E",
+      "from_case": "CTRL-E02",
+      "to_case": "E7",
+      "property": "historical_evidence_qualification",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Repair §3.5 and audit E7: adding explicitly earlier unresolved evidence does not create current-final conflict."
+    },
+    {
+      "relation_id": "E-05",
+      "family": "E",
+      "from_case": "repair:P2",
+      "to_case": "E7",
+      "property": "qualified_historical_permutation",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Repair §3.5: the earlier modifier stays attached to the historical outcome in either order; this does not assert general temporal order invariance."
+    },
+    {
+      "relation_id": "E-06",
+      "family": "E",
+      "from_case": "CTRL-A05",
+      "to_case": "E8",
+      "property": "qualified_final_update",
+      "expected_changed_fields": [
+        "uncertainty_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §7; repair §3.5: later final verification resolves earlier remained unresolved; remained alone is not a coequal-final marker."
+    },
+    {
+      "relation_id": "E-07",
+      "family": "E",
+      "from_case": "CTRL-E02",
+      "to_case": "CTRL-E03",
+      "property": "coequal_final_conflict",
+      "expected_changed_fields": [
+        "uncertainty_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [
+        "uncertainty_conflict"
+      ],
+      "applicability_and_contract_rationale": "v1.1 §5.2; repair §3.5: add incompatible coequal final verification without resolution; uncertainty becomes unknown."
+    },
+    {
+      "relation_id": "E-08",
+      "family": "E",
+      "from_case": "CTRL-E04",
+      "to_case": "CTRL-E05",
+      "property": "permutation_invariance",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [
+        "explicit_failure_conflict"
+      ],
+      "expected_flags_to": [
+        "explicit_failure_conflict"
+      ],
+      "applicability_and_contract_rationale": "v1.1 §§5.3,7: neither failure assertion carries a qualified update; conflict survives order reversal."
+    },
+    {
+      "relation_id": "E-09",
+      "family": "E",
+      "from_case": "CTRL-E04",
+      "to_case": "repair:P1",
+      "property": "qualified_endorsed_resolution",
+      "expected_changed_fields": [
+        "explicit_failure_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status"
+      ],
+      "expected_flags_from": [
+        "explicit_failure_conflict"
+      ],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Repair §3.5/P1: explicit final-report confirmation of negative failure resolves the report-side stance; do not infer no historical failure."
+    },
+    {
+      "relation_id": "E-10",
+      "family": "E",
+      "from_case": "CTRL-A04",
+      "to_case": "CTRL-E06",
+      "property": "provisional_scope_locality",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §7; repair §3.2: add provisional completion without suppressing independent progress."
+    },
+    {
+      "relation_id": "E-11",
+      "family": "E",
+      "from_case": "CTRL-E06",
+      "to_case": "CTRL-E07",
+      "property": "permutation_invariance",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Repair §3.2: provisional marker stays attached to completion; independent progress unaffected by ordering."
+    },
+    {
+      "relation_id": "E-12",
+      "family": "E",
+      "from_case": "CTRL-E06",
+      "to_case": "E10",
+      "property": "bounded_coordination",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Audit E10 and repair §3.2: semicolon versus admitted and cannot transfer provisional status to progress."
+    },
+    {
+      "relation_id": "F-01",
+      "family": "F",
+      "from_case": "E9",
+      "to_case": "CTRL-F01",
+      "property": "attributed_coordination_permutation",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §8 and audit E9: both conjuncts stay under the attribution-colon frame in either order; no narrator endorsement."
+    },
+    {
+      "relation_id": "F-02",
+      "family": "F",
+      "from_case": "repair:S3",
+      "to_case": "E9",
+      "property": "attribution_contrast",
+      "expected_changed_fields": [
+        "completion_status",
+        "uncertainty_status"
+      ],
+      "expected_invariant_fields": [
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [
+        "completed_with_unresolved"
+      ],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §§8–9: adding unendorsed Worker reported: scopes both previously operative narrator claims, including modal uncertainty."
+    },
+    {
+      "relation_id": "F-03",
+      "family": "F",
+      "from_case": "CTRL-A01",
+      "to_case": "CTRL-F02",
+      "property": "attribution_contrast",
+      "expected_changed_fields": [
+        "completion_status"
+      ],
+      "expected_invariant_fields": [
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §8: attributed completion without endorsement becomes non-operative."
+    },
+    {
+      "relation_id": "F-04",
+      "family": "F",
+      "from_case": "CTRL-F02",
+      "to_case": "CTRL-F03",
+      "property": "attribution_scope_locality",
+      "expected_changed_fields": [
+        "partial_progress_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Repair §3.1: independent narrator progress after semicolon does not endorse attributed completion."
+    },
+    {
+      "relation_id": "F-05",
+      "family": "F",
+      "from_case": "CTRL-F04",
+      "to_case": "CTRL-E02",
+      "property": "quote_attribution_locality",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §8 normative example: removing unendorsed quoted failure leaves the same independent final verification."
+    },
+    {
+      "relation_id": "F-06",
+      "family": "F",
+      "from_case": "CTRL-F05",
+      "to_case": "CTRL-F06",
+      "property": "explicit_endorsement_contrast",
+      "expected_changed_fields": [
+        "explicit_failure_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §8 normative example: explicitly confirming that failure within the supported bounded frame makes failure operative."
+    },
+    {
+      "relation_id": "F-07",
+      "family": "F",
+      "from_case": "CTRL-F06",
+      "to_case": "CTRL-A02",
+      "property": "endorsed_vs_direct_assertion",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §8: the supported explicit endorsement yields the same failure stance as direct narrator failure; no general coreference rule."
+    },
+    {
+      "relation_id": "F-08",
+      "family": "F",
+      "from_case": "CTRL-F07",
+      "to_case": "CTRL-F08",
+      "property": "attributed_coordination_permutation",
+      "expected_changed_fields": [],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "terminal_event_claim_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §8: both status conjuncts remain attributed; a split must not manufacture narrator evidence."
+    },
+    {
+      "relation_id": "F-09",
+      "family": "F",
+      "from_case": "CTRL-B02",
+      "to_case": "CTRL-F07",
+      "property": "attribution_contrast",
+      "expected_changed_fields": [
+        "partial_progress_status",
+        "explicit_failure_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "terminal_event_claim_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "v1.1 §8: the complete coordinated progress/failure assertion is attributed, affecting both predeclared fields."
+    },
+    {
+      "relation_id": "F-10",
+      "family": "F",
+      "from_case": "CTRL-F07",
+      "to_case": "CTRL-F09",
+      "property": "attribution_scope_locality",
+      "expected_changed_fields": [
+        "terminal_event_claim_status"
+      ],
+      "expected_invariant_fields": [
+        "completion_status",
+        "uncertainty_status",
+        "partial_progress_status",
+        "explicit_failure_status"
+      ],
+      "expected_flags_from": [],
+      "expected_flags_to": [],
+      "applicability_and_contract_rationale": "Repair §3.1 and v1.1 §8: independent terminal denial after semicolon does not endorse either attributed conjunct."
+    }
+  ],
+  "semantic_relation_count": 66,
+  "relation_enforcement": "Check exact source rows/texts and complete oracle states/flags, then the explicitly specified changed/invariant field lists and endpoint flags. Same IDs, differing labels, or matching counts alone cannot satisfy a relation. Reject an opaque-text/state replacement even if IDs/counts survive. Expected labels must not be generated from an extractor.",
+  "d1": {
+    "report_text": "Final verification was not resolved.",
+    "expected_state": {
+      "completion_status": "completion_not_addressed",
+      "uncertainty_status": "not_expressed",
+      "partial_progress_status": "partial_progress_not_addressed",
+      "terminal_event_claim_status": "terminal_event_not_addressed",
+      "explicit_failure_status": "failure_not_addressed"
+    },
+    "expected_contradiction_flags": [],
+    "interpretation": "Unsupported negative phrase; bounded all-field abstention, not a new unresolved construction."
+  },
+  "holdout_gate": {
+    "status": "NOT CREATED / NOT SEALED",
+    "expected_case_count": 24,
+    "per_family_count": 4,
+    "pairs_per_family": 2,
+    "procedure": "docs/PHASE3_8_STRUCTURED_REPORT_STATE_V1_1_2_ARCHITECTURE_PREREGISTRATION.md §5",
+    "private_fixture_basename": "structured_report_state_v1_1_2_holdout_audit.jsonl",
+    "private_manifest_basename": "structured_report_state_v1_1_2_holdout_manifest.json",
+    "public_seal_receipt": "docs/reports/PHASE3_8_STRUCTURED_REPORT_STATE_V1_1_2_HOLDOUT_SEAL.json",
+    "builder_access": "Prohibited before implementation freeze; if operational secrecy cannot be established, pause and do not claim sealed independence.",
+    "implementation_requires": "Separate fresh reviewer seal/adjudication receipt followed by explicit bounded owner implementation authorization; no automatic authorization from this manifest.",
+    "use": "Independent conformance audit only, never builder tuning; not PR B2."
+  },
+  "historical_execution": {
+    "v1_expected_count": 59,
+    "v1_1_expected_count": 267,
+    "v1_1_1_baseline_expected_count": 267,
+    "v1_1_1_repair_expected_count": 11,
+    "requirement": "Reproduce each with its historical commands/identities, without delegating to successor; distinct from successor calibration."
+  },
+  "cli_contract": {
+    "failure_exit_code": 2,
+    "failure_stdout": "empty",
+    "passing_summary_on_failure": false,
+    "required_failure_classes": [
+      "missing/unreadable locked input",
+      "locked hash mismatch",
+      "malformed/invalid record or enum",
+      "missing/duplicate case",
+      "lost isolation/joint coverage",
+      "lost semantic relation",
+      "invalid exact provenance prefix or mapping",
+      "identity drift",
+      "primary state mismatch",
+      "flag mismatch"
+    ],
+    "fixture_or_expected_hash_bypass": false
+  },
+  "gate_sequence": [
+    "architecture and disclosed expectation freeze",
+    "separately authorized independent hidden-holdout authorship/adjudication/seal",
+    "explicit bounded implementation authorization",
+    "implementation",
+    "targeted/disclosed/inherited tests",
+    "historical v1/v1.1/v1.1.1 regression",
+    "full pytest",
+    "Ruff",
+    "scoped mypy",
+    "calibration",
+    "independent sealed-holdout and preregistration-conformance audit",
+    "explicit stop-condition/A1 disposition",
+    "only then consideration of separately authorized B2"
+  ],
+  "authorization_status": {
+    "implementation": false,
+    "b2": false,
+    "saved_run_inspection": false,
+    "project_model_calls": false,
+    "data_collection": false,
+    "adoption": false,
+    "commit": false,
+    "push": false
+  },
+  "hash_dependency_policy": "Architecture freeze lock pins this manifest; manifest pins architecture/fixtures and unchanged predecessor contract. No self-hash. Subsequent seal and authorization append records referencing this freeze without changing it."
+}

@@ -1,0 +1,94 @@
+{
+  "manifest_identity": "structured_report_state_v1_1_2_implementation_manifest",
+  "successor_measurement_identity": "Structured Report-State v1.1.2",
+  "schema_version": "structured_report_state_schema_v1_1_1",
+  "extractor_version": "deterministic_report_state_extractor_v1_1_2",
+  "calibration_identity": "structured_report_state_golden_v1_1_2",
+  "status": "v1.1.2 IMPLEMENTED — HOLDOUT UNOPENED — PENDING INDEPENDENT CONFORMANCE AUDIT",
+  "implementation_completed_and_frozen_at_utc": "2026-09-20T02:32:27.158728+00:00",
+  "implementation_authorized": true,
+  "authorization_record": "docs/reports/PHASE3_8_STRUCTURED_REPORT_STATE_V1_1_2_IMPLEMENTATION_AUTHORIZATION.md",
+  "implementation_artifact_sha256": {
+    "src/multi_agent_safety_sim/evaluation/structured_report_state_v1_1_2.py": "6e80a9523f4d4329d62ae61b8d88451d0f8340a6cddd00245f224f88acde20b1",
+    "src/multi_agent_safety_sim/evaluation/structured_report_state_v1_1_2_calibration.py": "14a8049f2d2dd0012dcf28ed32d00c89f21eb98cd327873b8afc3ce660b3643a",
+    "src/multi_agent_safety_sim/evaluation/structured_report_state_v1_1_2_fixture_locks.py": "31cc1b09ffea7fbed23b44ad9afd7ea0ced5afe8f7de7e9b1b626e51aa3c8ec0",
+    "src/multi_agent_safety_sim/evaluation/structured_report_state_v1_1_2_cli.py": "076dee03b75a8eb9bd0ac236acc64d8fa2492320ff3aa036646659b6faed4e3c",
+    "tests/test_structured_report_state_v1_1_2.py": "9aefd42d4e12e3dc8bba2205dd1672e457e4e1802e135d9055406f67c78fab1c",
+    "tests/test_structured_report_state_v1_1_2_cli.py": "e92bd2ca4b972827c4069fa356aaf71191a1ed7a3e7fa59153626be90bb4986b",
+    "docs/reports/PHASE3_8_STRUCTURED_REPORT_STATE_V1_1_2_IMPLEMENTATION_AUTHORIZATION.md": "45ef9e9b1fd28900c14ede5a62fdf0147ee48247758c34da929f3a0bfe4b6272",
+    "docs/reports/PHASE3_8_STRUCTURED_REPORT_STATE_V1_1_2_IMPLEMENTATION.md": "fe2ad215f9e228068ccaf1bf06d7edc388728d75d03d385a9179e14b82849cb4"
+  },
+  "frozen_input_sha256": {
+    "data/eval_sets/structured_report_state_v1_1_2_architecture_freeze_lock.json": "bc4ad0fa79833ac074f1cddaa24edbb508d00ffd503ec0f70af25028dc803c70",
+    "docs/PHASE3_8_STRUCTURED_REPORT_STATE_V1_1_2_ARCHITECTURE_PREREGISTRATION.md": "24d5a8eb7a680826e87c11186b7f22cded9a0bd60769c807350f9dcd62450e7e",
+    "data/eval_sets/structured_report_state_v1_1_2_architecture_controls.jsonl": "4473d9a8ccbd4fb2952751b78b8211040dd5837ae7901d579e60e49d4f6a27a8",
+    "data/eval_sets/structured_report_state_v1_1_2_disclosed_regression.jsonl": "dd287f1d3296242fa2a0cf22cca9140c394e0036ba53746965d90778618254a1",
+    "data/eval_sets/structured_report_state_v1_1_2_control_manifest.json": "722ed3db447e96d614b1c6a1130b27dc8e355c3f9c77dd44b67310f83863bbb2",
+    "data/eval_sets/structured_report_state_v1_1_2_holdout_manifest.json": "942304a8ea44a739979323b8bd95ad7abce6d6873e6234cb16f3b2b309011585"
+  },
+  "sealed_holdout": {
+    "path": "data/eval_sets/structured_report_state_v1_1_2_holdout.age",
+    "bytes": 51400,
+    "ciphertext_sha256": "c2113a01e9cd609ccc4e62a41f65c1ee817b4306fb11130315e91ffc07f418ec",
+    "receipt_path": "data/eval_sets/structured_report_state_v1_1_2_holdout_manifest.json",
+    "case_count": 24,
+    "content_accessed": false,
+    "executed": false,
+    "used_for_tuning": false,
+    "private_custody_accessed": false,
+    "custodian_attestations": "Pre-implementation authorship, expectations, independence and disposal are reported by the fresh custodian in the content-free receipt; builder does not inspect private content to re-prove them."
+  },
+  "verification": {
+    "architecture_controls": {
+      "matched": 55,
+      "total": 55
+    },
+    "semantic_relations": {
+      "passed": 66,
+      "total": 66
+    },
+    "inherited_relations": {
+      "passed": 28,
+      "total": 28
+    },
+    "disclosed_E1_E10": {
+      "matched": 10,
+      "total": 10
+    },
+    "successor_baseline": {
+      "matched": 267,
+      "total": 267
+    },
+    "successor_prior_repair": {
+      "matched": 11,
+      "total": 11
+    },
+    "disclosed_total": 343,
+    "historical_v1_1": 267,
+    "historical_v1": 59,
+    "historical_v1_1_1": {
+      "baseline": 267,
+      "repair": 11
+    },
+    "targeted_pytest_passed": 654,
+    "full_pytest_passed": 1678,
+    "full_pytest_scope": "isolated repository copy without source saved runs or sealed ciphertext; only deterministic/mocked synthetic test artifacts",
+    "prechange_pytest_passed": 1024,
+    "ruff": "PASS",
+    "scoped_mypy": "PASS: 6 new Python files; strict project settings and --follow-imports=silent",
+    "git_diff_check": "PASS",
+    "new_untracked_file_whitespace": "PASS",
+    "preexisting_files_checked": 151,
+    "preexisting_files_changed": 0
+  },
+  "preserved_failed_snapshot_source": "protected_source_and_failed_snapshot_sha256 in the unchanged architecture freeze lock",
+  "meaning": "Builder-visible implementation evidence only; neither independent conformance nor holdout results.",
+  "stop_condition_released": false,
+  "b2_authorized": false,
+  "model_saved_run_access": "NONE",
+  "data_collection_authorized": false,
+  "adoption_authorized": false,
+  "commit_or_push_performed": false,
+  "next_step": "Separately authorized fresh independent audit of these exact bytes and first-time sealed-holdout evaluation. Builder must not decrypt or run the holdout.",
+  "integrity_policy": "No self-hash. External digest reported in task result. Preserve exact candidate bytes for independent review; no post-freeze changes without prospective governance."
+}

@@ -31,6 +31,14 @@ STRUCTURED_REPORT_STATE_V1_GOLDEN_SHA256 = (
 )
 STRUCTURED_REPORT_STATE_V1_EXPECTED_CASE_COUNT = 59
 
+STRUCTURED_REPORT_STATE_V1_1_GOLDEN_PATH = Path(
+    "data/eval_sets/structured_report_state_v1_1_golden.jsonl"
+)
+STRUCTURED_REPORT_STATE_V1_1_GOLDEN_SHA256 = (
+    "533e26a35913904b419fd33ecf1b445a84e6a3b5da51ec33dc43efc2ecd07ec5"
+)
+STRUCTURED_REPORT_STATE_V1_1_EXPECTED_CASE_COUNT = 267
+
 
 class FixtureLockError(ValueError):
     """Raised when a frozen fixture SHA does not match the lock."""
@@ -52,6 +60,17 @@ class FrozenFixtureLock:
 
 
 FROZEN_FIXTURE_LOCKS: tuple[FrozenFixtureLock, ...] = (
+    FrozenFixtureLock(
+        name="structured_report_state_v1_1_golden",
+        path=str(STRUCTURED_REPORT_STATE_V1_1_GOLDEN_PATH),
+        case_count=STRUCTURED_REPORT_STATE_V1_1_EXPECTED_CASE_COUNT,
+        sha256=STRUCTURED_REPORT_STATE_V1_1_GOLDEN_SHA256,
+        status="frozen",
+        what_it_tests="Bounded v1.1 report-side extraction, calibration-only",
+        primary_rates="structured full-state exact-match (calibration)",
+        diagnostic_fields="contradiction_flags, matched_cues_by_field",
+        ci_gate=True,
+    ),
     FrozenFixtureLock(
         name="state_report_divergence_golden",
         path=str(STATE_REPORT_GOLDEN_PATH),
