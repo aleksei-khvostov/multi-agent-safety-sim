@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import os
 import subprocess
 import sys
 from dataclasses import replace
+from hashlib import sha256
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +18,7 @@ from multi_agent_safety_sim.evaluation import (
     structured_report_state_v1_1_2_calibration as calibration,
 )
 from multi_agent_safety_sim.evaluation import structured_report_state_v1_1_2_cli as cli
+from multi_agent_safety_sim.evaluation import structured_report_state_v1_1_2_fixture_locks as locks
 from multi_agent_safety_sim.evaluation.structured_report_state_v1_1_2 import (
     StructuredReportStateV1_1_2,
     extract_structured_report_state_v1_1_2,
@@ -32,6 +35,9 @@ PINNED_PATHS = [
     *LOCK["artifact_sha256"],
     *LOCK["protected_source_and_failed_snapshot_sha256"],
 ]
+# Independent specification: never derive the permitted paths from production.
+ACTIVE_STATUS_PATHS = ("README.md", "docs/CURRENT_RESEARCH_STATE.md", "docs/MEASUREMENT_GATES.md")
+IMMUTABLE_PATHS = [name for name in PINNED_PATHS if name not in ACTIVE_STATUS_PATHS]
 # Only the explicit frozen inventory is read. No saved runs are enumerated/copied.
 PINNED_CONTENT = {name: Path(name).read_bytes() for name in PINNED_PATHS}
 MANIFEST = json.loads(
@@ -91,10 +97,10 @@ def test_cli_rejects_each_missing_locked_input(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     (isolated_inputs / name).unlink()
-    assert_closed(capsys)
+    assert name in assert_closed(capsys)
 
 
-@pytest.mark.parametrize("name", PINNED_PATHS)
+@pytest.mark.parametrize("name", IMMUTABLE_PATHS)
 def test_cli_rejects_each_locked_input_hash_mismatch(
     name: str,
     isolated_inputs: Path,
@@ -102,7 +108,65 @@ def test_cli_rejects_each_locked_input_hash_mismatch(
 ) -> None:
     path = isolated_inputs / name
     path.write_bytes(path.read_bytes() + b"\n")
-    assert "SHA mismatch" in assert_closed(capsys)
+    assert f"SHA mismatch for {name}" in assert_closed(capsys)
+
+
+@pytest.mark.parametrize("name", ACTIVE_STATUS_PATHS)
+def test_cli_accepts_post_closure_status_updates_without_claiming_frozen_bytes(
+    name: str,
+    isolated_inputs: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    path = isolated_inputs / name
+    path.write_bytes(path.read_bytes() + b"\nPost-closure governance status update.\n")
+    _, content = load_frozen_inputs()
+    assert set(ACTIVE_STATUS_PATHS).isdisjoint(content)
+    assert (
+        sha256(path.read_bytes()).hexdigest()
+        != LOCK["protected_source_and_failed_snapshot_sha256"][name]
+    )
+    assert Path(LOCK_PATH).read_bytes() == PINNED_CONTENT[LOCK_PATH]
+    assert cli.main() == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    summary = json.loads(captured.out)
+    assert summary["full_state_exact_match"] == 343
+    assert summary["b2_authorized"] is summary["data_collection_authorized"] is False
+
+
+@pytest.mark.parametrize(
+    ("group", "name"),
+    [
+        (group, name)
+        for group in ("artifact_sha256", "protected_source_and_failed_snapshot_sha256")
+        for name in ("README.md.unapproved", "docs/README.md", "docs/NEW_ACTIVE_STATUS.md")
+    ]
+    + [("artifact_sha256", name) for name in ACTIVE_STATUS_PATHS],
+)
+def test_status_exception_cannot_admit_other_paths_or_measurement_entries(
+    group: str,
+    name: str,
+    isolated_inputs: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    changed_lock = copy.deepcopy(LOCK)
+    changed_lock[group][name] = sha256(b"frozen bytes").hexdigest()
+    path = isolated_inputs / name
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(b"changed bytes")
+    original = locks._read_locked
+
+    def injected_lock(path: Path, expected: str) -> bytes:
+        content = original(path, expected)
+        if path == locks.ARCHITECTURE_LOCK_PATH:
+            # Exercise path classification after the real lock SHA check. The
+            # ordinary corruption tests separately enforce that lock's bytes.
+            return json.dumps(changed_lock).encode()
+        return content
+
+    monkeypatch.setattr(locks, "_read_locked", injected_lock)
+    assert f"SHA mismatch for {name}" in assert_closed(capsys)
 
 
 def test_cli_unreadable_input(
@@ -232,7 +296,9 @@ def test_cli_rejects_output_identity_state_or_literal_flag_drift(
 
     monkeypatch.setattr(calibration, "extract_structured_report_state_v1_1_2", drift)
     error = assert_closed(capsys)
-    assert ("identity drift" if failure in ("schema", "extractor") else "mismatch") in error
+    assert (
+        "identity drift" if failure in ("schema", "extractor") else "exact full-state/flag mismatch"
+    ) in error
 
 
 def test_cli_has_no_fixture_or_lock_bypass(

@@ -147,15 +147,35 @@ def test_inherited_28_relations(relation: dict[str, Any]) -> None:
     )
 
 
-def test_architecture_freeze_and_all_predecessor_bytes() -> None:
+def test_architecture_freeze_predecessor_bytes_and_historical_status_hashes() -> None:
     path = Path("data/eval_sets/structured_report_state_v1_1_2_architecture_freeze_lock.json")
     assert (
         sha256(path.read_bytes()).hexdigest()
         == "bc4ad0fa79833ac074f1cddaa24edbb508d00ffd503ec0f70af25028dc803c70"
     )
     lock = json.loads(path.read_bytes())
+    # Independent literals, not the loader's exception list or current doc hashes.
+    historical_status_hashes = {
+        "README.md": "5ee1475fba502e4249a773fad187c647f0a0793de673facd5a808af34e19f896",
+        "docs/CURRENT_RESEARCH_STATE.md": "0a6644b087d0021193e4c9f9f13bc91ba9f53bb234e5a9381563eb675478f404",
+        "docs/MEASUREMENT_GATES.md": "a886f77919734541e2267000f7b08f430a8c0791089ed0cf79637aa5fe8f0158",
+    }
+    for name, digest in historical_status_hashes.items():
+        assert lock["protected_source_and_failed_snapshot_sha256"][name] == digest
+    implementation_manifest = Path(
+        "data/eval_sets/structured_report_state_v1_1_2_implementation_manifest.json"
+    )
+    assert (
+        sha256(implementation_manifest.read_bytes()).hexdigest()
+        == "007ea594fe1d8775e35de7128ed966cf3c4c39305b948c69b7765f5aa83d99ce"
+    )
     for group in ("artifact_sha256", "protected_source_and_failed_snapshot_sha256"):
         for name, digest in lock[group].items():
+            if (
+                group == "protected_source_and_failed_snapshot_sha256"
+                and name in historical_status_hashes
+            ):
+                continue
             assert sha256(Path(name).read_bytes()).hexdigest() == digest, name
     assert MANIFEST["d1"]["expected_state"] == SILENCE
     assert len(ALL_ROWS) == 343
