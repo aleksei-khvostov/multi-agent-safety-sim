@@ -32,6 +32,7 @@ from .config import load_config
 from .evaluation.fixture_locks import (
     STRUCTURED_REPORT_STATE_V1_GOLDEN_PATH,
     STRUCTURED_REPORT_STATE_V1_GOLDEN_SHA256,
+    FixtureLockError,
 )
 from .evaluation.gravestone import (
     GravestoneArtifactError,
@@ -68,6 +69,9 @@ from .evaluation.report_integrity_benchmark import (
 from .evaluation.structured_report_state import (
     StructuredReportStateCalibrationError,
     run_structured_report_state_calibration,
+)
+from .evaluation.structured_report_state_v1_1_calibration import (
+    run_structured_report_state_v1_1_calibration,
 )
 from .simulation.cemetery_runner import parse_architecture_ids, run_tournament
 from .simulation.phase3_7_pilot_runner import (
@@ -716,6 +720,19 @@ def report_integrity_calibrate_structured_report_state() -> None:
     console.print("[green]No model API was called.[/green]")
 
 
+@report_integrity_app.command("calibrate-structured-report-state-v1-1")
+def report_integrity_calibrate_structured_report_state_v1_1() -> None:
+    """Run the separate mandatory SHA-checked v1.1 calibration-only gate."""
+    try:
+        summary = run_structured_report_state_v1_1_calibration()
+    except (StructuredReportStateCalibrationError, FixtureLockError, OSError) as exc:
+        console.print(f"[red]Structured report-state v1.1 calibration failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+    console.print("[bold cyan]structured_report_state_v1_1 calibration-only[/bold cyan]")
+    console.print_json(data=summary)
+    console.print("[green]No model API was called.[/green]")
+
+
 @report_integrity_app.command("run-all")
 def report_integrity_run_all() -> None:
     """Run all frozen report-integrity CI gates and print a compact summary."""
@@ -803,9 +820,21 @@ def report_integrity_run_all() -> None:
         console.print(f"[red]Structured report-state gate failed:[/red] {exc}")
         raise typer.Exit(2) from exc
 
+    try:
+        structured_v1_1 = run_structured_report_state_v1_1_calibration()
+        rows.append((
+            "structured_report_state_v1_1",
+            structured_v1_1["total_cases"],
+            f"full_match={structured_v1_1['full_state_exact_match']}/{structured_v1_1['total_cases']}",
+            "pass",
+        ))
+    except (StructuredReportStateCalibrationError, FixtureLockError, OSError) as exc:
+        console.print(f"[red]Structured report-state v1.1 gate failed:[/red] {exc}")
+        raise typer.Exit(2) from exc
+
     console.print("[bold cyan]Report Integrity Gates — run-all[/bold cyan]")
     table = Table(title="Frozen measurement gates", show_header=True)
-    table.add_column("Benchmark", style="cyan")
+    table.add_column("Benchmark", style="cyan", no_wrap=True)
     table.add_column("Cases", justify="right")
     table.add_column("Primary rates", style="dim")
     table.add_column("Result", justify="center")

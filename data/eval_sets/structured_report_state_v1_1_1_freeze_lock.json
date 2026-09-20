@@ -1,0 +1,73 @@
+{
+  "lock_identity": "structured_report_state_v1_1_1_approval_freeze_lock",
+  "successor_measurement_identity": "Structured Report-State v1.1.1",
+  "calibration_identity": "structured_report_state_golden_v1_1_1",
+  "approval_recorded_at_utc": "2026-09-19T02:11:36Z",
+  "preregistration_frozen_at_utc": "2026-09-19T02:13:22Z",
+  "regression_expectations_frozen_at_utc": "2026-09-19T02:19:34Z",
+  "authorization_recorded_at_utc": "2026-09-19T02:19:34Z",
+  "status": "FROZEN — BOUNDED SUCCESSOR IMPLEMENTATION AUTHORIZED",
+  "authorization_statement": "V1.1.1 IMPLEMENTATION REPAIR AUTHORIZED: YES",
+  "implementation_repair_authorized": true,
+  "execute_repair_in_this_task": false,
+  "approval_authority": "User / project owner; explicit approval/freeze instruction and subsequent schema-valid D1 confirmation",
+  "authorization_scope": "Only the bounded implementation in the hash-pinned approved preregistration. Expected labels are immutable after this pre-implementation freeze. No repair is implemented by this task.",
+  "prerequisites": {
+    "d1_fully_resolved": true,
+    "all_11_complete_regression_expectations_frozen": true,
+    "required_hashes_and_manifest_established": true,
+    "git_diff_check": "PASS",
+    "protected_existing_artifacts_unchanged": true
+  },
+  "expected_repair_case_count": 11,
+  "expected_predecessor_case_count": 267,
+  "predecessor_fixture_identity": "structured_report_state_golden_v1_1",
+  "predecessor_fixture_sha256": "533e26a35913904b419fd33ecf1b445a84e6a3b5da51ec33dc43efc2ecd07ec5",
+  "artifact_sha256": {
+    "docs/PHASE3_8_STRUCTURED_REPORT_STATE_V1_1_1_REPAIR_PREREGISTRATION.md": "2a5c63a8b46d5c1ae9beb198dd93dd58a120fe59b26da678ee3ef914f63e170d",
+    "data/eval_sets/structured_report_state_v1_1_1_repair_regression.jsonl": "9e27f8a32f38d1c089f212297bfeeca0478b8ba61c0bd93c516ec4d8909c05f9",
+    "data/eval_sets/structured_report_state_v1_1_1_calibration_manifest.json": "6751c6063df17089c0469fa87f1620a025ee1a49149d621197ccb1d281345f7f"
+  },
+  "failed_snapshot_and_historical_sha256": {
+    "data/eval_sets/structured_report_state_v1_1_golden.jsonl": "533e26a35913904b419fd33ecf1b445a84e6a3b5da51ec33dc43efc2ecd07ec5",
+    "src/multi_agent_safety_sim/evaluation/structured_report_state_v1_1.py": "7c0b8b83010f657b697146c204b88ad4c6d767a5c99cb4c068e1e2d5753258bd",
+    "src/multi_agent_safety_sim/evaluation/structured_report_state_v1_1_calibration.py": "210d7d77270647a8116aec641d4a7a4c305b5cee1c7cf25cd6587da8a0c4b14e",
+    "tests/test_structured_report_state_v1_1.py": "54efc47604dafc1942345eee0c43b7b8ad0a920208815409b8b8dd3329f1beff",
+    "src/multi_agent_safety_sim/evaluation/fixture_locks.py": "9e1cbf462b830460140446f5bc67f36d898c7a50cbdaeccb3eff9f40c2c56aa8",
+    "src/multi_agent_safety_sim/cli.py": "fceee72d67740088dbbef6451626b9267168a39a4703a4d5794eb8a536b89833",
+    "docs/PHASE3_8_STRUCTURED_REPORT_STATE_V1_1_PREREGISTRATION.md": "717f6aa19c39aac1571e8804cf6674760f33a1f024346cf8f4a1ee8655eb8e10",
+    "docs/reports/PHASE3_8_STRUCTURED_REPORT_STATE_V1_1_CONFORMANCE_AUDIT.md": "e0cce0580cf1e10ae5c073cbbd1a65e0754360f777ef6192f9c5746de10f6812",
+    "data/eval_sets/structured_report_state_v1_golden.jsonl": "42e8ba6fc1185abca50888336307143adccf72a75c169a4793c036725af496a7",
+    "src/multi_agent_safety_sim/evaluation/structured_report_state.py": "9376b7f370dc96edf440a35fd5217929c2b820b194c6e4b0afe7aae4094407ee",
+    "tests/test_structured_report_state.py": "94802a1af22dc16dde91faf762b0f3c0f4f273872a7221017b9ec98a6c0b6fc2",
+    "docs/PHASE3_8_STRUCTURED_REPORT_STATE_PREREGISTRATION.md": "3a239474c84a6600b3699016fd0ecf282005f28da4a00e8b72ac9e1490b3ff2e"
+  },
+  "preservation_verification": {
+    "preexisting_files_checked": 130,
+    "allowed_existing_file_change": "docs/PHASE3_8_STRUCTURED_REPORT_STATE_V1_1_1_REPAIR_PREREGISTRATION.md",
+    "other_preexisting_files_byte_identical": 129,
+    "preservation_method": "Existing failed candidate remains in place; fingerprints recorded. No separate archive or commit is claimed."
+  },
+  "freeze_validation": {
+    "kind": "pre-implementation data validation only; no extractor executed",
+    "complete_states_verified": 11,
+    "semantic_contrast_relations_verified": 28,
+    "all_22_enum_values_isolated_and_joint": true,
+    "required_joint_purposes_covered": true,
+    "untracked_artifact_whitespace": "PASS",
+    "implementation_executed": false,
+    "calibration_executed": false
+  },
+  "non_authorizations": {
+    "b2": false,
+    "saved_run_inspection": false,
+    "model_calls": false,
+    "model_or_data_collection": false,
+    "empirical_adoption": false,
+    "pr_c": false,
+    "changes_to_frozen_expected_labels": false,
+    "commit": false,
+    "push": false
+  },
+  "integrity_policy": "Verify all pinned hashes before successor implementation. This JSON lock contains no self-hash; its external digest can be retained in the approval-task result. Do not overwrite old locks or relabel failed v1.1 as conformant."
+}
