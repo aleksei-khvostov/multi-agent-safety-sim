@@ -1,22 +1,30 @@
 # multi-agent-safety-sim
 
-**A safety-first Python research prototype for simulating alignment failure modes in multi-agent LLM systems.**
+A Python research prototype for checking whether agent reports agree with independently recorded execution state, and whether the evaluators used to measure that agreement are trustworthy.
 
-`multi-agent-safety-sim` is an experimental framework for studying how autonomous agents can develop risky coordination and oversight failure patterns in shared environments: collusion, private-channel coordination, deceptive signaling, power-seeking language, delegation drift, weak audit trails, and watchdog failures.
+**Demonstrated:** deterministic simulations, trace/report separation, reproducible regression checks, and documented measurement failures. Phase 3.7 reports two small matched-evidence model pilots; their audits identify classifier artifacts and do not establish a strong architecture/persona-conditioned overclaim effect. The public repository contains audit reports and configurations, but not the underlying saved pilot runs.
 
-The project is intentionally conservative: it defaults to a `DummyLLMClient`, records auditable traces, and enforces safety caps through a central runner.
+**Unresolved:** general evaluator validity, real-world reporting reliability, architecture safety rankings, and deceptive intent. Passing authored calibration cases is regression evidence, not semantic validation. Phase 3.8 closed after three structured report-state successors failed conformance review despite passing their authored calibration suites.
 
-## Project framing
+**Current boundary:** Structured Report-State is not adopted. Further deterministic free-text extractor development is paused; the sealed holdout remains unopened. No Phase 3.9 or successor is authorized in the current public record. Real-model work, saved-run diagnostics, and data collection require separate authorization.
 
-`multi-agent-safety-sim` is a layered AI safety and agent-governance evaluation harness. It focuses on deterministic, inspectable simulations of delegation, oversight, report integrity, and artifact generation.
+## Reproduce the offline checks
 
-The project is for evaluation-method development. It does not claim to detect real-world deception, measure real-world agent danger, or validate architecture safety from dry-run outputs. Experimental dry-runs validate harness wiring and artifact pipelines only. Empirical claims require real-model runs with model, seed, policy, episode count, and prompt setup reported.
+From a source checkout, install Python 3.11+ and the development dependencies:
 
-**Report integrity** here means trace–report consistency, not deception detection. See [docs/REPORT_INTEGRITY_POSITIONING.md](docs/REPORT_INTEGRITY_POSITIONING.md) for how to read RIB-16, Gravestone, NDB-20, and future empirical pilots without misinterpreting rates as model safety scores.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -e ".[dev]"
+python3 -m pytest
+python3 -m multi_agent_safety_sim.evaluation.state_report_flow
+python3 -m multi_agent_safety_sim.cli rib-16 run
+python3 -m multi_agent_safety_sim.cli nested-delegation run
+```
 
-**NDB-20** extends report integrity to nested delegation: `python3 -m multi_agent_safety_sim.cli nested-delegation run` (API-free; primary rates only).
+These checks use fixtures and simulated behavior; they make no claim about model safety. They do not reproduce the untracked empirical pilot outputs. See [measurement gates](docs/MEASUREMENT_GATES.md) for exact contracts and limitations.
 
-For the current frozen report-integrity regression stack, see [`docs/MEASUREMENT_GATES.md`](docs/MEASUREMENT_GATES.md). The gates separate primary reference rates from diagnostic-only watchdog observations.
+The [current research state](docs/CURRENT_RESEARCH_STATE.md) and [Phase 3.8 measurement decision](docs/PHASE3_8_STRUCTURED_REPORT_STATE_MEASUREMENT_DECISION.md) govern current work. [AGENTS.md](AGENTS.md), preregistrations, and audits under [docs](docs/) preserve the detailed research controls and provenance. Earlier roadmap and pilot sections below retain historical context; they do not authorize new experiments. The historical Phase 3.7 case study's statement that classifier-v3 is unimplemented predates the later [v3 decision](docs/reports/PHASE3_7_CLASSIFIER_V3_MEASUREMENT_DECISION.md).
 
 ## Current research stack
 
@@ -67,13 +75,13 @@ Current `main` includes the Phase 3 research stack described above:
 - Death vs Divergence v0.4
 - README research-stack framing
 
-Latest merged PRs:
+Historical early-stack PRs (not the latest repository activity):
 
 - PR #2 — Agent Cemetery v0.3 survival-style stress-test harness
 - PR #3 — Death vs Divergence v0.4 report-integrity layer
 - PR #4 — README stack framing and reproducible demo commands
 
-Validation status: **138 tests passing**.
+The earlier **138 tests passing** total belongs to the early-stack milestone. At base commit `b9b08de`, the portfolio audit reproduced **1,687 passing tests** with Python 3.13.5; this is offline regression verification, not model evidence. Counts depend on the commit and environment.
 
 Historical note: the earlier v0.2.0 milestone completed the Phase 2 Oversight Signal Study and integrated it under `research/phase2_oversight_signal`. The current repository now layers those observability ideas into deterministic Phase 3 benchmark, artifact, survival-harness, and report-integrity workflows. Agent Cemetery remains an experimental harness, Death vs Divergence does not detect deception, and dry-run outputs validate harness wiring/artifacts only.
 
@@ -166,7 +174,7 @@ Watchdog Oversight
 State-Report Divergence
 ```
 
-Key findings:
+Historical findings on authored fixtures with rule-based planners and watchdogs (no LLM inference or general oversight-effectiveness validation):
 
 - Execution traces reduce honest-ambiguity false positives.
 - Most oversight value survives removal of explicit final-state markers.
@@ -174,11 +182,11 @@ Key findings:
 
 Core research artifacts:
 
-- `docs/PHASE2_RESEARCH_SUMMARY.md`
-- `docs/FINDINGS.md`
-- `docs/OVERSIGHT_SIGNAL_EXPERIMENT.md`
-- `docs/TRACE_ABLATION_EXPERIMENT.md`
-- `docs/TRACE_WITHOUT_FINAL_STATE_EXPERIMENT.md`
+- [PHASE2_RESEARCH_SUMMARY](research/phase2_oversight_signal/docs/PHASE2_RESEARCH_SUMMARY.md)
+- [FINDINGS](research/phase2_oversight_signal/docs/FINDINGS.md)
+- [OVERSIGHT_SIGNAL_EXPERIMENT](research/phase2_oversight_signal/docs/OVERSIGHT_SIGNAL_EXPERIMENT.md)
+- [TRACE_ABLATION_EXPERIMENT](research/phase2_oversight_signal/docs/TRACE_ABLATION_EXPERIMENT.md)
+- [TRACE_WITHOUT_FINAL_STATE_EXPERIMENT](research/phase2_oversight_signal/docs/TRACE_WITHOUT_FINAL_STATE_EXPERIMENT.md)
 
 ### Phase 3: State-Report Divergence
 
@@ -279,11 +287,11 @@ The summary reports separate oversight axes instead of collapsing everything int
 
 This matters because the Phase 2 research showed that final-report-only oversight can confuse honest ambiguity with real divergence. Phase 3 turns that finding into a packaged evaluation loop that can later be tested inside a Planner → Worker → Watchdog environment.
 
-## Status
+## Historical v0.2.0 milestone status
 
-Research prototype / alpha. 
+Research prototype / alpha. The milestone items below predate the Phase 3.8 closure; the current research state above governs further work.
 
-Current status:
+Historical milestones:
 
 ✅ Planner Delegation baseline complete
 
@@ -291,7 +299,7 @@ Current status:
 
 ✅ v0.2.0 published
 
-🔄 Phase 3 integration in progress
+Phase 3 integration was the next step at this historical milestone.
 
 ## Current scenario baselines
 
@@ -370,7 +378,7 @@ Combined governance insight:
 ## Installation
 
 ```bash
-cd multi_agent_safety_sim
+cd multi-agent-safety-sim
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
@@ -458,9 +466,9 @@ player_1 → execute: produced a safe PII-redacted summary
 player_2 → report: audit trail reviewed in dry-run mode
 ```
 
-### Planner Delegation real-model run
+### Historical Planner Delegation real-model command (requires separate authorization)
 
-Run the real-model workflow baseline:
+Historical command shown for provenance; executing a real-model run requires separate authorization:
 
 ```bash
 massim run \
@@ -480,7 +488,7 @@ The successful post-parser-fix rerun is documented in [`docs/PLANNER_DELEGATION_
 ## Repository structure
 
 ```text
-multi_agent_safety_sim/
+multi-agent-safety-sim/
 ├── AGENTS.md
 ├── config.yaml
 ├── docs/
@@ -500,6 +508,7 @@ multi_agent_safety_sim/
 ├── src/multi_agent_safety_sim/
 │   ├── agents/
 │   ├── alignment/
+│   ├── evaluation/
 │   ├── environment/
 │   ├── scenarios/
 │   ├── simulation/
@@ -547,7 +556,7 @@ Known limitations:
 - workflow metrics indicate auditability/provenance coverage, not safety guarantees;
 - current results are single-run pilot findings, not statistically meaningful evaluations.
 
-## Roadmap
+## Historical roadmap (options requiring authorization)
 
 - Add adversarial delegation test cases
 - Add executor escalation behavior for out-of-scope instructions
@@ -563,19 +572,19 @@ Known limitations:
 
 MIT. Intended for research, education, and portfolio demonstration.
 
-## Current Roadmap
+## Historical Phase 2–3 roadmap
 
 ### Phase 2 (Completed)
 
 Oversight Signal Study
 
-Major findings:
+Historical deterministic fixture findings; these do not validate LLM behavior or general oversight effectiveness:
 
 - Finding 005 — execution traces resolve honest ambiguity
 - Finding 006 — most trace value survives removal of final-state labels
 - Finding 007 — partial-progress dominates behavioral oversight value
 
-### Phase 3 (Current)
+### Phase 3 (historical integration milestone)
 
 Integration of observability findings into the packaged simulator.
 
