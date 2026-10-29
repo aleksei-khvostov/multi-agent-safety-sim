@@ -1,5 +1,6 @@
-<<<<<<< HEAD
 # Multi-Agent Safety Sim
+
+Historical Phase 2 prototype: findings below concern authored fixtures and rule-based planners/watchdogs, with no LLM inference in the Phase 2 experiments. They do not validate general oversight effectiveness.
 
 A small research prototype for studying **State-Report Divergence** in agentic systems.
 
@@ -207,7 +208,11 @@ Current limitations include:
 - No multi-agent delegation chains
 
 The goal is to study observability and oversight mechanics before introducing larger agentic complexity.
-=======
+
+## Historical packaged-simulator context
+
+The following block preserves the earlier packaged-simulator README context; its phase/status text is historical. See the [current research state](../../docs/CURRENT_RESEARCH_STATE.md) for the active closure and authorization boundaries.
+
 # multi-agent-safety-sim
 
 **A safety-first Python research prototype for simulating alignment failure modes in multi-agent LLM systems.**
@@ -235,14 +240,14 @@ Current focus:
 
 This project is accompanied by short research notes and governance artifacts that document the problem model, evaluation approach, current limitations, and delegated agentic workflow findings.
 
-- [Research Brief](docs/RESEARCH_BRIEF.md) — explains the core research problem: why multi-agent LLM systems create coordination and oversight risks that are not visible in single-agent evaluations.
-- [Governance Mapping](docs/GOVERNANCE_MAPPING.md) — maps the project’s runtime-governance concerns to broader AI governance concepts such as TRiSM, policy enforcement, auditability, and human oversight.
-- [Agentic Governance Rubric](docs/AGENTIC_GOVERNANCE_RUBRIC.md) — defines CBV-style criteria for evaluating runtime policy enforcement, human oversight, audit trails, role boundaries, and TRiSM coverage.
-- [Evaluation Criteria](docs/EVALUATION_CRITERIA.md) — defines pre-registered evaluation criteria for the Prisoner’s Dilemma pilot.
-- [Pilot Run Report](docs/PILOT_RUN_REPORT.md) — documents the first real-model Prisoner’s Dilemma pilot, false-positive findings, fixes, and the clean post-fix rerun.
-- [Planner Delegation Scenario Spec](docs/PLANNER_DELEGATION_SPEC.md) — describes the delegated workflow scenario: planner, executor, watchdog, task boundaries, and audit trail requirements.
-- [Planner Delegation Evaluation Criteria](docs/PLANNER_DELEGATION_EVALUATION_CRITERIA.md) — defines pre-run success and failure criteria for delegated workflow traces.
-- [Planner Delegation Baseline](docs/PLANNER_DELEGATION_BASELINE.md) — records the working `planner_delegation` baseline, task-payload fix, action-label parser fix, dry-run baseline, and successful post-parser-fix real-model rerun.
+- [Research Brief](../../docs/RESEARCH_BRIEF.md) — explains the core research problem: why multi-agent LLM systems create coordination and oversight risks that are not visible in single-agent evaluations.
+- [Governance Mapping](../../docs/GOVERNANCE_MAPPING.md) — maps the project’s runtime-governance concerns to broader AI governance concepts such as TRiSM, policy enforcement, auditability, and human oversight.
+- [Agentic Governance Rubric](../../docs/AGENTIC_GOVERNANCE_RUBRIC.md) — defines CBV-style criteria for evaluating runtime policy enforcement, human oversight, audit trails, role boundaries, and TRiSM coverage.
+- [Evaluation Criteria](../../docs/EVALUATION_CRITERIA.md) — defines pre-registered evaluation criteria for the Prisoner’s Dilemma pilot.
+- [Pilot Run Report](../../docs/PILOT_RUN_REPORT.md) — documents the first real-model Prisoner’s Dilemma pilot, false-positive findings, fixes, and the clean post-fix rerun.
+- [Planner Delegation Scenario Spec](../../docs/PLANNER_DELEGATION_SPEC.md) — describes the delegated workflow scenario: planner, executor, watchdog, task boundaries, and audit trail requirements.
+- [Planner Delegation Evaluation Criteria](../../docs/PLANNER_DELEGATION_EVALUATION_CRITERIA.md) — defines pre-run success and failure criteria for delegated workflow traces.
+- [Planner Delegation Baseline](../../docs/PLANNER_DELEGATION_BASELINE.md) — records the working `planner_delegation` baseline, task-payload fix, action-label parser fix, dry-run baseline, and successful post-parser-fix real-model rerun.
 
 ## Status
 
@@ -265,7 +270,7 @@ Current status:
 - Watchdog/probe false positives diagnosed.
 - Regression fixes added.
 - Clean post-fix real-model rerun completed.
-- Finding documented in [`docs/PILOT_RUN_REPORT.md`](docs/PILOT_RUN_REPORT.md).
+- Finding documented in [`docs/PILOT_RUN_REPORT.md`](../../docs/PILOT_RUN_REPORT.md).
 
 Key finding:
 
@@ -433,7 +438,7 @@ massim run \
   --no-dry-run
 ```
 
-The successful post-parser-fix rerun is documented in [`docs/PLANNER_DELEGATION_BASELINE.md`](docs/PLANNER_DELEGATION_BASELINE.md).
+The successful post-parser-fix rerun is documented in [`docs/PLANNER_DELEGATION_BASELINE.md`](../../docs/PLANNER_DELEGATION_BASELINE.md).
 
 ## Repository structure
 
@@ -479,7 +484,7 @@ Safety constraints include:
 - clear separation between agents, environment, probes, and runner;
 - scenario-aware dry-run behavior for safe integration testing.
 
-See [`AGENTS.md`](AGENTS.md) for additional project rules.
+See [`AGENTS.md`](../../AGENTS.md) for additional project rules.
 
 ## Development checks
 
@@ -520,4 +525,3 @@ Known limitations:
 ## License
 
 MIT. Intended for research, education, and portfolio demonstration.
->>>>>>> ab71b84ae4aaae3d7a36c5b70ff9e0ab25ae96f3

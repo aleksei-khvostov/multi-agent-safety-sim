@@ -55,9 +55,9 @@ notebooks = [
 massim = "multi_agent_safety_sim.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/ccaudaa/multi-agent-safety-sim"
-Repository = "https://github.com/ccaudaa/multi-agent-safety-sim"
-Issues = "https://github.com/ccaudaa/multi-agent-safety-sim/issues"
+Homepage = "https://github.com/aleksei-khvostov/multi-agent-safety-sim"
+Repository = "https://github.com/aleksei-khvostov/multi-agent-safety-sim"
+Issues = "https://github.com/aleksei-khvostov/multi-agent-safety-sim/issues"
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
