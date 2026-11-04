@@ -1,5 +1,11 @@
 # Current Research State
 
+## Public status update — 4 November 2026
+
+**Phase 3.9 CLOSED — INCOMPLETE.** The author closed the later, separately authorized human-reference feasibility follow-up on 3 November 2026 at the stimulus-audit stage. Pass 1's 32 records and separate erratum are preserved; Pass 2 completion and a completed two-annotator round are **NOT ESTABLISHED**. This is an owner-supplied administrative summary of nonpublic records, not a human-agreement result. See the [dated closeout](PHASE3_9_CLOSEOUT_2026-11-04.md) and [technical report 1.1](https://alekseikhvostov.com/research/semantic-conformance).
+
+The Phase 3.8 closure and stop condition below remain in force. Earlier statements that its decision authorized no new phase describe that historical decision; they do not establish that the later Phase 3.9 follow-up was executed. No new study or successor is authorized by this closeout.
+
 ## Status
 
 **PHASE 3.8 CLOSED AS A MEASUREMENT-DEVELOPMENT RESULT — STRUCTURED REPORT-STATE NOT ADOPTED**

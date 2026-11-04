@@ -6,7 +6,9 @@ A Python research prototype for checking whether agent reports agree with indepe
 
 **Unresolved:** general evaluator validity, real-world reporting reliability, architecture safety rankings, and deceptive intent. Passing authored calibration cases is regression evidence, not semantic validation. Phase 3.8 closed after three structured report-state successors failed conformance review despite passing their authored calibration suites.
 
-**Current boundary:** Structured Report-State is not adopted. Further deterministic free-text extractor development is paused; the sealed holdout remains unopened. No Phase 3.9 or successor is authorized in the current public record. Real-model work, saved-run diagnostics, and data collection require separate authorization.
+**Current boundary:** Structured Report-State is not adopted. Further deterministic free-text extractor development is paused; the sealed holdout remains unopened. [Phase 3.9 closed as incomplete](docs/PHASE3_9_CLOSEOUT_2026-11-04.md) at the stimulus-audit stage (decision 3 November 2026; public entry 4 November). Pass 1 is preserved; Pass 2 completion and a completed two-annotator round are not established. No successor or new study execution is authorized. Real-model work, saved-run diagnostics, and data collection require separate authorization.
+
+**Technical report:** [Semantic Conformance in Agent Report Evaluation, version 1.1](https://alekseikhvostov.com/research/semantic-conformance) — the measurement-development case study, exact counterexamples, and limitations.
 
 ## Reproduce the offline checks
 

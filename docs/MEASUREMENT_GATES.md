@@ -4,6 +4,8 @@ These gates catch **measurement drift** in the report-integrity layer before emp
 
 **PHASE 3.8 CLOSED AS A MEASUREMENT-DEVELOPMENT RESULT — STRUCTURED REPORT-STATE NOT ADOPTED.** The [measurement decision](PHASE3_8_STRUCTURED_REPORT_STATE_MEASUREMENT_DECISION.md) pauses further deterministic free-text extractor development. Historical passing gates remain verification facts, not empirical adoption or evidence of preregistration conformance on fresh compositions. The stop condition remains active; B2, PR C, empirical adoption, model/saved-run access, and data collection remain unauthorized. No successor is authorized, and the 24-case holdout remains sealed and unopened.
 
+**Phase 3.9 closeout, recorded 4 November 2026:** the separately authorized human-reference follow-up [closed as incomplete](PHASE3_9_CLOSEOUT_2026-11-04.md) at the stimulus-audit stage. Pass 1 is preserved; completion of Pass 2 and the two-annotator round is not established. This supplies no new passing gate or human-validation result and changes no frozen measurement input or Phase 3.8 stop condition.
+
 For external framing — what these gates do and do **not** mean — see [REPORT_INTEGRITY_POSITIONING.md](REPORT_INTEGRITY_POSITIONING.md).
 
 ---
