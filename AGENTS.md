@@ -63,9 +63,11 @@ All experiments must remain inside controlled simulation environments.
 
 ---
 
-## 3. Current Status
+## 3. Research status
 
-Current implementation:
+Phase 3.9 closed as incomplete at the stimulus audit stage. Pass 1 is preserved. Completion of Pass 2 and of the two-annotator round remains unconfirmed. The Phase 3.8 stop condition remains in force and the holdout remains unopened. [Current research state](docs/CURRENT_RESEARCH_STATE.md) · [Phase 3.9 closeout](https://github.com/aleksei-khvostov/multi-agent-safety-sim/blob/main/docs/PHASE3_9_CLOSEOUT_2026-11-04.md)
+
+Early implementation baseline:
 
 - repeated Prisoner’s Dilemma baseline;
 - configurable agent personas;
@@ -78,9 +80,7 @@ Current implementation:
 - ruff linting;
 - public research brief in `docs/RESEARCH_BRIEF.md`.
 
-Current status: **MVP observability prototype**.
-
-Planned extensions:
+Early roadmap items:
 
 - `PlannerDelegationEnv`;
 - stronger task-drift and coordination metrics;
@@ -353,7 +353,7 @@ git status
 
 10. Project Phases
 
-Current phase: Phase 0 / Phase 1 boundary
+Historical roadmap. See section 3 for the current research disposition.
 
 Phase 0 — Foundation
 
